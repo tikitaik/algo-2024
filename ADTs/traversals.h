@@ -1,0 +1,388 @@
+#pragma once
+
+#include <iostream>
+#include "linkedlist.h"
+#include "graph.h"
+
+// add untraversed neighbours of current vertex to unvisited list
+template <typename T> void graph::addUntraversedNeighbours(T& list, node* current) {
+    linkedList<node>* untNeighbours = untraversedNeighbours(current);
+    listNode<node>* neighbourListNode = untNeighbours->returnHead();
+    // loops through each neighbour and adds it
+    for (int i = 0; i < untNeighbours->size(); i++) {
+        list.insertTail(neighbourListNode->data);
+        if (i < untNeighbours->size() - 1) {
+            neighbourListNode = neighbourListNode->next;
+        }
+    }
+}
+
+// check if every node in graph's traversed attribute == true
+bool graph::allNodesAreTraversed() {
+    listNode<node>* curListNode = allNodes().returnHead();
+    // for loop and enum
+    for (int i = 0; i < allNodes().size(); i++) {
+        if (!curListNode->data->traversed) {
+            return false;
+        }
+        if (i < allNodes().size() - 1) {
+            curListNode = curListNode->next;
+        }
+    }
+    // otherwise return true
+    return true;
+}
+
+// writes the traversed and untraversed nodes to console, very useless
+void graph::displayTraversed() {
+    listNode<node>* curListNode = allNodes().returnHead();
+
+    linkedList<int> traversed;
+    linkedList<int> untraversed;
+    for (int i = 0; i < allNodes().size(); i++) {
+        if (curListNode->data->traversed) {
+            traversed.insertTail(curListNode->data->id);
+        }
+        else {
+            untraversed.insertTail(curListNode->data->id);
+        }
+        if (i < allNodes().size() - 1) {
+            curListNode = curListNode->next;
+        }
+    }
+    std::cout << "traversed: " << traversed << '\n';
+    std::cout << "untraversed: " << untraversed << '\n';
+}
+
+// sets every node in graph to untraversed
+void graph::setAllNodesToUntraversed() {
+    listNode<node>* curNode = allNodes().returnHead();
+    // loop and enum again
+    for (int i = 0; i < nodeCount(); i++) {
+        curNode->data->traversed = false;
+        if (i < nodeCount() - 1) {
+            curNode = curNode->next;
+        }
+    }
+}
+
+// returns an adjacency matrix in a 1D array, given a graph
+// but is printed as 2D by the displayMatrix2D function
+int* graph::adjMatrix2D() {
+    const int nodeCount = allNodes().size();
+    const int edgeCount = allEdges().size();
+    int* matrixArr = new int [nodeCount * nodeCount + 1];
+
+    // cheeky extra cell is used for storing the count in an extra element, not very useful though
+    matrixArr[nodeCount * nodeCount] = nodeCount;
+    listNode<edge>* curEdge = allEdges().returnHead();
+
+    // O(n^2) sets all values to 0
+    for (int i = 0; i < nodeCount; i++) {
+        for (int j = 0; j < nodeCount; j++) {
+            matrixArr[i * nodeCount + j] = 0;
+        }
+    }
+
+    // actually sets the values
+    for (int i = 0; i < edgeCount; i++) {
+        matrixArr[(curEdge->data->start) * nodeCount + (curEdge->data->end)] = curEdge->data->weight;
+
+        if (!directed) {
+            matrixArr[(curEdge->data->end) * nodeCount + (curEdge->data->start)] = curEdge->data->weight;
+        }
+        curEdge = curEdge->next;
+    }
+
+    return matrixArr;
+}
+
+// displays 1D matrix as if it was 2D, sadly need second param for size as pointers fucking suck
+// and dont have good sizeof functionality
+void graph::displayMatrix2D(const int* matrix, const int nodeCount) {
+    // beautiful if else statement
+    if (nodeCount < 10) {
+        std::cout << "outputting adjacency matrix:\n   ";
+    }
+    else {
+        std::cout << "outputting adjacency matrix:\n    ";
+    }
+    // top legened
+    for (int i = 0; i < nodeCount; i++) {
+        std::cout << "  " << i << " ";
+    }
+    // only works for graphs with < 100 nodes, which should be fine
+    if (nodeCount >= 10) {
+        std::cout << "\n0  [ ";
+    }
+    else if (nodeCount < 10) {
+        std::cout << "\n0 [ ";
+    }
+    // mwah chefs kiss
+    for (int i = 0; i < nodeCount * nodeCount; i++) {
+        if (matrix[i] < 10) {
+            std::cout << ' ';
+        }
+        std::cout << matrix[i];
+        // end of row and start of new row for less than ten nodes total
+        if (i + 1 == nodeCount * nodeCount) {
+            continue;
+        }
+        else if ((i + 1) % nodeCount == 0 && nodeCount < 10) {
+            std::cout << " ]\n" << (i + nodeCount) / nodeCount << " [ ";
+        }
+        // end of row and start of new row for row thats single digit when there's double digit nodes
+        else if ((i + 1) % nodeCount == 0 && ((i + nodeCount) / nodeCount) < 10) {
+            std::cout << " ]\n" << (i + nodeCount) / nodeCount << "  [ ";
+        }
+        // end of row and start of new row for row thats double digit when there's double digit nodes
+        else if ((i + 1) % nodeCount == 0 && ((i + nodeCount) / nodeCount) >= 10) {
+            std::cout << " ]\n" << (i + nodeCount) / nodeCount << " [ ";
+        }
+        // commas in rows with column number higher than or equal to 10
+        else if ((i % nodeCount) >= 9) {
+            std::cout << ",  ";
+        }
+        // commas in rows with column number higher than or equal to 10
+        else {
+            std::cout << ", ";
+        }
+    }
+    std::cout << " ]\n";
+}
+
+
+// depth first search on an adjaency matrix
+stack<int> graph::adjDFS(int* matrix, const int nodeCount, const int source) {
+    stack<int> traversed;
+    stack<int> unvisited;
+    int* traversedArr = new int[nodeCount];
+    int cur;
+    int sourcePush = source;
+    traversedArr[source] = 1;
+    traversed.push(sourcePush);
+
+    // big ugly for loop that goes through each row and adds coordinates of 1s to the unvisited stack
+    // and then goes to those rows and adds all of the ones from there
+    // it returns same thing as the other DFS
+    for (int i = 0; i < nodeCount; i++) {
+        cur = *traversed.top()->data;
+        traversedArr[cur] = 1;
+        for (int j = nodeCount - 1; j > -1; j--) {
+            // if an edge between node with id cur and nodeCount + j exists and it is not a
+            // traversed node then add it to the unvisited stack
+            if (matrix[cur * nodeCount + j] != 0 && traversedArr[j] == 0) {
+                int* toPush = new int;
+                *toPush = j;
+                unvisited.push(toPush);
+            }
+        }
+        
+        // sets cur to top of stack if there is an element in the stack and pushes the top
+        // if it isnt in there already
+        if (unvisited.top() != nullptr) {
+            int* ref = unvisited.pop()->data;
+            if (!traversed.contains(*ref)) {
+                traversed.push(ref);
+            }
+        }
+    }
+
+    return traversed;
+}
+
+// returns linkedList of order of nodes being searched with DFS
+linkedList<node> graph::DFS (const int source) {
+    linkedList<node> visited;
+    stack<node> unvisited;
+    node sourceNode = *searchNodeID(source);
+
+    // ugly ass statement to get the source node, since you can pick
+    node* current = allNodes().searchKey(sourceNode)->data;
+
+    // guess what this does
+    setAllNodesToUntraversed();
+
+    // preliminary node stuff
+    current->traversed = true;
+    visited.insertTail(allNodes().searchKey(sourceNode)->data);
+    
+    // repeat while not every node has been traversed
+    // DFS is O(n) anyway so i can use for loop to avoid endless while loop shit if code is bad
+    for (int i = 0; i < nodeCount(); i++) {
+        if (!allNodesAreTraversed()) {
+
+            // add neighbouring nodes to unvisited stack if they have not been traversed
+            // works in numerical order of node ID
+            addUntraversedNeighbours<stack<node> >(unvisited, current);
+
+            // set current node to stack pop, set it to traversed, and add to visited stack
+            // if visited stack doesnt contain it already
+            if (unvisited.size() > 0) {
+                current = unvisited.pop()->data;
+                current->traversed = true;
+                if (!visited.contains(*current)) {
+                    visited.insertTail(current);
+                }
+            }
+        }
+    }
+    return visited;
+}
+
+// returns linkedList of order of nodes being searched with BFS (using queue not stack)
+linkedList<node> graph::BFS (const int source) {
+    linkedList<node> visited;
+    queue<node> unvisited;
+    node sourceNode = *searchNodeID(source);
+
+    // ugly ass statement to get the source node since you can pick
+    node* current = allNodes().searchKey(sourceNode)->data;
+
+    setAllNodesToUntraversed();
+
+    // preliminary node stuff
+    current->traversed = true;
+    visited.insertTail(allNodes().searchKey(sourceNode)->data);
+    
+    // repeat while not every node has been traversed
+    // BFS is O(n) anyway so i can use for loop to avoid endless while loop shit if code is bad
+    for (int i = 0; i < nodeCount(); i++) {
+        if (!allNodesAreTraversed()) {
+
+            // add neighbouring nodes to unvisited stack if they have not been traversed
+            // this works in alphabetical order in DFS but not for BFS
+            addUntraversedNeighbours<queue<node> >(unvisited, current);
+
+            // set current node to top of queue, remove it from the queue, set it to traversed,
+            // and add to visited stack if visited doesnt contain it already
+            if (unvisited.size() > 0) {
+                current = unvisited.peek()->data;
+                unvisited.removeFront();
+                current->traversed = true;
+                if (!visited.contains(*current)) {
+                    visited.insertTail(current);
+                }
+            }
+        }
+    }
+    return visited;
+}
+
+int* graph::FWTC() {
+    //let T be |V|x|V| matrix of transitive closure initialized to run on a directed graph G={V,E}
+    const int nodeCount = allNodes().size();
+    int* T = new int[nodeCount * nodeCount];
+
+    // row
+    for (int i = 0; i < nodeCount; i++) {
+        // column
+        for(int j = 0; j < nodeCount; j++) {
+            if ((i == j) || (edgeExists(i, j))) {
+                T[nodeCount * i + j] = 1; //there is a path
+            }
+            else {
+                T[nodeCount * i + j] = 0; //path not yet found
+            }
+        }
+    }
+        
+    //construct T
+    for (int i = 0; i < nodeCount; i++) {
+        for (int j = 0; j < nodeCount; j++) {
+            for (int k = 0; k < nodeCount; k++) {
+                //Check for path from k to j via i
+                T[nodeCount * k + j] = T[nodeCount * k + j] || (T[nodeCount * k + i] && T[nodeCount * i + j]);
+            } 
+        }
+    }
+
+    return T;
+}
+
+// will make
+bool graph::cyclic() {
+    return false;
+}
+
+// returns topological sort if the graph is acyclic and directed
+linkedList<node>* graph::topologicalSort() {
+    if (directed == false) {
+        std::cout << "this graph is not directed\n";
+        return nullptr;
+    }
+    else if (cyclic()) {
+        std::cout << "this graph is cyclic\n";
+        return nullptr;
+    }
+    else if (!connected()) {
+        std::cout << "this graph is disconnected\n";
+        return nullptr;
+    }
+
+    // dfs vars
+    linkedList<node> dfsVisited;
+    stack<node> dfsUnvisited;
+    // top sort vars
+    stack<node> topVisiting;
+    stack<node> topSort;
+    // enum vars
+    node* current = allNodes().returnHead()->data;
+    // the one and only functionnnnnn
+    setAllNodesToUntraversed();
+
+    // preliminary node stuff
+    current->traversed = true;
+    dfsVisited.insertTail(current);
+
+    // do a dfs from each node, and add node to topSort stack if it has no untraversed descendants and it is not in topSort
+    for (int i = 0; i < allNodes().size(); i++) {
+        current = allNodes().goToIndex(i)->data;
+        topVisiting.push(*current);
+
+        // this is the DFS starting from each node on the directed graph
+        for (int j = 0; j < allNodes().size(); j++) {
+            if (!allNodesAreTraversed()) {
+
+                // add neighbouring nodes to unvisited stack if they have not been traversed
+                addUntraversedNeighbours<stack<node> >(dfsUnvisited, current);
+
+                // set current node to top of stack, set it to traversed, and add to visited stack
+                if (dfsUnvisited.top() != nullptr) {
+                    current = dfsUnvisited.pop()->data;
+                    current->traversed = true;
+                    // add node to visited linkedList
+                    if (!dfsVisited.contains(*current)) {
+                        dfsVisited.insertTail(current);
+                        topVisiting.push(current);
+                    }
+                }
+
+                // if node has no untraversed neighbours and isnt already in the topSort stack add it to the topSort stack
+                // repeat for every node going back until it has an untraversed descendant
+                if (topVisiting.top() != nullptr) {
+                    while (untraversedNeighbours(topVisiting.top()->data)->size() <= 0 && !topSort.contains(*topVisiting.top()->data)) {
+                        std::cout << "pushing: " << topVisiting.top()->data << " to topSort\n";
+                        topSort.push(topVisiting.pop()->data);
+                        if (topVisiting.size() == 0) { break; }
+                    }
+                }
+                // debug
+                std::cout << "topSort: " << topSort << '\n';
+                std::cout << "topVisiting: " << topVisiting << '\n';
+                std::cout << "dfsVisited: " << dfsVisited << '\n';
+                std::cout << "dfsUnvisited: " << dfsUnvisited << '\n';
+            }
+            else { break; }
+        }
+    }
+
+    linkedList<node>* sortOrdered = new linkedList<node>;
+    const int topSortSize = topSort.size();
+
+    for (int i = 0; i < topSortSize; i++) {
+        sortOrdered->insertTail(topSort.pop()->data);
+    }
+    
+    return sortOrdered;
+}
