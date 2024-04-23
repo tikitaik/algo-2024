@@ -3,9 +3,9 @@
 #include <iostream>
 #include "linkedlist.h"
 
-struct node {
+template <typename T> struct node {
     int id;
-    std::string* attribute;
+    T*  attribute;
     bool traversed;
     
     node () {
@@ -18,7 +18,7 @@ struct node {
     }
 };
 
-std::ostream& operator << (std::ostream& os, const node& node)
+template <typename T> std::ostream& operator << (std::ostream& os, const node<T>& node)
 {
     //os << "node id is " << node.id << " node attribute is " << node.attribute;
     os << node.id;
@@ -49,9 +49,10 @@ std::ostream& operator << (std::ostream& os, const edge& edge)
     return os;
 }
 
-class graph {
+template <typename T> class graph {
     protected:
 
+    typedef node<T> node;
     linkedList<node> nodes;
     linkedList<edge> edges;
 
@@ -437,28 +438,19 @@ class graph {
     }
 
     // outside funcs for trav algorithms
-    template <typename T> void addUntraversedNeighbours(T& list, node* current);
-    bool allNodesAreTraversed();
-    void displayTraversed();
-    void setAllNodesToUntraversed();
-    int* adjMatrix2D();
-    void displayMatrix2D(const int* matrix, const int nodeCount);
-    stack<int> adjDFS(int* matrix, const int nodeCount, const int source);
-    linkedList<node> DFS (const int source);
-    linkedList<node> BFS (const int source);
-    int* FWTC();
-    bool cyclic();
-    linkedList<node>* topologicalSort();
+    //inkedList<node> DFS (const int source);
+    //linkedList<node> BFS (const int source);
+    //linkedList<node>* topologicalSort();
 
     // outside funcs for mst algorithms
-    graph prims();
-    graph prims(const int sourceNode);
-    graph kruskals(const int sourceNode);
+    //graph prims();
+    //graph prims(const int sourceNode);
+    //graph kruskals(const int sourceNode);*/
 
-    friend std::ostream& operator << (std::ostream& os, const graph& graph);
+    template<typename U> friend std::ostream& operator << (std::ostream& os, const graph<U>& graph);
 };
 
-std::ostream& operator << (std::ostream& os, const graph& graph) {
+template<typename T> std::ostream& operator << (std::ostream& os, const graph<T>& graph) {
     if (*graph.nodes.sptr == 0) {
         os << "nodes is empty \n";
     }
@@ -476,18 +468,19 @@ std::ostream& operator << (std::ostream& os, const graph& graph) {
     return os;
 }
 
-template <typename T> class tree : graph {
-
+template <typename T> class tree : graph<T> {
+    typedef node<T> node;
     node* srcNode;
 
     public:
     
-    tree() : graph(false) {}
+    tree() : graph<T>(false) {}
 
     // only add edge if graph isnt cyclic
 };
 
 template <typename T> struct binNode {
+    typedef binNode<T> node;
     const int id;
     // need to make ref
     T data;

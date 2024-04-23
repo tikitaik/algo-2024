@@ -4,7 +4,7 @@
 #include "shortPaths.h"
 
 int main() {
-    graph graph(true);
+    graph<int> graph(true);
     
     graph.addNodes(10);
 
@@ -28,8 +28,11 @@ int main() {
     graph.addEdge(8, 9, 5);
 
     std::cout << graph << '\n';
-    std::cout << "DFS: " << graph.DFS(0) << '\n';
-    std::cout << "topSort: " << *graph.topologicalSort() << '\n';
-    std::cout << graph.prims() << '\n';
-    graph.displayMatrix2D(graph.FWTC(), graph.allNodes().size());
+    displayTraversed(graph);
+    //std::cout << "DFS: " << graph.DFS(0) << '\n';
+    //std::cout << "topSort: " << *graph.topologicalSort() << '\n';
+    std::cout << prims(graph) << '\n';
+    displayMatrix2D(adjMatrix2D(graph), graph.nodeCount());
+    std::cout << adjDFS(adjMatrix2D(graph), graph.nodeCount(), 0) << '\n';
+    displayMatrix2D(FWTC(graph), graph.nodeCount());
 }

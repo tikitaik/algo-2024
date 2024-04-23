@@ -5,24 +5,25 @@
 #include "traversals.h"
 
 // given a connected graph returns an MST using prims algorithm
-graph graph::prims(const int sourceNode) {
+template<typename U> graph<U> prims(graph<U>& graph, const int sourceNode) {
+    typedef node<U> node;
     // prelim setup
-    graph T(directed);
-    T.addNode(*searchNodeID(sourceNode));
-    const int sourceNodeCount = allNodes().size();
-    const int sourceEdgeCount = allEdges().size();
+    class graph<U> T(graph.directed);
+    T.addNode(*graph.searchNodeID(sourceNode));
+    const int sourceNodeCount = graph.allNodes().size();
+    const int sourceEdgeCount = graph.allEdges().size();
     
     // main loop
-    while (T.allNodes().size() != sourceNodeCount)
+    while (T.nodeCount() != sourceNodeCount)
     {
         // boilerplatetetetatatet
-        listNode<edge>* curEdge = allEdges().returnHead();
+        listNode<edge>* curEdge = graph.allEdges().returnHead();
         linkedList<edge> crossingEdges;
 
         // find crossing edges for T and G - T
         for(int i = 0; i < sourceEdgeCount; i++) {
             // i wish it looked better than this
-            if ((T.allNodes().contains(*searchNodeID(curEdge->data->start)) && !T.allNodes().contains(*searchNodeID(curEdge->data->end))) || (T.allNodes().contains(*searchNodeID(curEdge->data->end)) && !T.allNodes().contains(*searchNodeID(curEdge->data->start)))) {
+            if ((T.allNodes().contains(*graph.searchNodeID(curEdge->data->start)) && !T.allNodes().contains(*graph.searchNodeID(curEdge->data->end))) || (T.allNodes().contains(*graph.searchNodeID(curEdge->data->end)) && !T.allNodes().contains(*graph.searchNodeID(curEdge->data->start)))) {
                 crossingEdges.insertTail(curEdge->data);
                 std::cout << "adding edge " << curEdge->data << " to crossingEdges\n";
             }
@@ -58,11 +59,11 @@ graph graph::prims(const int sourceNode) {
 
         std::cout << "smallest crossing edge is " << toAdd << " with weight of " << toAdd->weight << '\n';
         // add node before edge otherwise graph class wont let me add the edge
-        if (T.allNodes().contains(*searchNodeID(toAdd->start)) && !T.allNodes().contains(*searchNodeID(toAdd->end))) {
-            T.addNode(*searchNodeID(toAdd->end));
+        if (T.allNodes().contains(*graph.searchNodeID(toAdd->start)) && !T.allNodes().contains(*graph.searchNodeID(toAdd->end))) {
+            T.addNode(*graph.searchNodeID(toAdd->end));
         }
         else {
-            T.addNode(*searchNodeID(toAdd->start));
+            T.addNode(*graph.searchNodeID(toAdd->start));
         }
         T.addEdge(toAdd);
     }
@@ -71,18 +72,18 @@ graph graph::prims(const int sourceNode) {
 }
 
 // for when you dont want to define source node
-graph graph::prims() {
-    return prims(allNodes().returnHead()->data->id);
+template<typename T> graph<T> prims(graph<T>& graph) {
+    return prims(graph, graph.allNodes().returnHead()->data->id);
 }
 
-graph graph::kruskals(const int sourceNode) {
+template<typename T> graph<T> kruskals(graph<T>& graph, const int sourceNode) {
     // find lowest weight edge in A which doesnt form a cycle
     // add to T until T is connected
 
     // prelim setup
-    graph T(directed);
-    const int sourceNodeCount = allNodes().size();
-    const int sourceEdgeCount = allEdges().size();
+    class graph<T> T(graph.directed);
+    const int sourceNodeCount = graph.allNodes().size();
+    const int sourceEdgeCount = graph.allEdges().size();
 
     // main loop
     while (!T.connected()) {

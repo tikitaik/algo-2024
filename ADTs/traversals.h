@@ -5,27 +5,29 @@
 #include "graph.h"
 
 // add untraversed neighbours of current vertex to unvisited list
-template <typename T> void graph::addUntraversedNeighbours(T& list, node* current) {
-    linkedList<node>* untNeighbours = untraversedNeighbours(current);
+template <typename T> void addUntraversedNeighbours(graph<T> graph, T& list, node<T>* current) {
+    typedef node<T> node;
+    linkedList<node>* untNeighbours = graph.untraversedNeighbours(current);
     listNode<node>* neighbourListNode = untNeighbours->returnHead();
     // loops through each neighbour and adds it
     for (int i = 0; i < untNeighbours->size(); i++) {
         list.insertTail(neighbourListNode->data);
-        if (i < untNeighbours->size() - 1) {
+        if (neighbourListNode->next != nullptr) {
             neighbourListNode = neighbourListNode->next;
         }
     }
 }
 
 // check if every node in graph's traversed attribute == true
-bool graph::allNodesAreTraversed() {
-    listNode<node>* curListNode = allNodes().returnHead();
+template<typename T> bool allNodesAreTraversed(graph<T>& graph) {
+    typedef node<T> node;
+    listNode<node>* curListNode = graph.allNodes().returnHead();
     // for loop and enum
-    for (int i = 0; i < allNodes().size(); i++) {
+    for (int i = 0; i < graph.allNodes().size(); i++) {
         if (!curListNode->data->traversed) {
             return false;
         }
-        if (i < allNodes().size() - 1) {
+        if (i < graph.allNodes().size() - 1) {
             curListNode = curListNode->next;
         }
     }
@@ -34,19 +36,20 @@ bool graph::allNodesAreTraversed() {
 }
 
 // writes the traversed and untraversed nodes to console, very useless
-void graph::displayTraversed() {
-    listNode<node>* curListNode = allNodes().returnHead();
+template<typename T> void displayTraversed(graph<T>& graph) {
+    typedef node<T> node;
+    listNode<node>* curListNode = graph.allNodes().returnHead();
 
     linkedList<int> traversed;
     linkedList<int> untraversed;
-    for (int i = 0; i < allNodes().size(); i++) {
+    for (int i = 0; i < graph.allNodes().size(); i++) {
         if (curListNode->data->traversed) {
             traversed.insertTail(curListNode->data->id);
         }
         else {
             untraversed.insertTail(curListNode->data->id);
         }
-        if (i < allNodes().size() - 1) {
+        if (curListNode->next != nullptr) {
             curListNode = curListNode->next;
         }
     }
@@ -55,12 +58,14 @@ void graph::displayTraversed() {
 }
 
 // sets every node in graph to untraversed
-void graph::setAllNodesToUntraversed() {
-    listNode<node>* curNode = allNodes().returnHead();
+template<typename T> void setAllNodesToUntraversed(graph<T>& graph) {
+    typedef node<T> node;
+    listNode<node>* curNode = graph.allNodes().returnHead();
+
     // loop and enum again
-    for (int i = 0; i < nodeCount(); i++) {
+    for (int i = 0; i < graph.nodeCount(); i++) {
         curNode->data->traversed = false;
-        if (i < nodeCount() - 1) {
+        if (curNode->next != nullptr) {
             curNode = curNode->next;
         }
     }
@@ -68,14 +73,15 @@ void graph::setAllNodesToUntraversed() {
 
 // returns an adjacency matrix in a 1D array, given a graph
 // but is printed as 2D by the displayMatrix2D function
-int* graph::adjMatrix2D() {
-    const int nodeCount = allNodes().size();
-    const int edgeCount = allEdges().size();
+template<typename T> int* adjMatrix2D(graph<T>& graph) {
+    typedef node<T> node;
+    const int nodeCount = graph.allNodes().size();
+    const int edgeCount = graph.allEdges().size();
     int* matrixArr = new int [nodeCount * nodeCount + 1];
 
     // cheeky extra cell is used for storing the count in an extra element, not very useful though
     matrixArr[nodeCount * nodeCount] = nodeCount;
-    listNode<edge>* curEdge = allEdges().returnHead();
+    listNode<edge>* curEdge = graph.allEdges().returnHead();
 
     // O(n^2) sets all values to 0
     for (int i = 0; i < nodeCount; i++) {
@@ -88,7 +94,7 @@ int* graph::adjMatrix2D() {
     for (int i = 0; i < edgeCount; i++) {
         matrixArr[(curEdge->data->start) * nodeCount + (curEdge->data->end)] = curEdge->data->weight;
 
-        if (!directed) {
+        if (!graph.directed) {
             matrixArr[(curEdge->data->end) * nodeCount + (curEdge->data->start)] = curEdge->data->weight;
         }
         curEdge = curEdge->next;
@@ -99,7 +105,7 @@ int* graph::adjMatrix2D() {
 
 // displays 1D matrix as if it was 2D, sadly need second param for size as pointers fucking suck
 // and dont have good sizeof functionality
-void graph::displayMatrix2D(const int* matrix, const int nodeCount) {
+void displayMatrix2D(const int* matrix, const int nodeCount) {
     // beautiful if else statement
     if (nodeCount < 10) {
         std::cout << "outputting adjacency matrix:\n   ";
@@ -153,7 +159,7 @@ void graph::displayMatrix2D(const int* matrix, const int nodeCount) {
 
 
 // depth first search on an adjaency matrix
-stack<int> graph::adjDFS(int* matrix, const int nodeCount, const int source) {
+stack<int> adjDFS(int* matrix, const int nodeCount, const int source) {
     stack<int> traversed;
     stack<int> unvisited;
     int* traversedArr = new int[nodeCount];
@@ -190,7 +196,7 @@ stack<int> graph::adjDFS(int* matrix, const int nodeCount, const int source) {
 
     return traversed;
 }
-
+/*
 // returns linkedList of order of nodes being searched with DFS
 linkedList<node> graph::DFS (const int source) {
     linkedList<node> visited;
@@ -267,18 +273,18 @@ linkedList<node> graph::BFS (const int source) {
         }
     }
     return visited;
-}
+}*/
 
-int* graph::FWTC() {
+template<typename U> int* FWTC(graph<U>& graph) { 
     //let T be |V|x|V| matrix of transitive closure initialized to run on a directed graph G={V,E}
-    const int nodeCount = allNodes().size();
+    const int nodeCount = graph.nodeCount();
     int* T = new int[nodeCount * nodeCount];
 
     // row
     for (int i = 0; i < nodeCount; i++) {
         // column
         for(int j = 0; j < nodeCount; j++) {
-            if ((i == j) || (edgeExists(i, j))) {
+            if ((i == j) || (graph.edgeExists(i, j))) {
                 T[nodeCount * i + j] = 1; //there is a path
             }
             else {
@@ -301,10 +307,10 @@ int* graph::FWTC() {
 }
 
 // will make
-bool graph::cyclic() {
+template<typename T> bool cyclic(graph<T>& graph) {
     return false;
 }
-
+/*
 // returns topological sort if the graph is acyclic and directed
 linkedList<node>* graph::topologicalSort() {
     if (directed == false) {
@@ -385,4 +391,4 @@ linkedList<node>* graph::topologicalSort() {
     }
     
     return sortOrdered;
-}
+}*/
