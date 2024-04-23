@@ -286,7 +286,7 @@ template <typename T> class linkedList {
 
         for (int i = 0; i < *sptr; i++) {
             if (*searchKey->data == key) {
-                std::cout << "contains return true\n";
+                //std::cout << "contains return true\n";
                 return true;
             }
             else if (i < *sptr) {

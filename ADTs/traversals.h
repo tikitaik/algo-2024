@@ -5,7 +5,7 @@
 #include "graph.h"
 
 // add untraversed neighbours of current vertex to unvisited list
-template <typename T> void addUntraversedNeighbours(graph<T> graph, T& list, node<T>* current) {
+template <typename T, typename U> void addUntraversedNeighbours(graph<T>& graph, U& list, node<T>* current) {
     typedef node<T> node;
     linkedList<node>* untNeighbours = graph.untraversedNeighbours(current);
     listNode<node>* neighbourListNode = untNeighbours->returnHead();
@@ -19,7 +19,7 @@ template <typename T> void addUntraversedNeighbours(graph<T> graph, T& list, nod
 }
 
 // check if every node in graph's traversed attribute == true
-template<typename T> bool allNodesAreTraversed(graph<T>& graph) {
+template <typename T> bool allNodesAreTraversed(graph<T>& graph) {
     typedef node<T> node;
     listNode<node>* curListNode = graph.allNodes().returnHead();
     // for loop and enum
@@ -36,7 +36,7 @@ template<typename T> bool allNodesAreTraversed(graph<T>& graph) {
 }
 
 // writes the traversed and untraversed nodes to console, very useless
-template<typename T> void displayTraversed(graph<T>& graph) {
+template <typename T> void displayTraversed(graph<T>& graph) {
     typedef node<T> node;
     listNode<node>* curListNode = graph.allNodes().returnHead();
 
@@ -58,7 +58,7 @@ template<typename T> void displayTraversed(graph<T>& graph) {
 }
 
 // sets every node in graph to untraversed
-template<typename T> void setAllNodesToUntraversed(graph<T>& graph) {
+template <typename T> void setAllNodesToUntraversed(graph<T>& graph) {
     typedef node<T> node;
     listNode<node>* curNode = graph.allNodes().returnHead();
 
@@ -73,7 +73,7 @@ template<typename T> void setAllNodesToUntraversed(graph<T>& graph) {
 
 // returns an adjacency matrix in a 1D array, given a graph
 // but is printed as 2D by the displayMatrix2D function
-template<typename T> int* adjMatrix2D(graph<T>& graph) {
+template <typename T> int* adjMatrix2D(graph<T>& graph) {
     typedef node<T> node;
     const int nodeCount = graph.allNodes().size();
     const int edgeCount = graph.allEdges().size();
@@ -196,31 +196,32 @@ stack<int> adjDFS(int* matrix, const int nodeCount, const int source) {
 
     return traversed;
 }
-/*
+
 // returns linkedList of order of nodes being searched with DFS
-linkedList<node> graph::DFS (const int source) {
+template <typename T> linkedList<node<T> > DFS (graph<T>& graph, const int source) {
+    typedef node<T> node;
     linkedList<node> visited;
     stack<node> unvisited;
-    node sourceNode = *searchNodeID(source);
+    node sourceNode = *graph.searchNodeID(source);
 
     // ugly ass statement to get the source node, since you can pick
-    node* current = allNodes().searchKey(sourceNode)->data;
+    node* current = graph.allNodes().searchKey(sourceNode)->data;
 
     // guess what this does
-    setAllNodesToUntraversed();
+    setAllNodesToUntraversed(graph);
 
     // preliminary node stuff
     current->traversed = true;
-    visited.insertTail(allNodes().searchKey(sourceNode)->data);
+    visited.insertTail(graph.allNodes().searchKey(sourceNode)->data);
     
     // repeat while not every node has been traversed
     // DFS is O(n) anyway so i can use for loop to avoid endless while loop shit if code is bad
-    for (int i = 0; i < nodeCount(); i++) {
-        if (!allNodesAreTraversed()) {
+    for (int i = 0; i < graph.nodeCount(); i++) {
+        if (!allNodesAreTraversed(graph)) {
 
             // add neighbouring nodes to unvisited stack if they have not been traversed
             // works in numerical order of node ID
-            addUntraversedNeighbours<stack<node> >(unvisited, current);
+            addUntraversedNeighbours(graph, unvisited, current);
 
             // set current node to stack pop, set it to traversed, and add to visited stack
             // if visited stack doesnt contain it already
@@ -237,28 +238,29 @@ linkedList<node> graph::DFS (const int source) {
 }
 
 // returns linkedList of order of nodes being searched with BFS (using queue not stack)
-linkedList<node> graph::BFS (const int source) {
+template <typename T> linkedList<node<T> > BFS (graph<T>& graph, const int source) {
+    typedef node<T> node;
     linkedList<node> visited;
     queue<node> unvisited;
-    node sourceNode = *searchNodeID(source);
+    node sourceNode = *graph.searchNodeID(source);
 
     // ugly ass statement to get the source node since you can pick
-    node* current = allNodes().searchKey(sourceNode)->data;
+    node* current = graph.allNodes().searchKey(sourceNode)->data;
 
-    setAllNodesToUntraversed();
+    setAllNodesToUntraversed(graph);
 
     // preliminary node stuff
     current->traversed = true;
-    visited.insertTail(allNodes().searchKey(sourceNode)->data);
+    visited.insertTail(graph.allNodes().searchKey(sourceNode)->data);
     
     // repeat while not every node has been traversed
     // BFS is O(n) anyway so i can use for loop to avoid endless while loop shit if code is bad
-    for (int i = 0; i < nodeCount(); i++) {
-        if (!allNodesAreTraversed()) {
+    for (int i = 0; i < graph.nodeCount(); i++) {
+        if (!allNodesAreTraversed(graph)) {
 
             // add neighbouring nodes to unvisited stack if they have not been traversed
             // this works in alphabetical order in DFS but not for BFS
-            addUntraversedNeighbours<queue<node> >(unvisited, current);
+            addUntraversedNeighbours(graph, unvisited, current);
 
             // set current node to top of queue, remove it from the queue, set it to traversed,
             // and add to visited stack if visited doesnt contain it already
@@ -273,9 +275,9 @@ linkedList<node> graph::BFS (const int source) {
         }
     }
     return visited;
-}*/
+}
 
-template<typename U> int* FWTC(graph<U>& graph) { 
+template <typename U> int* FWTC(graph<U>& graph) { 
     //let T be |V|x|V| matrix of transitive closure initialized to run on a directed graph G={V,E}
     const int nodeCount = graph.nodeCount();
     int* T = new int[nodeCount * nodeCount];
@@ -307,21 +309,22 @@ template<typename U> int* FWTC(graph<U>& graph) {
 }
 
 // will make
-template<typename T> bool cyclic(graph<T>& graph) {
+template <typename T> bool cyclic(graph<T>& graph) {
     return false;
 }
-/*
+
 // returns topological sort if the graph is acyclic and directed
-linkedList<node>* graph::topologicalSort() {
-    if (directed == false) {
+template <typename T> linkedList<node<T> >* topologicalSort(graph<T>& graph) {
+    typedef node<T> node;
+    if (graph.directed == false) {
         std::cout << "this graph is not directed\n";
         return nullptr;
     }
-    else if (cyclic()) {
+    else if (cyclic(graph)) {
         std::cout << "this graph is cyclic\n";
         return nullptr;
     }
-    else if (!connected()) {
+    else if (!graph.connected()) {
         std::cout << "this graph is disconnected\n";
         return nullptr;
     }
@@ -333,25 +336,25 @@ linkedList<node>* graph::topologicalSort() {
     stack<node> topVisiting;
     stack<node> topSort;
     // enum vars
-    node* current = allNodes().returnHead()->data;
+    node* current = graph.allNodes().returnHead()->data;
     // the one and only functionnnnnn
-    setAllNodesToUntraversed();
+    setAllNodesToUntraversed(graph);
 
     // preliminary node stuff
     current->traversed = true;
     dfsVisited.insertTail(current);
 
     // do a dfs from each node, and add node to topSort stack if it has no untraversed descendants and it is not in topSort
-    for (int i = 0; i < allNodes().size(); i++) {
-        current = allNodes().goToIndex(i)->data;
+    for (int i = 0; i < graph.nodeCount(); i++) {
+        current = graph.allNodes().goToIndex(i)->data;
         topVisiting.push(*current);
 
         // this is the DFS starting from each node on the directed graph
-        for (int j = 0; j < allNodes().size(); j++) {
-            if (!allNodesAreTraversed()) {
+        for (int j = 0; j < graph.nodeCount(); j++) {
+            if (!allNodesAreTraversed(graph)) {
 
                 // add neighbouring nodes to unvisited stack if they have not been traversed
-                addUntraversedNeighbours<stack<node> >(dfsUnvisited, current);
+                addUntraversedNeighbours(graph, dfsUnvisited, current);
 
                 // set current node to top of stack, set it to traversed, and add to visited stack
                 if (dfsUnvisited.top() != nullptr) {
@@ -367,8 +370,8 @@ linkedList<node>* graph::topologicalSort() {
                 // if node has no untraversed neighbours and isnt already in the topSort stack add it to the topSort stack
                 // repeat for every node going back until it has an untraversed descendant
                 if (topVisiting.top() != nullptr) {
-                    while (untraversedNeighbours(topVisiting.top()->data)->size() <= 0 && !topSort.contains(*topVisiting.top()->data)) {
-                        std::cout << "pushing: " << topVisiting.top()->data << " to topSort\n";
+                    while (graph.untraversedNeighbours(topVisiting.top()->data)->size() <= 0 && !topSort.contains(*topVisiting.top()->data)) {
+                        std::cout << "pushing: " << *topVisiting.top()->data << " to topSort\n";
                         topSort.push(topVisiting.pop()->data);
                         if (topVisiting.size() == 0) { break; }
                     }
@@ -391,4 +394,4 @@ linkedList<node>* graph::topologicalSort() {
     }
     
     return sortOrdered;
-}*/
+}
