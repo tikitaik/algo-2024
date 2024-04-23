@@ -40,7 +40,6 @@ int geoSeries (int a, float r, int n) {
 }
 
 // f(n) = a^n, a > 0 e R
-// no maths library
 float aToPowOfN(float a, int n) {
     if (n == 1) {
         return a;
