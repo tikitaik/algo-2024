@@ -328,69 +328,60 @@ template <typename T> linkedList<node<T> >* topologicalSort(graph<T>& graph) {
         std::cout << "this graph is disconnected\n";
         return nullptr;
     }
-
-    // dfs vars
-    linkedList<node> dfsVisited;
-    stack<node> dfsUnvisited;
     // top sort vars
-    stack<node> topVisiting;
-    stack<node> topSort;
-    // enum vars
-    node* current = graph.allNodes().returnHead()->data;
+    stack<node> visited;
+    stack<node> unvisited;
+    node* current;
     // the one and only functionnnnnn
     setAllNodesToUntraversed(graph);
 
-    // preliminary node stuff
-    current->traversed = true;
-    dfsVisited.insertTail(current);
-
-    // do a dfs from each node, and add node to topSort stack if it has no untraversed descendants and it is not in topSort
+    // do a dfs from each node, and add node to visited stack if it has no untraversed descendants and it is not in topSort
     for (int i = 0; i < graph.nodeCount(); i++) {
-        current = graph.allNodes().goToIndex(i)->data;
-        topVisiting.push(*current);
+
+        // find node not in visited and set it to that to ensure every node is explored
+        listNode<node>* curNode = graph.allNodes().returnHead();
+        for (int j = 0; j < graph.nodeCount(); j++) {
+            if (!visited.contains(*curNode->data)) {
+                std::cout << "visited does not contain node with id " << curNode->data->id << '\n';
+                current = curNode->data;
+                break;
+            }
+            else if (curNode->next != nullptr) {
+                curNode = curNode->next;
+            }
+        }
+        unvisited.push(*current);
 
         // this is the DFS starting from each node on the directed graph
         for (int j = 0; j < graph.nodeCount(); j++) {
             if (!allNodesAreTraversed(graph)) {
 
                 // add neighbouring nodes to unvisited stack if they have not been traversed
-                addUntraversedNeighbours(graph, dfsUnvisited, current);
+                addUntraversedNeighbours(graph, unvisited, current);
 
-                // set current node to top of stack, set it to traversed, and add to visited stack
-                if (dfsUnvisited.top() != nullptr) {
-                    current = dfsUnvisited.pop()->data;
-                    current->traversed = true;
-                    // add node to visited linkedList
-                    if (!dfsVisited.contains(*current)) {
-                        dfsVisited.insertTail(current);
-                        topVisiting.push(current);
+                // if node has no untraversed neighbours and isnt already in the visited stack add it to the topSort stack
+                // repeat for every node going back until it has an untraversed child
+                if (unvisited.top() != nullptr && graph.untraversedNeighbours(unvisited.top()->data)->size() <= 0 && !visited.contains(*unvisited.top()->data)) {
+                    while (graph.untraversedNeighbours(unvisited.top()->data)->size() <= 0 && !visited.contains(*unvisited.top()->data)) {
+                        std::cout << "pushing: " << *unvisited.top()->data << " to visited\n";
+                        current = unvisited.pop()->data;
+                        current->traversed = true;
+                        visited.push(current);
+                        if (unvisited.size() == 0) { break; }
                     }
                 }
-
-                // if node has no untraversed neighbours and isnt already in the topSort stack add it to the topSort stack
-                // repeat for every node going back until it has an untraversed descendant
-                if (topVisiting.top() != nullptr) {
-                    while (graph.untraversedNeighbours(topVisiting.top()->data)->size() <= 0 && !topSort.contains(*topVisiting.top()->data)) {
-                        std::cout << "pushing: " << *topVisiting.top()->data << " to topSort\n";
-                        topSort.push(topVisiting.pop()->data);
-                        if (topVisiting.size() == 0) { break; }
-                    }
+                else if (unvisited.top() != nullptr) {
+                    current = unvisited.top()->data;
                 }
-                // debug
-                std::cout << "topSort: " << topSort << '\n';
-                std::cout << "topVisiting: " << topVisiting << '\n';
-                std::cout << "dfsVisited: " << dfsVisited << '\n';
-                std::cout << "dfsUnvisited: " << dfsUnvisited << '\n';
             }
             else { break; }
         }
     }
 
     linkedList<node>* sortOrdered = new linkedList<node>;
-    const int topSortSize = topSort.size();
 
-    for (int i = 0; i < topSortSize; i++) {
-        sortOrdered->insertTail(topSort.pop()->data);
+    for (int i = 0; i < graph.nodeCount(); i++) {
+        sortOrdered->insertTail(visited.pop()->data);
     }
     
     return sortOrdered;
