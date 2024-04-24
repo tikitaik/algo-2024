@@ -1,7 +1,7 @@
 #include "linkedlist.h"
 #include "graph.h"
 #include "traversals.h"
-//#include "shortPaths.h"
+#include "shortPaths.h"
 
 int main() {
     graph<int> graph(true);
@@ -32,7 +32,7 @@ int main() {
     std::cout << "DFS: " << DFS(graph, 0) << '\n';
     std::cout << "BFS: " << BFS(graph, 0) << '\n';
     std::cout << "topSort: " << *topologicalSort(graph) << '\n';
-    //std::cout << prims(graph) << '\n';
+    std::cout << prims(graph) << '\n';
     //displayMatrix2D(adjMatrix2D(graph), graph.nodeCount());
     //std::cout << adjDFS(adjMatrix2D(graph), graph.nodeCount(), 0) << '\n';
     //displayMatrix2D(FWTC(graph), graph.nodeCount());

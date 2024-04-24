@@ -4,28 +4,28 @@
 #include "graph.h"
 #include "traversals.h"
 
-// given a connected graph returns an MST using prims algorithm
-template<typename U> graph<U> prims(graph<U>& graph, const int sourceNode) {
+// given a connected inGraph returns an MST using prims algorithm
+template<typename U> graph<U> prims(graph<U>& inGraph, const int sourceNode) {
     typedef node<U> node;
     // prelim setup
-    class graph<U> T(graph.directed);
-    T.addNode(*graph.searchNodeID(sourceNode));
-    const int sourceNodeCount = graph.allNodes().size();
-    const int sourceEdgeCount = graph.allEdges().size();
+    graph<U> T(inGraph.directed);
+    T.addNode(*inGraph.searchNodeID(sourceNode));
+    const int sourceNodeCount = inGraph.allNodes().size();
+    const int sourceEdgeCount = inGraph.allEdges().size();
     
     // main loop
     while (T.nodeCount() != sourceNodeCount)
     {
         // boilerplatetetetatatet
-        listNode<edge>* curEdge = graph.allEdges().returnHead();
+        listNode<edge>* curEdge = inGraph.allEdges().returnHead();
         linkedList<edge> crossingEdges;
 
         // find crossing edges for T and G - T
         for(int i = 0; i < sourceEdgeCount; i++) {
             // i wish it looked better than this
-            if ((T.allNodes().contains(*graph.searchNodeID(curEdge->data->start)) && !T.allNodes().contains(*graph.searchNodeID(curEdge->data->end))) || (T.allNodes().contains(*graph.searchNodeID(curEdge->data->end)) && !T.allNodes().contains(*graph.searchNodeID(curEdge->data->start)))) {
+            if ((T.allNodes().contains(*inGraph.searchNodeID(curEdge->data->start)) && !T.allNodes().contains(*inGraph.searchNodeID(curEdge->data->end))) || (T.allNodes().contains(*inGraph.searchNodeID(curEdge->data->end)) && !T.allNodes().contains(*inGraph.searchNodeID(curEdge->data->start)))) {
                 crossingEdges.insertTail(curEdge->data);
-                std::cout << "adding edge " << curEdge->data << " to crossingEdges\n";
+                std::cout << "adding edge " << *curEdge->data << " to crossingEdges\n";
             }
             else {
                 std::cout << "not adding edge\n";
@@ -57,13 +57,13 @@ template<typename U> graph<U> prims(graph<U>& graph, const int sourceNode) {
             crossingEdges.removeAtIndex(0);
         }
 
-        std::cout << "smallest crossing edge is " << toAdd << " with weight of " << toAdd->weight << '\n';
-        // add node before edge otherwise graph class wont let me add the edge
-        if (T.allNodes().contains(*graph.searchNodeID(toAdd->start)) && !T.allNodes().contains(*graph.searchNodeID(toAdd->end))) {
-            T.addNode(*graph.searchNodeID(toAdd->end));
+        std::cout << "smallest crossing edge is " << *toAdd << " with weight of " << toAdd->weight << '\n';
+        // add node before edge otherwise inGraph class wont let me add the edge
+        if (T.allNodes().contains(*inGraph.searchNodeID(toAdd->start)) && !T.allNodes().contains(*inGraph.searchNodeID(toAdd->end))) {
+            T.addNode(*inGraph.searchNodeID(toAdd->end));
         }
         else {
-            T.addNode(*graph.searchNodeID(toAdd->start));
+            T.addNode(*inGraph.searchNodeID(toAdd->start));
         }
         T.addEdge(toAdd);
     }
@@ -72,18 +72,18 @@ template<typename U> graph<U> prims(graph<U>& graph, const int sourceNode) {
 }
 
 // for when you dont want to define source node
-template<typename T> graph<T> prims(graph<T>& graph) {
-    return prims(graph, graph.allNodes().returnHead()->data->id);
+template<typename T> graph<T> prims(graph<T>& inGraph) {
+    return prims(inGraph, inGraph.allNodes().returnHead()->data->id);
 }
 
-template<typename T> graph<T> kruskals(graph<T>& graph, const int sourceNode) {
+template<typename U> graph<U> kruskals(graph<U>& inGraph, const int sourceNode) {
     // find lowest weight edge in A which doesnt form a cycle
     // add to T until T is connected
 
     // prelim setup
-    class graph<T> T(graph.directed);
-    const int sourceNodeCount = graph.allNodes().size();
-    const int sourceEdgeCount = graph.allEdges().size();
+    graph<U> T(inGraph.directed);
+    const int sourceNodeCount = inGraph.allNodes().size();
+    const int sourceEdgeCount = inGraph.allEdges().size();
 
     // main loop
     while (!T.connected()) {

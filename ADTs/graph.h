@@ -561,5 +561,5 @@ template <typename T> class binaryTree {
         binNode& ref = *toAdd;
         binaryTree.insertTail(ref);
         std::cout << "adding node with id " << ref.id << '\n';
-    }
+    }   
 };
