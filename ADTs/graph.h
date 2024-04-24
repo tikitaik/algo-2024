@@ -66,7 +66,7 @@ template <typename T> class graph {
                 return i;
             }
             else {
-                if (i < nodes.size() - 1) {
+                if (curNode->next != nullptr) {
                     curNode = curNode->next;
                 }
             }

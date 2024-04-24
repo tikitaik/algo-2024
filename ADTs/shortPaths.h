@@ -25,10 +25,7 @@ template<typename U> graph<U> prims(graph<U>& inGraph, const int sourceNode) {
             // i wish it looked better than this
             if ((T.allNodes().contains(*inGraph.searchNodeID(curEdge->data->start)) && !T.allNodes().contains(*inGraph.searchNodeID(curEdge->data->end))) || (T.allNodes().contains(*inGraph.searchNodeID(curEdge->data->end)) && !T.allNodes().contains(*inGraph.searchNodeID(curEdge->data->start)))) {
                 crossingEdges.insertTail(curEdge->data);
-                std::cout << "adding edge " << *curEdge->data << " to crossingEdges\n";
-            }
-            else {
-                std::cout << "not adding edge\n";
+                //std::cout << "adding edge " << *curEdge->data << " to crossingEdges\n";
             }
 
             if(curEdge->next != nullptr) {
@@ -52,18 +49,17 @@ template<typename U> graph<U> prims(graph<U>& inGraph, const int sourceNode) {
             }
         }
         // deletes everything in crossingEdges for clean up
-        int crossingEdgesSize = crossingEdges.size();
-        for (int i = 0; i < crossingEdgesSize; i++) {
-            crossingEdges.removeAtIndex(0);
+        for (int i = crossingEdges.size(); i > 0; i--) {
+            crossingEdges.removeAtIndex(i - 1);
         }
 
         std::cout << "smallest crossing edge is " << *toAdd << " with weight of " << toAdd->weight << '\n';
         // add node before edge otherwise inGraph class wont let me add the edge
         if (T.allNodes().contains(*inGraph.searchNodeID(toAdd->start)) && !T.allNodes().contains(*inGraph.searchNodeID(toAdd->end))) {
-            T.addNode(*inGraph.searchNodeID(toAdd->end));
+            T.addNode(inGraph.searchNodeID(toAdd->end));
         }
         else {
-            T.addNode(*inGraph.searchNodeID(toAdd->start));
+            T.addNode(inGraph.searchNodeID(toAdd->start));
         }
         T.addEdge(toAdd);
     }
@@ -91,4 +87,8 @@ template<typename U> graph<U> kruskals(graph<U>& inGraph, const int sourceNode) 
     }
 
     return T;
+}
+
+int fastExp(int base, int power) {
+    return -1;
 }
