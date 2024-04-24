@@ -1,7 +1,7 @@
-#include "linkedlist.h"
-#include "graph.h"
-#include "traversals.h"
-#include "shortPaths.h"
+#include "adts/linkedlist.h"
+#include "adts/graph.h"
+#include "adts/traversals.h"
+#include "adts/shortPaths.h"
 
 int main() {
     graph<int> graph(true);

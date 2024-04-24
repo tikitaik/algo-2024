@@ -1,7 +1,7 @@
 #pragma once
 
 #include <iostream>
-#include "linkedlist.h"
+#include "adts/linkedlist.h"
 
 template <typename T> struct node {
     int id;

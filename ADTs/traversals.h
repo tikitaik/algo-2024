@@ -1,8 +1,8 @@
 #pragma once
 
 #include <iostream>
-#include "linkedlist.h"
-#include "graph.h"
+#include "adts/linkedlist.h"
+#include "adts/graph.h"
 
 // add untraversed neighbours of current vertex to unvisited list
 template <typename T, typename U> void addUntraversedNeighbours(graph<T>& graph, U& list, node<T>* current) {

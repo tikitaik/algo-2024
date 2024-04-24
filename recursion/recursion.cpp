@@ -1,4 +1,6 @@
 #include <iostream>
+#include "adts/linkedlist.h"
+#include "adts/graph.h"
 
 int factorial(unsigned long long int n)
 {
@@ -47,6 +49,10 @@ float aToPowOfN(float a, int n) {
     else {
         return aToPowOfN(a, n - 1) * a;
     }
+}
+
+template <typename T> recursiveDFS(graph<T>& graph, const int sourceNodeID) {
+
 }
 
 int main()

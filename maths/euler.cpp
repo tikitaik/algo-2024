@@ -1,5 +1,4 @@
 #include <iostream>
-#include <iomanip> 
 
 long double next (size_t n) {
     if (n == 0) {

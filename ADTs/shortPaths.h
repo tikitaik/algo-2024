@@ -1,8 +1,8 @@
 # pragma once
 
-#include "linkedlist.h"
-#include "graph.h"
-#include "traversals.h"
+#include "adts/linkedlist.h"
+#include "adts/graph.h"
+#include "adts/traversals.h"
 
 // given a connected inGraph returns an MST using prims algorithm
 template<typename U> graph<U> prims(graph<U>& inGraph, const int sourceNode) {
