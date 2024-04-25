@@ -88,7 +88,3 @@ template<typename U> graph<U> kruskals(graph<U>& inGraph, const int sourceNode) 
 
     return T;
 }
-
-int fastExp(int base, int power) {
-    return -1;
-}
