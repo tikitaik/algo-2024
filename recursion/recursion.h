@@ -1,0 +1,261 @@
+#pragma once
+
+#include <iostream>
+#include "adts/linkedlist.h"
+#include "adts/graph.h"
+#include "adts/traversals.h"
+
+int factorial(unsigned long long int n)
+{
+    if (n == 0)
+    {
+        return 1;
+    }
+    else
+    {
+        return n * factorial (n - 1);
+    }
+}
+
+int fib (int n) {
+    if (n <= 1) {
+        return n;
+    }
+    else {
+        return fib(n - 1) + fib(n - 2);
+    }
+}
+
+// i hate snakeCase 🤬🤬🤬🤬🤬🤬🤬🤬🤬🤬🤬🤬🤬🤬🤬🤬🤬🤬
+int arithSeries (int start, int diff, int n) {
+    if (n == 0) {
+        return start;
+    }
+    else {
+        return arithSeries(start + diff * (n - 1), diff, n - 1);
+    }
+}
+
+int geoSeries (int a, float r, int n) {
+    if (n <= 1) {
+        return a;
+    }
+    else {
+        return a + geoSeries(r * a, r, n - 1);
+    }
+}
+
+// f(n) = a^n, a > 0 e R
+float aToPowOfN(float a, int n) {
+    if (n == 1) {
+        return a;
+    }
+    else {
+        return aToPowOfN(a, n - 1) * a;
+    }
+}
+
+template <typename T> linkedList<node<T> >* recursiveDFSStart(graph<T>& graph, const int sourceNodeID) {
+    if (!graph.connected() || graph.directed) {
+        std::cout << "wont run because might seg fault\n";
+        return nullptr;
+    }
+    linkedList<node<T> > visited;
+    stack<node<T> > unvisited;
+    setAllNodesToUntraversed(graph);
+    linkedList<node<T> >* returnList = new linkedList<node<T> >;
+    *returnList = recursiveDFS(graph, graph.searchNodeID(sourceNodeID), visited, unvisited);
+    return returnList; 
+}
+
+template <typename T> linkedList<node<T> > recursiveDFS(graph<T>& graph, node<T>* current, linkedList<node<T> >& visited, stack<node<T> >& unvisited) {
+    // add one node to list each time?
+    // delete nodes from graph?
+    if (visited.size() == graph.nodeCount()) {
+        return visited;
+    }
+    else {
+        // do stuff
+        current->traversed = true;
+
+        if (!visited.contains(*current)) {
+            visited.insertTail(current);
+        }
+
+        addUntraversedNeighbours(graph, unvisited, current);
+
+        if (unvisited.size() > 0) {
+            current = unvisited.pop()->data;
+        }
+        return recursiveDFS(graph, current, visited, unvisited);
+    }
+}
+
+template <typename T> linkedList<node<T> >* recTopSortStart(graph<T>& graph) {
+    typedef node<T> node;
+    if (graph.directed == false) {
+        std::cout << "this graph is not directed\n";
+        return nullptr;
+    }
+    else if (cyclic(graph)) {
+        std::cout << "this graph is cyclic\n";
+        return nullptr;
+    }
+    else if (!graph.connected()) {
+        std::cout << "this graph is disconnected\n";
+        return nullptr;
+    }
+
+    setAllNodesToUntraversed(graph);
+    stack<node> visited;
+    stack<node> unvisited;
+    unvisited.push(graph.allNodes().returnHead()->data);
+    return recTopSort(graph, graph.allNodes().returnHead()->data , visited, unvisited);
+}
+
+template <typename T> linkedList<node<T> >* recTopSort(graph<T>& graph, node<T>* current, stack<node<T> >& visited, stack<node<T> >& unvisited) {
+    typedef node<T> node;
+    // if top sort is done return opp order topsort push thing
+    if (visited.size() == graph.nodeCount()) {
+        // reverse it
+        linkedList<node>* orderedTopSort = new linkedList<node>;
+        for (int i = 0; i < graph.nodeCount(); i++) {
+            orderedTopSort->insertTail(visited.pop()->data);
+        }
+
+        return orderedTopSort;
+    }
+    // do more topsorting otherwise
+    else {
+        // need to call one iteration if it has nodes it can keep traversing
+        // only add vertex once all children are explored or it has no children
+        if (graph.untraversedNeighbours(current)->size() == 0) {
+            current->traversed = true;
+            if (!visited.contains(*current)) {
+                std::cout << "pushing " << *current << " to visited\n";
+                visited.push(current);
+            } 
+            if (unvisited.size() > 0) {
+                return recTopSort(graph, unvisited.pop()->data, visited, unvisited);
+            }
+            // find node not in visited and set it to that to ensure every node is explored
+            listNode<node>* curNode = graph.allNodes().returnHead();
+            for (int i = 0; i < graph.nodeCount(); i++) {
+                if (!visited.contains(*curNode->data)) {
+                    std::cout << "visited does not contain node with id " << curNode->data->id << '\n';
+                    return recTopSort(graph, curNode->data, visited, unvisited);
+                }
+                else if (curNode->next != nullptr) {
+                    curNode = curNode->next;
+                }
+            }
+            // prints if all ndoes are in graph after pushing last node to visited
+            std::cout << "i dont think this should be printing\n";
+            return recTopSort(graph, current, visited, unvisited);
+        }
+        // continute DFS if not fully explored 
+        else {
+            addUntraversedNeighbours(graph, unvisited, current);
+            if (unvisited.size() > 0) {
+                current = unvisited.top()->data;
+            }
+
+            return recTopSort(graph, current, visited, unvisited);
+        }
+    }
+}
+// prims but recursive
+template <typename T> graph<T> recPrimsStart(graph<T>& sourceGraph) {
+    if (sourceGraph.directed) {
+        std::cout << "theres a good chance this wont be right g\n";
+    }
+    graph<T> MST(false);
+    MST.addNode(sourceGraph.allNodes().returnHead()->data);
+    return recPrims(sourceGraph, MST);
+}
+
+// add one edge and node and return MST if the node count is the same 
+template <typename T> graph<T> recPrims(graph<T>& sourceGraph, graph<T>& MST) {
+    // must be an MST if it has all of the nodes
+    if (MST.nodeCount() == sourceGraph.nodeCount()) {
+        return MST;
+    } // add one node and one edge
+    else {
+
+        // find crossing edges
+        linkedList<edge> crossingEdges;
+        listNode<edge>* curEdge = sourceGraph.allEdges().returnHead();
+        for(int i = 0; i < sourceGraph.allEdges().size(); i++) {
+            // i wish it looked better than this
+            if ((MST.allNodes().contains(*sourceGraph.searchNodeID(curEdge->data->start)) && !MST.allNodes().contains(*sourceGraph.searchNodeID(curEdge->data->end))) || (MST.allNodes().contains(*sourceGraph.searchNodeID(curEdge->data->end)) && !MST.allNodes().contains(*sourceGraph.searchNodeID(curEdge->data->start)))) {
+                crossingEdges.insertTail(curEdge->data);
+                //std::cout << "adding edge " << *curEdge->data << " to crossingEdges\n";
+            }
+
+            if(curEdge->next != nullptr) {
+                curEdge = curEdge->next;
+            }
+        }
+
+        // find minimal edge from crossingEdges
+        int smallestWeight = 0;
+        listNode<edge>* curCrossingEdge = crossingEdges.returnHead();
+        edge* toAdd = crossingEdges.returnHead()->data;
+
+        for (int i = 0; i < crossingEdges.size(); i++) {
+            if (smallestWeight == 0 || curCrossingEdge->data->weight < smallestWeight) {
+                smallestWeight = curCrossingEdge->data->weight;
+                toAdd = curCrossingEdge->data;
+            }
+
+            if (curCrossingEdge->next != nullptr) {
+                curCrossingEdge = curCrossingEdge->next;
+            }
+        }
+        // deletes everything in crossingEdges for clean up
+        const int crossingEdgesSize = crossingEdges.size();
+        for (int i = crossingEdges.size(); i > 0; i--) {
+            crossingEdges.removeAtIndex(i - 1);
+        }
+
+        std::cout << "smallest crossing edge is " << *toAdd << " with weight of " << toAdd->weight << '\n';
+        // add edge and node it leads to to graph
+        if (MST.allNodes().contains(*sourceGraph.searchNodeID(toAdd->start)) && !MST.allNodes().contains(*sourceGraph.searchNodeID(toAdd->end))) {
+            MST.addNode(sourceGraph.searchNodeID(toAdd->end));
+        }
+        else {
+            MST.addNode(sourceGraph.searchNodeID(toAdd->start));
+        }
+        MST.addEdge(toAdd);
+
+        // call thing again
+        return recPrims(sourceGraph, MST);
+        // easy
+    }
+}
+
+// this shit suckcs dick
+int fastExp(int base, int n) {
+    std::cout << "base: " << base << " n: " << n << '\n';
+    // do calculation for how much to subtract and then raise it to power 
+    // then call again?
+    if (n == 0) {
+        std::cout << "base base " << base << '\n'; 
+        return base;
+    }
+    else {
+        int max2pow = 1;
+        while (max2pow * 2 <= n) {
+            max2pow = max2pow * 2;
+        }
+        n = n - max2pow;
+        std::cout << "max2pow: " << max2pow << '\n';
+        std::cout << "n: " << n << '\n';
+        while (max2pow % 2 == 0) {
+            base = base * base;
+            std::cout << base << '\n';
+            max2pow = max2pow / 2;
+        }
+        fastExp(base, n);
+    }
+}
