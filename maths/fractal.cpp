@@ -1,40 +1,44 @@
 #include "maths/raylib.h"
 #include <iostream>
 
-// draw a right way up triangle
-void drawTriangleUp(float startX, float startY, float midX, float midY, float endX, float endY) {
-    DrawLine(startX, startY, midX, midY, RED);
-    DrawLine(midX, midY, endX, endY, RED);
-    DrawLine(endX, endY, startX, startY, RED);
-}
-// draw an upside down triangle
-void drawTriangleDown() {
+const int screenWidth = 1280;
+const int screenHeight = 720;
+float triHeight = 500;
 
+// gets x coord of top point, y coord of top point, and heigh of triangle
+void tri(float xTop, float yTop, float height) {
+    DrawTriangle(Vector2 {xTop, yTop}, Vector2 {static_cast<float>(xTop - (0.57735 * height)), yTop + height}, Vector2{static_cast<float>(xTop + (0.57735 * height)), yTop + height}, WHITE);
 }
 
+void divide(float x, float y, float height, int lvl, int max) {
+    if (lvl >= max) {
+        tri(x, y, height);
+    }
+    else {
+        //DrawTriangle(Vector2 {x, y}, Vector2 {static_cast<float>(x - (0.57735 * height)), y + height}, Vector2{static_cast<float>(x + (0.57735 * height)), y + height}, BLACK);
+        // top triangle
+        divide(x, y, height / 2, lvl + 1, max);
+        // bottom left triangle
+        divide(x - (0.57735 * height / 2), y + height / 2, height / 2, lvl + 1, max);
+        // bottom right triangle
+        divide(x + (0.57735 * height / 2), y + height / 2, height / 2, lvl + 1, max);
+    }
+}
+
+// funny triangle - draw three black triangles and a white triangle in every white triangle
+void sierpinski(int max) {
+    divide(screenWidth / 2, (screenHeight - triHeight) / 2 , triHeight, 1, max);
+}
 
 int main () {
-    const int screenWidth = 1280;
-    const int screenHeight = 720;
-    InitWindow(1280, 720, "fractals?");
+    InitWindow(screenWidth, screenHeight, "fractals?");
     SetTargetFPS(60);
     
     while (!WindowShouldClose())    // Detect window close button or ESC key
     {
         BeginDrawing();
-
             ClearBackground(BLACK);
-
-            // Triangle shapes and lines
-            DrawTriangle((Vector2){ screenWidth/4.0f *3.0f, 80.0f },
-                         (Vector2){ screenWidth/4.0f *3.0f - 60.0f, 150.0f },
-                         (Vector2){ screenWidth/4.0f *3.0f + 60.0f, 150.0f }, VIOLET);
-
-            drawTriangleUp(100.0f, 100.0f, 50.0f, 150.0f, 150.0f, 150.0f);
-            // NOTE: We draw all LINES based shapes together to optimize internal drawing,
-            // this way, all LINES are rendered in a single draw pass
-            DrawLine(18, 42, screenWidth - 18, 42, RAYWHITE);
+            sierpinski(10);
         EndDrawing();
-        //----------------------------------------------------------------------------------
     }
 }
