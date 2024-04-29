@@ -1,7 +1,9 @@
 #include "maths/raylib.h"
 #include <iostream>
 
-Vector2 windowSize = {1280, 720};
+Vector2 windowSize = {1400, 800};
+
+// triangle vars
 float triHeight = 720;
 float tan30 = 0.57735026919;
 
@@ -31,8 +33,8 @@ void sierpinski(int max) {
 
 
 // fractal stuff now >:)
-int maxIter = 50;
-float scale = 1.0f / float(windowSize.y / 2);
+int maxIterations = 400;
+float scale = 0.5f / float(windowSize.y / 2);
 
 Vector2 squareZn(Vector2 zn, Vector2 C) {
     const float zr = zn.x * zn.x - zn.y * zn.y;
@@ -46,18 +48,19 @@ float modSq(Vector2 z) {
 }
 
 int iterations(const Vector2 z0, const Vector2 C) {
-    int iter = 0;
+    int iterations = 0;
     Vector2 zcur = z0;
-    while (iter < maxIter && modSq(zcur) <= 4.0) {
+
+    while (iterations < maxIterations && modSq(zcur) <= 4.0) {
         zcur = squareZn(zcur, C);
-        iter++;
+        iterations++;
+
+        if (iterations >= maxIterations) {
+            return maxIterations;
+        }
     }
-    if (iter >= 50) {
-        return 50;
-    }
-    else {
-        return iter;
-    }
+
+    return iterations;
 }
 
 void render(const Vector2 windowSize, const Vector2 C, const float scale) {
@@ -67,7 +70,8 @@ void render(const Vector2 windowSize, const Vector2 C, const float scale) {
             // colour pixel
             const float px = float(x - windowSize.x / 2) * scale;
             const float py = float(y - windowSize.y / 2) * scale;
-            DrawPixel(x, y, ColorFromHSV(float(iterations({px, py}, C) / 50.0 * 360.0), 0.5, 1));
+            const int iters = iterations({px, py}, C);
+            DrawPixel(x, y, ColorFromHSV(float(iters /  float(maxIterations) * 360.0), 0.9, 0.8));
         }
     }
 }
@@ -80,9 +84,10 @@ int main (int argc, char *argv[]) {
     {
         BeginDrawing();
             ClearBackground(BLACK);
-            //DrawPixel(100, 100, ColorFromHSV(1.0 / 360.0f, 0.8f, float(iterations({float(100), float(100)}, {1,1}) / 50.0f)));
-            render(windowSize, Vector2 {-1.5, 0.0}, scale);
-            scale = scale - 0.00001;
+            
+            render(windowSize, Vector2 {-0.776358437, -0.128674929}, scale);
+            //scale = scale - 0.00004;
+
         EndDrawing();
     }
 }
