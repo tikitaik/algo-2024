@@ -33,14 +33,14 @@ void sierpinski(int max) {
 
 
 // fractal stuff now >:)
-int maxIterations = 400;
-float scale = 0.5f / float(windowSize.y / 2);
+int maxIterations = 350;
+float scale = 1.0 / float(windowSize.y / 2);
 
 Vector2 squareZn(Vector2 zn, Vector2 C) {
     const float zr = zn.x * zn.x - zn.y * zn.y;
     const float zi = 2.0 * zn.x * zn.y;
     
-    return Vector2 {zr + C.x, zi + C.y};
+    return {zr + C.x, zi + C.y};
 }
 
 float modSq(Vector2 z) {
@@ -71,7 +71,7 @@ void render(const Vector2 windowSize, const Vector2 C, const float scale) {
             const float px = float(x - windowSize.x / 2) * scale;
             const float py = float(y - windowSize.y / 2) * scale;
             const int iters = iterations({px, py}, C);
-            DrawPixel(x, y, ColorFromHSV(float(iters /  float(maxIterations) * 360.0), 0.9, 0.8));
+            DrawPixel(x, y, ColorFromHSV(360.0 - float(iters) /  float(maxIterations) * 360.0, 1.0, float(iters) / float (maxIterations)));
         }
     }
 }
@@ -85,8 +85,8 @@ int main (int argc, char *argv[]) {
         BeginDrawing();
             ClearBackground(BLACK);
             
-            render(windowSize, Vector2 {-0.776358437, -0.128674929}, scale);
-            //scale = scale - 0.00004;
+            render(windowSize, {-1.768778833, -0.001738996}, scale);
+            scale = scale - 0.00004;
 
         EndDrawing();
     }
