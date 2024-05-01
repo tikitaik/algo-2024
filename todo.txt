@@ -4,3 +4,8 @@ circular boolean
 kruskals
 bellman ford
 floyd-warshall shortest path
+recursive binary checker
+recursive word checker
+recursive fast exponentiation
+binary trees
+trees

@@ -108,10 +108,10 @@ template <typename T> int* adjMatrix2D(graph<T>& graph) {
 void displayMatrix2D(const int* matrix, const int nodeCount) {
     // beautiful if else statement
     if (nodeCount < 10) {
-        std::cout << "outputting adjacency matrix:\n   ";
+        std::cout << "outputting matrix:\n   ";
     }
     else {
-        std::cout << "outputting adjacency matrix:\n    ";
+        std::cout << "outputting matrix:\n    ";
     }
     // top legened
     for (int i = 0; i < nodeCount; i++) {

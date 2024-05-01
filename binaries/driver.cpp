@@ -5,7 +5,7 @@
 #include "recursion/recursion.h"
 
 int main() {
-    graph<int> graphTest(true);
+    /*graph<int> graphTest(true);
     
     graphTest.addNodes(10);
 
@@ -55,5 +55,14 @@ int main() {
 
     std::cout << "recTopSort:\n" << *recTopSortStart(graphTopSort) << '\n';
     std::cout << "topSortNormal:\n" << *topologicalSort(graphTopSort) << '\n';
-    std::cout << fastExp(2, 3) << '\n';
+    std::cout << fastExp(2, 3) << '\n';*/
+    graph<int> classTrans(true);
+
+    classTrans.addNodes(4);
+    classTrans.addEdge(0, 3);
+    classTrans.addEdge(0, 2);
+    classTrans.addEdge(1, 2);
+    classTrans.addEdge(2, 0);
+    classTrans.addEdge(3, 1);
+    displayMatrix2D(FWTC(classTrans), 4);
 }
