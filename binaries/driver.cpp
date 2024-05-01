@@ -64,5 +64,5 @@ int main() {
     bool g = wordCheck(words, "yuh");
     std::cout << "g: " << g << '\n';*/
     int arr[] = { 0, 1, 5, 6, 7 ,9, 11, 36, 57, 67, 79, 80, 81, 82, 1020 };
-    std::cout << recBinSearch(arr, 0, sizeof(arr) / sizeof (arr[0]) - 1, 55) << '\n';
+    std::cout << recBinSearch(arr, 0, sizeof(arr) / sizeof (arr[0]) - 1, 1) << '\n';
 }

@@ -92,12 +92,8 @@ template <typename T> int recBinSearch(T arr[], int left, int right, T target) {
         return recBinSearch(arr, mid + 1, right, target);
     }
     // get the right side outta here
-    else if (arr[mid] > target) {
+    else  {
         return recBinSearch(arr, left, mid - 1, target);
-    }
-    // :(
-    else {
-        return -1;
     }
 }
 
