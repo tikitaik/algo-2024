@@ -4,8 +4,8 @@ circular boolean
 kruskals
 bellman ford
 floyd-warshall shortest path
-recursive binary checker
-recursive word checker
-recursive fast exponentiation
+recursive binary checker - binary search
+recursive word checker - narrow list down
+recursive fast exponentiation - look up fonction for it x^n = {x(x^2)^((n-1)/2) for n odd, (x^2)^(n/2) for n even}
 binary trees
 trees

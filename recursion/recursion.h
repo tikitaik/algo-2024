@@ -55,6 +55,83 @@ float aToPowOfN(float a, int n) {
     }
 }
 
+//checks if any strings in a linked list have one character and are equal to input char
+bool oneCharAndEqual (linkedList<std::string> words, std::string wordToCheck) {
+    if (wordToCheck.length() != 1) {
+        return false;
+    }
+    // commence the search
+    listNode<std::string>* curNode = words.returnHead();
+
+    // returns true if any strings in words has size of 1 and is equal to wordToCheck (which would be a 1 length string)
+    for (int i = 0; i < words.size(); i++) {
+        if (curNode->data->length() == 1 && (*curNode->data)[0] == wordToCheck[0]) {
+            std::cout << "returning true" << '\n';
+            return true;
+        }
+        curNode->inc();
+    }
+
+    return false;
+}
+
+// recursive check for if wordToCheck is a string in words
+bool wordCheck (linkedList<std::string> words, std::string wordToCheck) {
+    std::cout << "wordToCheck: " << wordToCheck << '\n';
+    if (oneCharAndEqual(words, wordToCheck) == true) {
+        return true;
+    }
+    else if (wordToCheck.length() == 1) {
+        return false;
+    }
+    else {
+        char charCheck = wordToCheck[0];
+        listNode<std::string>* curWordNode = words.returnHead();
+
+        // check each word in list to see if the first character in remaining string is same as the first
+        // in the wordCheck string, which also gets whittled down
+        int size = words.size();
+        for (int i = 0; i < size; i++) {
+            if ((*curWordNode->data)[0] != charCheck) {
+                std::cout << "removing word " << *curWordNode->data << '\n';
+                words.removeNode(curWordNode);
+            }
+            else {
+                // get rid of first letter in each string, shortens words until one will be equal
+                words.searchKey(*curWordNode->data)->data->erase(0, 1);
+            }
+            curWordNode->inc();
+        }
+        return wordCheck(words, wordToCheck.erase(0, 1));
+    }
+}
+
+// this shit suckcs dick
+int fastExp(int base, int n) {
+    std::cout << "base: " << base << " n: " << n << '\n';
+    // do calculation for how much to subtract and then raise it to power 
+    // then call again?
+    if (n == 0) {
+        std::cout << "base base " << base << '\n'; 
+        return base;
+    }
+    else {
+        int max2pow = 1;
+        while (max2pow * 2 <= n) {
+            max2pow = max2pow * 2;
+        }
+        n = n - max2pow;
+        std::cout << "max2pow: " << max2pow << '\n';
+        std::cout << "n: " << n << '\n';
+        while (max2pow % 2 == 0) {
+            base = base * base;
+            std::cout << base << '\n';
+            max2pow = max2pow / 2;
+        }
+        fastExp(base, n);
+    }
+}
+
 template <typename T> linkedList<node<T> >* recursiveDFSStart(graph<T>& graph, const int sourceNodeID) {
     if (!graph.connected() || graph.directed) {
         std::cout << "wont run because might seg fault\n";
@@ -231,31 +308,5 @@ template <typename T> graph<T> recPrims(graph<T>& sourceGraph, graph<T>& MST) {
         // call thing again
         return recPrims(sourceGraph, MST);
         // easy
-    }
-}
-
-// this shit suckcs dick
-int fastExp(int base, int n) {
-    std::cout << "base: " << base << " n: " << n << '\n';
-    // do calculation for how much to subtract and then raise it to power 
-    // then call again?
-    if (n == 0) {
-        std::cout << "base base " << base << '\n'; 
-        return base;
-    }
-    else {
-        int max2pow = 1;
-        while (max2pow * 2 <= n) {
-            max2pow = max2pow * 2;
-        }
-        n = n - max2pow;
-        std::cout << "max2pow: " << max2pow << '\n';
-        std::cout << "n: " << n << '\n';
-        while (max2pow % 2 == 0) {
-            base = base * base;
-            std::cout << base << '\n';
-            max2pow = max2pow / 2;
-        }
-        fastExp(base, n);
     }
 }

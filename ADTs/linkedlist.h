@@ -19,6 +19,15 @@ template<typename T> struct listNode {
         this->next = (listNode*)malloc(sizeof(listNode));
         this->id = id;
     }
+
+    void inc() {
+        if (next != nullptr) {
+            prev = this;
+            id =next->id;
+            data = next->data;
+            next = next->next;
+        }
+    }
 };
 
 // one type doubly linked list
@@ -185,29 +194,35 @@ template <typename T> class linkedList {
         insertAtIndex(index, ptr);
     }
     
+    // same as remove key but dont need to put key in
+    void removeNode(listNode* node) {
+        if (contains(*node->data)) {
+            remove(node);
+        }
+        else {
+            std::cout << "listNode does not exits in this list, cannot remove\n";
+        }
+    }
+    
     // deletes listNode at given index
     void removeAtIndex(int n) {
-        if (n >* sptr - 1 || n < 0) {
+        if (n > *sptr - 1 || n < 0) {
             std::cout << "index is beyond bounds of list (index starts at 0) \n";
             return;
         }
 
-        listNode* del = (listNode*)malloc(sizeof(listNode));
-        del = goToIndex(n);
-
-        remove(del);
-
+        remove(goToIndex(n));
         //std::cout << "removed listNode at index " << n << " with value of " << del->data <<"\n";
-        free(del);
     }
 
     // deletes all elements with this key in the list
     void removeKey(T key) {
-        while (searchKey(key) != nullptr) {
-            listNode* del = (listNode*)malloc(sizeof(listNode));
-            del = searchKey(key);
+        if (searchKey(key) != nullptr) {
+            listNode* del = searchKey(key);
             remove(del);
-            free(del);
+        }
+        else {
+            std::cout << "could not find key and so nothing was removed\n";
         }
     }
 
@@ -229,11 +244,11 @@ template <typename T> class linkedList {
 
         listNode* display = this->head;
 
-        for (int i = 0; i <* sptr - 1; i++) {
-            std::cout << *display->data << ", "; 
-            display = display->next;
+        for (int i = 0; i < *sptr - 1; i++) {
+            std::cout << *display->data << ", ";
+            display->inc();
         }
-        std::cout << *display->data << "\n";
+        std::cout << *display->data << '\n';
         display = nullptr;
     }
 
@@ -265,7 +280,7 @@ template <typename T> class linkedList {
         }
         return nullptr;
     }
-
+    // returns index of first listnode found with equivalent key
     int getIndex(const T* key) {
         listNode* searchKey = this->head;
 
@@ -280,7 +295,7 @@ template <typename T> class linkedList {
         free(searchKey);
         return -1;
     }
-
+    // does this list contain a node w this key
     bool contains(const T key) {
         listNode* searchKey = this->head;
 
@@ -289,7 +304,7 @@ template <typename T> class linkedList {
                 //std::cout << "contains return true\n";
                 return true;
             }
-            else if (i < *sptr) {
+            else if (searchKey->next != nullptr) {
                 searchKey = searchKey->next;
             }
         }
@@ -297,7 +312,7 @@ template <typename T> class linkedList {
         return false;
     }
 
-    // returns mem address of the listNode at passed index
+    // returns pointer to listNode at passed index
     listNode* goToIndex(int index) {
 
         listNode* atIndex = this->head;
@@ -317,7 +332,7 @@ template <typename T> class linkedList {
     }
 
     int size() {
-        return *sptr;
+        return curSize;
     }
 
     bool isEmpty() {
