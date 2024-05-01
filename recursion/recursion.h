@@ -46,12 +46,24 @@ int geoSeries (int a, float r, int n) {
 }
 
 // f(n) = a^n, a > 0 e R
-float aToPowOfN(float a, int n) {
+float powIntExponent(float a, int n) {
     if (n == 1) {
         return a;
     }
     else {
-        return aToPowOfN(a, n - 1) * a;
+        return powIntExponent(a, n - 1) * a;
+    }
+}
+
+// this shit suckcs dick
+int fastExp(int base, int n) {
+    // x^n = {x(x^2)^((n - 1)/2) for odd}
+    //     = {x(x^2)^(n / 2) for even }
+    if (base % 2 == 1) {
+        return base * powIntExponent(base * base, (n - 1) / 2);
+    }
+    else {
+        return powIntExponent(base * base, n / 2);
     }
 }
 
@@ -125,32 +137,6 @@ bool wordCheck (linkedList<std::string> words, std::string wordToCheck) {
             curWordNode->inc();
         }
         return wordCheck(words, wordToCheck.erase(0, 1));
-    }
-}
-
-// this shit suckcs dick
-int fastExp(int base, int n) {
-    std::cout << "base: " << base << " n: " << n << '\n';
-    // do calculation for how much to subtract and then raise it to power 
-    // then call again?
-    if (n == 0) {
-        std::cout << "base base " << base << '\n'; 
-        return base;
-    }
-    else {
-        int max2pow = 1;
-        while (max2pow * 2 <= n) {
-            max2pow = max2pow * 2;
-        }
-        n = n - max2pow;
-        std::cout << "max2pow: " << max2pow << '\n';
-        std::cout << "n: " << n << '\n';
-        while (max2pow % 2 == 0) {
-            base = base * base;
-            std::cout << base << '\n';
-            max2pow = max2pow / 2;
-        }
-        fastExp(base, n);
     }
 }
 
