@@ -75,6 +75,32 @@ bool oneCharAndEqual (linkedList<std::string> words, std::string wordToCheck) {
     return false;
 }
 
+// recursive binary search for an array
+template <typename T> int recBinSearch(T arr[], int left, int right, T target) {
+    int mid = (left + right) / 2;
+    
+    // yayyyy
+    if (arr[mid] == target) {
+        return mid;
+    }
+    // uh oh
+    else if (left > right) {
+        return -1;
+    }
+    // get the left side outta here
+    else if (arr[mid] < target) {
+        return recBinSearch(arr, mid + 1, right, target);
+    }
+    // get the right side outta here
+    else if (arr[mid] > target) {
+        return recBinSearch(arr, left, mid - 1, target);
+    }
+    // :(
+    else {
+        return -1;
+    }
+}
+
 // recursive check for if wordToCheck is a string in words
 bool wordCheck (linkedList<std::string> words, std::string wordToCheck) {
     std::cout << "wordToCheck: " << wordToCheck << '\n';
