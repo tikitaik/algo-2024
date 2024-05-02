@@ -67,26 +67,6 @@ int fastExp(int base, int n) {
     }
 }
 
-//checks if any strings in a linked list have one character and are equal to input char
-bool oneCharAndEqual (linkedList<std::string> words, std::string wordToCheck) {
-    if (wordToCheck.length() != 1) {
-        return false;
-    }
-    // commence the search
-    listNode<std::string>* curNode = words.returnHead();
-
-    // returns true if any strings in words has size of 1 and is equal to wordToCheck (which would be a 1 length string)
-    for (int i = 0; i < words.size(); i++) {
-        if (curNode->data->length() == 1 && (*curNode->data)[0] == wordToCheck[0]) {
-            std::cout << "returning true" << '\n';
-            return true;
-        }
-        curNode->inc();
-    }
-
-    return false;
-}
-
 // recursive binary search for an array
 template <typename T> int recBinSearch(T arr[], int left, int right, T target) {
     int mid = (left + right) / 2;
@@ -107,6 +87,26 @@ template <typename T> int recBinSearch(T arr[], int left, int right, T target) {
     else  {
         return recBinSearch(arr, left, mid - 1, target);
     }
+}
+
+//checks if any strings in a linked list have one character and are equal to input char
+bool oneCharAndEqual (linkedList<std::string> words, std::string wordToCheck) {
+    if (wordToCheck.length() != 1) {
+        return false;
+    }
+    // commence the search
+    listNode<std::string>* curNode = words.returnHead();
+
+    // returns true if any strings in words has size of 1 and is equal to wordToCheck (which would be a 1 length string)
+    for (int i = 0; i < words.size(); i++) {
+        if (curNode->data->length() == 1 && (*curNode->data)[0] == wordToCheck[0]) {
+            std::cout << "returning true" << '\n';
+            return true;
+        }
+        curNode->inc();
+    }
+
+    return false;
 }
 
 // recursive check for if wordToCheck is a string in words
