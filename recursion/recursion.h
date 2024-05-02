@@ -59,11 +59,14 @@ float powIntExponent(float a, int n) {
 int fastExp(int base, int n) {
     // x^n = {x(x^2)^((n - 1)/2) for odd}
     //     = {x(x^2)^(n / 2) for even }
-    if (base % 2 == 1) {
-        return base * powIntExponent(base * base, (n - 1) / 2);
+    if (n == 0) {
+        return 1;
+    }
+    else if (n % 2 == 1) {
+        return base * fastExp(base * base, (n - 1) / 2);
     }
     else {
-        return powIntExponent(base * base, n / 2);
+        return fastExp(base * base, n / 2);
     }
 }
 

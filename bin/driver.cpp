@@ -55,6 +55,7 @@ int main() {
 
     std::cout << "recTopSort:\n" << *recTopSortStart(graphTopSort) << '\n';
     std::cout << "topSortNormal:\n" << *topologicalSort(graphTopSort) << '\n';
-    std::cout << fastExp(2, 3) << '\n';
     */
+    std::cout << fastExp(15, 5) << '\n';
+    
 }
