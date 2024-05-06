@@ -1,7 +1,7 @@
 #include "../raylib/raylib.h"
 #include <iostream>
 
-Vector2 windowSize = {1400, 900};
+Vector2 windowSize = {600, 600};
 
 // triangle vars
 float triHeight = 720;
@@ -33,7 +33,7 @@ void sierpinski(int max) {
 
 
 // fractal stuff now >:)
-int maxIterations = 600;
+int maxIterations = 800;
 float scale = 0.1 / float(windowSize.y / 2);
 
 Vector2 squareZn(Vector2 zn, Vector2 C) {
@@ -71,7 +71,7 @@ void render(const Vector2 windowSize, const Vector2 C, const float scale) {
             const float px = float(x - windowSize.x / 2) * scale;
             const float py = float(y - windowSize.y / 2) * scale;
             const int iters = iterations({px, py}, C);
-            DrawPixel(x, y, ColorFromHSV((100 + float(iters) /  float(maxIterations) * 90.0), 1.0, (float(iters) / float (maxIterations)) * 0.5 + 0.1));
+            DrawPixel(x, y, ColorFromHSV(100 + (float(iters) /  float(maxIterations) * 90.0), 1.0, (float(iters) / float (maxIterations)) * 0.5 + 0.1));
         }
     }
 }
@@ -85,7 +85,8 @@ int main (int argc, char *argv[]) {
         ClearBackground(BLACK);
         // julia island
         render(windowSize, {-1.768778833, -0.001738996}, scale);
-        //scale = scale - 0.01 * scale;
+        //render(windowSize, {-0.737464176, -0.208210782}, scale);
+        scale = scale - 0.1 * scale;
         EndDrawing();
     }
 

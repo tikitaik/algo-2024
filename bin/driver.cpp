@@ -56,6 +56,20 @@ int main() {
     std::cout << "recTopSort:\n" << *recTopSortStart(graphTopSort) << '\n';
     std::cout << "topSortNormal:\n" << *topologicalSort(graphTopSort) << '\n';
     */
-    std::cout << fastExp(15, 5) << '\n';
-    
+    int a[2][2] =
+    {
+        {1, 2},
+        {3, 4}
+    };
+
+    int b[2][2] = 
+    {
+        {5, 6},
+        {7, 8}
+    };
+    int c[2][2] = {
+        {0, 0},
+        {0, 0}
+    };
+    multiplySquareMatricies(2, a, b, c);
 }
