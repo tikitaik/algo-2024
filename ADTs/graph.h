@@ -408,13 +408,13 @@ template <typename T> class graph {
         return true;
     }
 
+    // need to make
     bool cyclic() {
         if (directed) {
             return false;
         }
-        else {
-            return true;
-        }
+
+        return true;
     }
 
     // O(n^2)
@@ -458,16 +458,6 @@ template <typename T> class graph {
             displayAttribute(nodeSelect);
         }
     }
-
-    // outside funcs for trav algorithms
-    //inkedList<node> DFS (const int source);
-    //linkedList<node> BFS (const int source);
-    //linkedList<node>* topologicalSort();
-
-    // outside funcs for mst algorithms
-    //graph prims();
-    //graph prims(const int sourceNode);
-    //graph kruskals(const int sourceNode);*/
 
     template<typename U> friend std::ostream& operator << (std::ostream& os, const graph<U>& graph);
 };
