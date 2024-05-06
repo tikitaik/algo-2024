@@ -408,6 +408,15 @@ template <typename T> class graph {
         return true;
     }
 
+    bool cyclic() {
+        if (directed) {
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+
     // O(n^2)
     void makeComplete() {
         if (this->directed == true) {

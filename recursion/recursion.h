@@ -185,7 +185,7 @@ template <typename T> linkedList<node<T> >* recTopSortStart(graph<T>& graph) {
         std::cout << "this graph is not directed\n";
         return nullptr;
     }
-    else if (cyclic(graph)) {
+    else if (graph.cyclic()) {
         std::cout << "this graph is cyclic\n";
         return nullptr;
     }

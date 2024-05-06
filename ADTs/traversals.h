@@ -295,11 +295,6 @@ template <typename U> int* FWTC(graph<U>& graph) {
     return T;
 }
 
-// will make
-template <typename T> bool cyclic(graph<T>& graph) {
-    return false;
-}
-
 // returns topological sort if the graph is acyclic and directed
 template <typename T> linkedList<node<T> >* topologicalSort(graph<T>& graph) {
     typedef node<T> node;
@@ -307,7 +302,7 @@ template <typename T> linkedList<node<T> >* topologicalSort(graph<T>& graph) {
         std::cout << "this graph is not directed\n";
         return nullptr;
     }
-    else if (cyclic(graph)) {
+    else if (graph.cyclic()) {
         std::cout << "this graph is cyclic\n";
         return nullptr;
     }
