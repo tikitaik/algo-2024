@@ -55,7 +55,7 @@ float powIntExponent(float a, int n) {
     }
 }
 
-// this shiz suckcs dick
+// this shit suckcs dick
 int fastExp(int base, int n) {
     // x^n = {x(x^2)^((n - 1)/2) for odd}
     //     = {x(x^2)^(n / 2) for even }
@@ -68,45 +68,6 @@ int fastExp(int base, int n) {
     else {
         return fastExp(base * base, n / 2);
     }
-}
-
-int**  multiplySquareMatricies(const int n, int a[][n], int b[][n], int c[][n]) {
-    // base case is 1 x 1 matrix
-    // do sum of rows recursively
-    // for each int in column[0] sum it into the rows
-    int** product = new int*[n];
-
-    for (int i = 0; i < n; i++) {
-        product[i] = new int[n];
-        for (int j = 0; j < n; j++) {
-            product[i][j] = 0;
-        }
-    }
-    std::cout << "init\n";
-    // row
-    for (int i = 0; i < n; i++) {
-        // column
-        for (int j = 0; j < n; j++) {
-            // iterate through
-            for (int k = 0; k < n; k++) {
-                product[i][j] = product[i][j] + a[i][k] * b[k][j];
-            }
-        }
-    }
-
-    for (int i = 0; i < n; i++) {
-        for (int j = 0; j < n; j++) {
-            std::cout << product[i][j] << ", ";
-        }
-        std::cout << '\n';
-    }
-
-    // recursion come to me
-    // base case of 1x1 matrix
-    //
-
-    if ()
-    return product;
 }
 
 // recursive binary search for an array
