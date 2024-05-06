@@ -38,7 +38,7 @@ int main() {
     std::cout << recPrimsStart(graphTest) << '\n';
     //displayMatrix2D(adjMatrix2D(graphTest), graph.nodeCount());
     //std::cout << adjDFS(adjMatrix2D(graphTest), graph.nodeCount(), 0) << '\n';
-    //displayMatrix2D(FWTC(graphTest), graph.nodeCount());
+    //displayMatrix2D(FWTC(graphTest), graph.nodeCount());*/
 
     graph<int> graphTopSort(true);
 
@@ -53,9 +53,10 @@ int main() {
     graphTopSort.addEdge(2, 4);
     graphTopSort.addEdge(3, 4);
 
+    
     std::cout << "recTopSort:\n" << *recTopSortStart(graphTopSort) << '\n';
     std::cout << "topSortNormal:\n" << *topologicalSort(graphTopSort) << '\n';
-    */
-    std::cout << fastExp(15, 5) << '\n';
+
+    //std::cout << fastExp(15, 5) << '\n';
     
 }

@@ -364,6 +364,19 @@ template <typename T> class graph {
         return false;
     }
 
+    // sets every node in graph to untraversed
+    void setAllNodesToUntraversed() {
+        listNode<node>* curNode = allNodes().returnHead();
+
+        // loop and enum again
+        for (int i = 0; i < nodeCount(); i++) {
+            curNode->data->traversed = false;
+            if (curNode->next != nullptr) {
+                curNode = curNode->next;
+            }
+        }
+    }
+
     // checks if each node id exists in at least one edge
     bool connected() {
         int nodeUsed[nodes.size()];

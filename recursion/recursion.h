@@ -150,7 +150,7 @@ template <typename T> linkedList<node<T> >* recursiveDFSStart(graph<T>& graph, c
     }
     linkedList<node<T> > visited;
     stack<node<T> > unvisited;
-    setAllNodesToUntraversed(graph);
+    graph.setAllNodesToUntraversed();
     linkedList<node<T> >* returnList = new linkedList<node<T> >;
     *returnList = recursiveDFS(graph, graph.searchNodeID(sourceNodeID), visited, unvisited);
     return returnList; 
@@ -194,7 +194,7 @@ template <typename T> linkedList<node<T> >* recTopSortStart(graph<T>& graph) {
         return nullptr;
     }
 
-    setAllNodesToUntraversed(graph);
+    graph.setAllNodesToUntraversed();
     stack<node> visited;
     stack<node> unvisited;
     unvisited.push(graph.allNodes().returnHead()->data);

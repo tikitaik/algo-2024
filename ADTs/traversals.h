@@ -57,19 +57,6 @@ template <typename T> void displayTraversed(graph<T>& graph) {
     std::cout << "untraversed: " << untraversed << '\n';
 }
 
-// sets every node in graph to untraversed
-template <typename T> void setAllNodesToUntraversed(graph<T>& graph) {
-    typedef node<T> node;
-    listNode<node>* curNode = graph.allNodes().returnHead();
-
-    // loop and enum again
-    for (int i = 0; i < graph.nodeCount(); i++) {
-        curNode->data->traversed = false;
-        if (curNode->next != nullptr) {
-            curNode = curNode->next;
-        }
-    }
-}
 
 // returns an adjacency matrix in a 1D array, given a graph
 // but is printed as 2D by the displayMatrix2D function
@@ -208,7 +195,7 @@ template <typename T> linkedList<node<T> > DFS (graph<T>& graph, const int sourc
     node* current = graph.allNodes().searchKey(sourceNode)->data;
 
     // guess what this does
-    setAllNodesToUntraversed(graph);
+    graph.setAllNodesToUntraversed();
 
     // preliminary node stuff
     current->traversed = true;
@@ -247,7 +234,7 @@ template <typename T> linkedList<node<T> > BFS (graph<T>& graph, const int sourc
     // ugly ass statement to get the source node since you can pick
     node* current = graph.allNodes().searchKey(sourceNode)->data;
 
-    setAllNodesToUntraversed(graph);
+    graph.setAllNodesToUntraversed();
 
     // preliminary node stuff
     current->traversed = true;
@@ -333,7 +320,7 @@ template <typename T> linkedList<node<T> >* topologicalSort(graph<T>& graph) {
     stack<node> unvisited;
     node* current;
     // the one and only functionnnnnn
-    setAllNodesToUntraversed(graph);
+    graph.setAllNodesToUntraversed();
 
     // do a dfs from each node, and add node to visited stack if it has no untraversed descendants and it is not in topSort
     for (int i = 0; i < graph.nodeCount(); i++) {
