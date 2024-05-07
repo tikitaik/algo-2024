@@ -20,7 +20,7 @@ template<typename T> struct listNode {
         this->id = id;
     }
 
-    void inc() {
+    void increment() {
         if (next != nullptr) {
             prev = this;
             id =next->id;
@@ -547,4 +547,13 @@ template <typename K, typename V> class dictionary : linkedList<K>, linkedList<V
 #include "adts/graph.h"
 template<typename T> bool operator == (const node<T> n1, const node<T> n2) {
     return n1.id == n2.id;
+}
+
+bool operator == (const edge e1, const edge e2) {
+    if (e1.start == e2.start && e1.end == e2.end && e1.weight == e2.weight) {
+        return true;
+    }
+    else {
+        return false;
+    }
 }

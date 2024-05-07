@@ -1,7 +1,5 @@
 Djikstras
 A*
-circular boolean
-kruskals
 bellman ford
 floyd-warshall shortest path
 binary trees

@@ -136,7 +136,7 @@ template <typename T> class graph {
             return;
         }
                 
-        //std::cout << "adding node with id " << add.id << "\n";
+        //std::cout << "adding node with id " << add->id << "\n";
 
         nodes.insertTail(add);
     }

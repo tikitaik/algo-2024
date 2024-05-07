@@ -4,26 +4,26 @@
 #include "adts/graph.h"
 #include "adts/traversals.h"
 
-// given a connected inGraph returns an MST using prims algorithm
-template<typename U> graph<U> prims(graph<U>& inGraph, const int sourceNode) {
+// given a connected g returns an MST using prims algorithm
+template<typename U> graph<U> prims(graph<U>& g, const int sourceNode) {
     typedef node<U> node;
     // prelim setup
-    graph<U> T(inGraph.directed);
-    T.addNode(*inGraph.searchNodeID(sourceNode));
-    const int sourceNodeCount = inGraph.allNodes().size();
-    const int sourceEdgeCount = inGraph.allEdges().size();
+    graph<U> T(g.directed);
+    T.addNode(*g.searchNodeID(sourceNode));
+    const int sourceNodeCount = g.allNodes().size();
+    const int sourceEdgeCount = g.allEdges().size();
     
     // main loop
     while (T.nodeCount() != sourceNodeCount)
     {
         // boilerplatetetetatatet
-        listNode<edge>* curEdge = inGraph.allEdges().returnHead();
+        listNode<edge>* curEdge = g.allEdges().returnHead();
         linkedList<edge> crossingEdges;
 
         // find crossing edges for T and G - T
         for(int i = 0; i < sourceEdgeCount; i++) {
             // i wish it looked better than this
-            if ((T.allNodes().contains(*inGraph.searchNodeID(curEdge->data->start)) && !T.allNodes().contains(*inGraph.searchNodeID(curEdge->data->end))) || (T.allNodes().contains(*inGraph.searchNodeID(curEdge->data->end)) && !T.allNodes().contains(*inGraph.searchNodeID(curEdge->data->start)))) {
+            if ((T.allNodes().contains(*g.searchNodeID(curEdge->data->start)) && !T.allNodes().contains(*g.searchNodeID(curEdge->data->end))) || (T.allNodes().contains(*g.searchNodeID(curEdge->data->end)) && !T.allNodes().contains(*g.searchNodeID(curEdge->data->start)))) {
                 crossingEdges.insertTail(curEdge->data);
                 //std::cout << "adding edge " << *curEdge->data << " to crossingEdges\n";
             }
@@ -54,12 +54,12 @@ template<typename U> graph<U> prims(graph<U>& inGraph, const int sourceNode) {
         }
 
         std::cout << "smallest crossing edge is " << *toAdd << " with weight of " << toAdd->weight << '\n';
-        // add node before edge otherwise inGraph class wont let me add the edge
-        if (T.allNodes().contains(*inGraph.searchNodeID(toAdd->start)) && !T.allNodes().contains(*inGraph.searchNodeID(toAdd->end))) {
-            T.addNode(inGraph.searchNodeID(toAdd->end));
+        // add node before edge otherwise g class wont let me add the edge
+        if (T.allNodes().contains(*g.searchNodeID(toAdd->start)) && !T.allNodes().contains(*g.searchNodeID(toAdd->end))) {
+            T.addNode(g.searchNodeID(toAdd->end));
         }
         else {
-            T.addNode(inGraph.searchNodeID(toAdd->start));
+            T.addNode(g.searchNodeID(toAdd->start));
         }
         T.addEdge(toAdd);
     }
@@ -68,22 +68,55 @@ template<typename U> graph<U> prims(graph<U>& inGraph, const int sourceNode) {
 }
 
 // for when you dont want to define source node
-template<typename T> graph<T> prims(graph<T>& inGraph) {
-    return prims(inGraph, inGraph.allNodes().returnHead()->data->id);
+template<typename T> graph<T> prims(graph<T>& g) {
+    return prims(g, g.allNodes().returnHead()->data->id);
 }
 
-template<typename U> graph<U> kruskals(graph<U>& inGraph, const int sourceNode) {
+template<typename U> graph<U> kruskals(graph<U>& g) {
+    typedef node<U> node;
     // find lowest weight edge in A which doesnt form a cycle
     // add to T until T is connected
 
     // prelim setup
-    graph<U> T(inGraph.directed);
-    const int sourceNodeCount = inGraph.allNodes().size();
-    const int sourceEdgeCount = inGraph.allEdges().size();
+    graph<U> T(g.directed);
+    const int sourceNodeCount = g.allNodes().size();
+    const int sourceEdgeCount = g.allEdges().size();
+
+    // add all nodes from g to T
+    listNode<node>* curNode = g.allNodes().returnHead();
+    for (int i = 0; i < sourceNodeCount; i++) {
+        T.addNode(curNode->data);
+        curNode->increment();
+    }
 
     // main loop
     while (!T.connected()) {
+        // find minimal edge that doesn't make the graph cyclic
+        listNode<edge>* curEdge = g.allEdges().returnHead();
+        edge* minEdge;
+        int minWeight = 0;
 
+        for (int i = 0; i < sourceEdgeCount; i++) {
+            if ((curEdge->data->weight < minWeight || minWeight == 0) && !T.allEdges().contains(*curEdge->data)) {
+
+                T.addEdge(curEdge->data);
+
+                if (!T.cyclic()) {
+                    minEdge = curEdge->data;
+                    minWeight = minEdge->weight;
+                }
+                T.deleteEdge(curEdge->data);
+            }
+            if (curEdge->next != nullptr) {
+                curEdge = curEdge->next;
+            }
+        }
+
+        T.addEdge(minEdge);
+
+
+        std::cout << "minEdge is " << *minEdge << " with weight " << minEdge->weight << '\n';
+        // add edge and nodes it connects to T
     }
 
     return T;
