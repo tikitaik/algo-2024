@@ -29,12 +29,12 @@ int main() {
     g.addEdge(8, 9, 5);
 
     std::cout << g << '\n';
-    std::cout << "DFS: " << DFS(g, 0) << '\n';
-    std::cout << "BFS: " << BFS(g, 0) << '\n';
+    //std::cout << "DFS: " << DFS(g, 0) << '\n';
+    //std::cout << "BFS: " << BFS(g, 0) << '\n';
     std::cout << "topSort: " << *topologicalSort(g) << '\n';
     std::cout << "topSort: " << *recTopSortStart(g) << '\n';
-    std::cout << prims(g) << '\n';
-    std::cout << recPrimsStart(g) << '\n';
-    std::cout << kruskals(g) << '\n';
-    displayMatrix2D(FWTC(g), g.nodeCount());
+    //std::cout << prims(g) << '\n';
+    //std::cout << recPrimsStart(g) << '\n';
+    //std::cout << kruskals(g) << '\n';
+    //displayMatrix2D(FWTC(g), g.nodeCount());*/
 }

@@ -18,22 +18,6 @@ template <typename T, typename U> void addUntraversedNeighbours(graph<T>& g, U& 
     }
 }
 
-// check if every node in graph's traversed attribute == true
-template <typename T> bool allNodesAreTraversed(graph<T>& g) {
-    typedef node<T> node;
-    listNode<node>* curListNode = g.allNodes().returnHead();
-    // for loop and enum
-    for (int i = 0; i < g.nodeCount(); i++) {
-        if (!curListNode->data->traversed) {
-            return false;
-        }
-        if (curListNode->next != nullptr) {
-            curListNode = curListNode->next;
-        }
-    }
-    // otherwise return true
-    return true;
-}
 
 // writes the traversed and untraversed nodes to console, very useless
 template <typename T> void displayTraversed(graph<T>& g) {
@@ -199,7 +183,7 @@ template <typename T> linkedList<node<T> > DFS (graph<T>& g, const int source) {
     visited.insertTail(current);
     
     // icy condition that means it'll terminate when theres no unvisited nodes or it has nowhere else to go
-    while ((g.neighbours(current)->size() > 0 || unvisited.size() > 0 || visited.size() < 1) && !allNodesAreTraversed(g)) {
+    while ((g.neighbours(current)->size() > 0 || unvisited.size() > 0 || visited.size() < 1) && !g.allNodesAreTraversed()) {
 
         // add neighbouring nodes to unvisited stack if they have not been traversed
         // works in numerical order of node ID
@@ -233,7 +217,7 @@ template <typename T> linkedList<node<T> > BFS (graph<T>& g, const int source) {
     visited.insertTail(current);
     
     // icy condition that means it'll terminate when theres no unvisited nodes or it has nowhere else to go
-    while ((g.neighbours(current)->size() > 0 || unvisited.size() > 0 || visited.size() < 1) && !allNodesAreTraversed(g)) {
+    while ((g.neighbours(current)->size() > 0 || unvisited.size() > 0 || visited.size() < 1) && !g.allNodesAreTraversed()) {
         // add neighbouring nodes to unvisited stack if they have not been traversed
         // this works in alphabetical order in DFS but not for BFS
         addUntraversedNeighbours(g, unvisited, current);
@@ -324,7 +308,7 @@ template <typename T> linkedList<node<T> >* topologicalSort(graph<T>& g) {
 
         // this is the DFS starting from each node on the directed g
         for (int j = 0; j < g.nodeCount(); j++) {
-            if (!allNodesAreTraversed(g)) {
+            if (!g.allNodesAreTraversed()) {
 
                 // add neighbouring nodes to unvisited stack if they have not been traversed
                 addUntraversedNeighbours(g, unvisited, current);

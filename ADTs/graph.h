@@ -377,35 +377,63 @@ template <typename T> class graph {
         }
     }
 
+    // check if every node in graph's traversed attribute == true
+    bool allNodesAreTraversed() {
+        listNode<node>* curListNode = allNodes().returnHead();
+
+        // for loop and enum
+        for (int i = 0; i < nodeCount(); i++) {
+            if (!curListNode->data->traversed) {
+                return false;
+            }
+            if (curListNode->next != nullptr) {
+                curListNode = curListNode->next;
+            }
+        }
+        // otherwise return true
+        return true;
+    }
+
     // checks if each node id exists in at least one edge
     bool connected() {
-        int nodeUsed[nodes.size()];
-        listNode<edge>* curEdge = edges.returnHead();
-        listNode<node>* curNode = nodes.returnHead();
+        setAllNodesToUntraversed();
+        // DFS aay
+        linkedList<node> visited;
+        stack<node> unvisited;
+        node* current = allNodes().returnHead()->data;
 
-        for (int i = 0; i < edges.size(); i++) {
-            curNode = nodes.returnHead();
+        current->traversed = true;
+        visited.insertTail(current);
 
-            for (int j = 0; j < nodes.size(); j++) {
-                if ((curNode->data->id == curEdge->data->start || curNode->data->id == curEdge->data->end) && nodeUsed[nodes.getIndex(curNode->data)] != 1) {
-                    nodeUsed[nodes.getIndex(curNode->data)] = 1;
-                }
-                if (j < nodes.size() - 1) {
+        while ((untraversedNeighbours(current)->size() > 0 || unvisited.size() > 0 || visited.size() < 1) && !allNodesAreTraversed()) {
+            linkedList<node>* untNeighbours = untraversedNeighbours(current);
+            listNode<node>* curNode = untNeighbours->returnHead();
+
+            for (int i = 0; i < untNeighbours->size(); i++) {
+                unvisited.push(curNode->data);
+                if (curNode->next != nullptr) {
                     curNode = curNode->next;
                 }
             }
-            if (i < edges.size() - 1) {
-                curEdge = curEdge->next;
+
+            if (unvisited.size() > 0) {
+                current = unvisited.pop()->data;
+                current->traversed = true;
+                if (!visited.contains(*current)) {
+                    visited.insertTail(current);
+                }
             }
         }
 
-        for (int i = 0; i < sizeof(nodeUsed) / sizeof(nodeUsed[0]); i++) {
-            if (nodeUsed[i] != 1){
-                return false;
-            }
-        }
+        std::cout << "yayayayayayaya " << visited << '\n';
 
-        return true;
+        if (allNodesAreTraversed()) {
+            setAllNodesToUntraversed();
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 
     bool cycleCheck(node* current, linkedList<node>& visited, stack<node>& curStack) {
