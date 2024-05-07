@@ -46,17 +46,13 @@ int main() {
 
     graphTopSort.addEdge(0, 1);
     graphTopSort.addEdge(0, 2);
-    graphTopSort.addEdge(0, 4);
+    graphTopSort.addEdge(4, 0);
     graphTopSort.addEdge(1, 3);
     graphTopSort.addEdge(1, 4);
     graphTopSort.addEdge(2, 3);
     graphTopSort.addEdge(2, 4);
     graphTopSort.addEdge(3, 4);
 
-    
     std::cout << "recTopSort:\n" << *recTopSortStart(graphTopSort) << '\n';
     std::cout << "topSortNormal:\n" << *topologicalSort(graphTopSort) << '\n';
-
-    //std::cout << fastExp(15, 5) << '\n';
-    
 }

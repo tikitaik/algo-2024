@@ -408,13 +408,43 @@ template <typename T> class graph {
         return true;
     }
 
-    // need to make
-    bool cyclic() {
-        if (directed) {
+    bool cycleCheck(node* current, linkedList<node>& visited, stack<node>& curStack) {
+        if (curStack.contains(*current)) {
+            return true;
+        }
+
+        if (visited.contains(*current)) {
             return false;
         }
 
-        return true;
+        visited.insertTail(current);
+        curStack.push(current);
+
+        listNode<node>* curNode = neighbours(current)->returnHead();
+        for (int i = 0; i < neighbours(current)->size(); i++) {
+            if (cycleCheck(curNode->data, visited, curStack)) {
+                return true;
+            }
+        }
+
+        curStack.removeKey(*current);
+
+        return false;
+    }
+
+    // DFS return true and needs to set things back to untraversed afterwards
+    bool cyclic() {
+        linkedList<node> visited;
+        stack<node> curStack;
+        listNode<node>* curNode = allNodes().returnHead();
+
+        for (int i = 0; i < nodeCount(); i++) {
+            if (cycleCheck(curNode->data, visited, curStack)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     // O(n^2)
