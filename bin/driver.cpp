@@ -5,7 +5,7 @@
 #include "recursion/recursion.h"
 
 int main() {
-    graph<int> g(true);
+    graph<int> g(false);
     
     g.addNodes(10);
 
@@ -32,28 +32,12 @@ int main() {
     displayTraversed(g);
     std::cout << "DFS: " << DFS(g, 0) << '\n';
     std::cout << "BFS: " << BFS(g, 0) << '\n';
-    std::cout << "topSort: " << *topologicalSort(g) << '\n';
-    std::cout << "topSort: " << *recTopSortStart(g) << '\n';
-    std::cout << prims(g) << '\n';
-    std::cout << kruskals(g) << '\n';
-    /*std::cout << recPrimsStart(g) << '\n';
+    //std::cout << "topSort: " << *topologicalSort(g) << '\n';
+    //std::cout << "topSort: " << *recTopSortStart(g) << '\n';
+    //std::cout << prims(g) << '\n';
+    //std::cout << kruskals(g) << '\n';
+    std::cout << recPrimsStart(g) << '\n';
     displayMatrix2D(adjMatrix2D(g), g.nodeCount());
     std::cout << adjDFS(adjMatrix2D(g), g.nodeCount(), 0) << '\n';
     displayMatrix2D(FWTC(g), g.nodeCount());
-
-    graph<int> gTopSort(true);
-
-    gTopSort.addNodes(5);
-
-    gTopSort.addEdge(0, 1);
-    gTopSort.addEdge(0, 2);
-    gTopSort.addEdge(0, 4);
-    gTopSort.addEdge(1, 3);
-    gTopSort.addEdge(1, 4);
-    gTopSort.addEdge(2, 3);
-    gTopSort.addEdge(2, 4);
-    gTopSort.addEdge(3, 4);
-
-    std::cout << "recTopSort:\n" << *recTopSortStart(gTopSort) << '\n';
-    std::cout << "topSortNormal:\n" << *topologicalSort(gTopSort) << '\n';*/
 }

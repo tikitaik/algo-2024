@@ -7,6 +7,12 @@
 // given a connected g returns an MST using prims algorithm
 template<typename U> graph<U> prims(graph<U>& g, const int sourceNode) {
     typedef node<U> node;
+
+    // works on undirected graphs best
+    if (g.directed) {
+        std::cout << "this may not work as prim's doesnt always work on directed graphs\n";
+    }
+
     // prelim setup
     graph<U> T(g.directed);
     T.addNode(*g.searchNodeID(sourceNode));
@@ -76,6 +82,11 @@ template<typename U> graph<U> kruskals(graph<U>& g) {
     typedef node<U> node;
     // find lowest weight edge in A which doesnt form a cycle
     // add to T until T is connected
+    
+    // works on undirected graphs best
+    if (g.directed) {
+        std::cout << "this may not work as kruskals doesnt always work on directed graphs\n";
+    }
 
     // prelim setup
     graph<U> T(g.directed);

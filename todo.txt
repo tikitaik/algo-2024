@@ -1,5 +1,6 @@
 Djikstras
 A*
+change connected boolean to check if it is connected, not that each node is connected to another
 bellman ford
 floyd-warshall shortest path
 binary trees

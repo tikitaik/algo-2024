@@ -191,33 +191,29 @@ template <typename T> linkedList<node<T> > DFS (graph<T>& graph, const int sourc
     stack<node> unvisited;
     node sourceNode = *graph.searchNodeID(source);
 
-    // ugly ass statement to get the source node, since you can pick
-    node* current = graph.allNodes().searchKey(sourceNode)->data;
+    node* current = graph.searchNodeID(source);
 
     // guess what this does
     graph.setAllNodesToUntraversed();
 
     // preliminary node stuff
     current->traversed = true;
-    visited.insertTail(graph.allNodes().searchKey(sourceNode)->data);
+    visited.insertTail(current);
     
     // repeat while not every node has been traversed
-    // DFS is O(n) anyway so i can use for loop to avoid endless while loop shit if code is bad
-    for (int i = 0; i < graph.nodeCount(); i++) {
-        if (!allNodesAreTraversed(graph)) {
+    while (!allNodesAreTraversed(graph)) {
 
-            // add neighbouring nodes to unvisited stack if they have not been traversed
-            // works in numerical order of node ID
-            addUntraversedNeighbours(graph, unvisited, current);
+        // add neighbouring nodes to unvisited stack if they have not been traversed
+        // works in numerical order of node ID
+        addUntraversedNeighbours(graph, unvisited, current);
 
-            // set current node to stack pop, set it to traversed, and add to visited stack
-            // if visited stack doesnt contain it already
-            if (unvisited.size() > 0) {
-                current = unvisited.pop()->data;
-                current->traversed = true;
-                if (!visited.contains(*current)) {
-                    visited.insertTail(current);
-                }
+        // set current node to stack pop, set it to traversed, and add to visited stack
+        // if visited stack doesnt contain it already
+        if (unvisited.size() > 0) {
+            current = unvisited.pop()->data;
+            current->traversed = true;
+            if (!visited.contains(*current)) {
+                visited.insertTail(current);
             }
         }
     }
@@ -229,35 +225,30 @@ template <typename T> linkedList<node<T> > BFS (graph<T>& graph, const int sourc
     typedef node<T> node;
     linkedList<node> visited;
     queue<node> unvisited;
-    node sourceNode = *graph.searchNodeID(source);
 
-    // ugly ass statement to get the source node since you can pick
-    node* current = graph.allNodes().searchKey(sourceNode)->data;
+    node* current = graph.searchNodeID(source);
 
     graph.setAllNodesToUntraversed();
 
     // preliminary node stuff
     current->traversed = true;
-    visited.insertTail(graph.allNodes().searchKey(sourceNode)->data);
+    visited.insertTail(current);
     
     // repeat while not every node has been traversed
-    // BFS is O(n) anyway so i can use for loop to avoid endless while loop shit if code is bad
-    for (int i = 0; i < graph.nodeCount(); i++) {
-        if (!allNodesAreTraversed(graph)) {
+    while (!allNodesAreTraversed(graph)) {
 
-            // add neighbouring nodes to unvisited stack if they have not been traversed
-            // this works in alphabetical order in DFS but not for BFS
-            addUntraversedNeighbours(graph, unvisited, current);
+        // add neighbouring nodes to unvisited stack if they have not been traversed
+        // this works in alphabetical order in DFS but not for BFS
+        addUntraversedNeighbours(graph, unvisited, current);
 
-            // set current node to top of queue, remove it from the queue, set it to traversed,
-            // and add to visited stack if visited doesnt contain it already
-            if (unvisited.size() > 0) {
-                current = unvisited.peek()->data;
-                unvisited.removeFront();
-                current->traversed = true;
-                if (!visited.contains(*current)) {
-                    visited.insertTail(current);
-                }
+        // set current node to top of queue, remove it from the queue, set it to traversed,
+        // and add to visited stack if visited doesnt contain it already
+        if (unvisited.size() > 0) {
+            current = unvisited.peek()->data;
+            unvisited.removeFront();
+            current->traversed = true;
+            if (!visited.contains(*current)) {
+                visited.insertTail(current);
             }
         }
     }
