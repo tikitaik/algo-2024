@@ -57,7 +57,6 @@ template <typename T> void displayTraversed(graph<T>& g) {
     std::cout << "untraversed: " << untraversed << '\n';
 }
 
-
 // returns an adjacency matrix in a 1D array, given a graph
 // but is printed as 2D by the displayMatrix2D function
 template <typename T> int* adjMatrix2D(graph<T>& graph) {
