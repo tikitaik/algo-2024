@@ -277,6 +277,27 @@ template <typename T> class graph {
         return untNeighbours;
     }
     
+    linkedList<node>* untraversedNeighboursUndirected (node* center) {
+        //return nodes on opposite ends of edges that connect to graph
+        listNode<edge>* curEdge = edges.returnTail();
+        linkedList<node>* untNeighbours = new linkedList<node>;
+
+        for (int i = 0; i < edges.size(); i++) {
+            if (curEdge->data->start == center->id && !searchNodeID(curEdge->data->end)->traversed) {
+                untNeighbours->insertTail(nodes.goToIndex(indexOfId(curEdge->data->end))->data);
+                //std::cout << "from " << curEdge->data << " adding " << curEdge->data->end << " to neighbours \n";
+            }
+            else if (curEdge->data->end == center->id && !searchNodeID(curEdge->data->start)->traversed) {
+                untNeighbours->insertTail(nodes.goToIndex(indexOfId(curEdge->data->start))->data);
+                //std::cout << "from " << curEdge->data << " adding " << curEdge->data->start << " to neighbours \n";
+            }
+            if (i < edges.size() - 1) {
+                curEdge = curEdge->prev;
+            }
+        }
+
+        return untNeighbours;
+    }
     // list of edges that an edge shares a common vertex with
     linkedList<edge>* incident (edge* centerEdge) {
         //return nodes on opposite ends of edges that connect to graph
@@ -405,8 +426,8 @@ template <typename T> class graph {
         current->traversed = true;
         visited.insertTail(current);
 
-        while ((untraversedNeighbours(current)->size() > 0 || unvisited.size() > 0 || visited.size() < 1) && !allNodesAreTraversed()) {
-            linkedList<node>* untNeighbours = untraversedNeighbours(current);
+        while ((untraversedNeighboursUndirected(current)->size() > 0 || unvisited.size() > 0 || visited.size() < 1) && !allNodesAreTraversed()) {
+            linkedList<node>* untNeighbours = untraversedNeighboursUndirected(current);
             listNode<node>* curNode = untNeighbours->returnHead();
 
             for (int i = 0; i < untNeighbours->size(); i++) {

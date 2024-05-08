@@ -7,7 +7,7 @@
 int main() {
     graph<int> g(true);
     
-    g.addNodes(10);
+    g.addNodes(11);
 
     g.addEdge(0, 3, 4);
     g.addEdge(0, 1, 10);
@@ -27,6 +27,7 @@ int main() {
     g.addEdge(6, 9, 12);
     g.addEdge(7, 9, 15);
     g.addEdge(8, 9, 5);
+    g.addEdge(10, 9, 6);
 
     std::cout << g << '\n';
     //std::cout << "DFS: " << DFS(g, 0) << '\n';
