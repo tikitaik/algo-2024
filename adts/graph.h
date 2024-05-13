@@ -229,7 +229,7 @@ template <typename T> class graph {
     // adjacent funcs
     linkedList<node>* neighbours (node* center, bool directed) {
         //return nodes on opposite ends of edges that connect to graph
-        listNode<edge>* curEdge = edges.returnTail();
+        listNode<edge>* curEdge = edges.returnHead();
         linkedList<node>* neighbours = new linkedList<node>;
 
         for (int i = 0; i < edges.size(); i++) {
@@ -241,8 +241,8 @@ template <typename T> class graph {
                 neighbours->insertTail(searchNodeID(curEdge->data->start));
                 //std::cout << "from " << curEdge->data << " adding " << curEdge->data->start << " to neighbours \n";
             }
-            if (curEdge->prev != nullptr) {
-                curEdge = curEdge->prev;
+            if (curEdge->next != nullptr) {
+                curEdge = curEdge->next;
             }
         }
 
@@ -251,7 +251,7 @@ template <typename T> class graph {
 
     linkedList<node>* untraversedNeighbours (node* center, bool directed) {
         //return nodes on opposite ends of edges that connect to graph
-        listNode<edge>* curEdge = edges.returnTail();
+        listNode<edge>* curEdge = edges.returnHead();
         linkedList<node>* untNeighbours = new linkedList<node>;
 
         for (int i = 0; i < edges.size(); i++) {
@@ -264,8 +264,8 @@ template <typename T> class graph {
                 //std::cout << "from " << curEdge->data << " adding " << curEdge->data->start << " to neighbours \n";
             }
 
-            if (curEdge->prev != nullptr) {
-                curEdge = curEdge->prev;
+            if (curEdge->next != nullptr) {
+                curEdge = curEdge->next;
             }
         }
 
@@ -454,8 +454,8 @@ template <typename T> class graph {
     bool cycleCheck(node* current, stack<node>& curStack, linkedList<node>& visited) {
         // return cyclic if already in recursion stack
         if (curStack.contains(*current)) {
-            std::cout << curStack << '\n';
-            std::cout << *current << " is in curStack\n";
+            //std::cout << curStack << '\n';
+            //std::cout << *current << " is in curStack\n";
             return true;
         }
         // return acyclic if node is visited but not in recursion stack
@@ -466,6 +466,7 @@ template <typename T> class graph {
         // do this for all neighbours of this node
         linkedList<node> neighboursToCheck = *neighbours(current, directed);
         listNode<node>* curNode = neighboursToCheck.returnHead();
+        //std::cout << neighboursToCheck << '\n';
        // get rid of previous goober 
         if (curStack.size() > 0) {
             neighboursToCheck.removeKey(*curStack.top()->data);

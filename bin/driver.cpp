@@ -33,8 +33,8 @@ int main() {
     //std::cout << "topSort: " << *topologicalSort(g) << '\n';
     //std::cout << "topSort: " << *recTopSortStart(g) << '\n';
     
-    std::cout << prims(g).cyclic() << '\n';
-    //std::cout << kruskals(g) << '\n';
+    std::cout << prims(g) << '\n';
+    std::cout << kruskals(g) << '\n';
 
     graph<int> test(false);
     test.addNodes(4);
