@@ -7,7 +7,7 @@
 // add untraversed neighbours of current vertex to unvisited list
 template <typename T, typename U> void addUntraversedNeighbours(graph<T>& g, U& list, node<T>* current) {
     typedef node<T> node;
-    linkedList<node>* untNeighbours = g.untraversedNeighbours(current);
+    linkedList<node>* untNeighbours = g.untraversedNeighbours(current, g.directed);
     listNode<node>* neighbourListNode = untNeighbours->returnHead();
     // loops through each neighbour and adds it
     for (int i = 0; i < untNeighbours->size(); i++) {
@@ -16,29 +16,6 @@ template <typename T, typename U> void addUntraversedNeighbours(graph<T>& g, U& 
             neighbourListNode = neighbourListNode->next;
         }
     }
-}
-
-
-// writes the traversed and untraversed nodes to console, very useless
-template <typename T> void displayTraversed(graph<T>& g) {
-    typedef node<T> node;
-    listNode<node>* curListNode = g.allNodes().returnHead();
-
-    linkedList<int> traversed;
-    linkedList<int> untraversed;
-    for (int i = 0; i < g.nodeCount(); i++) {
-        if (curListNode->data->traversed) {
-            traversed.insertTail(curListNode->data->id);
-        }
-        else {
-            untraversed.insertTail(curListNode->data->id);
-        }
-        if (curListNode->next != nullptr) {
-            curListNode = curListNode->next;
-        }
-    }
-    std::cout << "traversed: " << traversed << '\n';
-    std::cout << "untraversed: " << untraversed << '\n';
 }
 
 // returns an adjacency matrix in a 1D array, given a graph
@@ -315,8 +292,8 @@ template <typename T> linkedList<node<T> >* topologicalSort(graph<T>& g) {
 
                 // if node has no untraversed neighbours and isnt already in the visited stack add it to the topSort stack
                 // repeat for every node going back until it has an untraversed child
-                if (unvisited.top() != nullptr && g.untraversedNeighbours(unvisited.top()->data)->size() <= 0 && !visited.contains(*unvisited.top()->data)) {
-                    while (g.untraversedNeighbours(unvisited.top()->data)->size() <= 0 && !visited.contains(*unvisited.top()->data)) {
+                if (unvisited.top() != nullptr && g.untraversedNeighbours(unvisited.top()->data, g.directed)->size() <= 0 && !visited.contains(*unvisited.top()->data)) {
+                    while (g.untraversedNeighbours(unvisited.top()->data, g.directed)->size() <= 0 && !visited.contains(*unvisited.top()->data)) {
                         std::cout << "pushing: " << *unvisited.top()->data << " to visited\n";
                         current = unvisited.pop()->data;
                         current->traversed = true;

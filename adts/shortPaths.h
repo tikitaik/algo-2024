@@ -102,6 +102,7 @@ template<typename U> graph<U> kruskals(graph<U>& g) {
 
     // main loop
     while (!T.connected()) {
+    //for (int n = 0; n < 5; n++) {
         // find minimal edge that doesn't make the graph cyclic
         listNode<edge>* curEdge = g.allEdges().returnHead();
         edge* minEdge;
@@ -122,11 +123,11 @@ template<typename U> graph<U> kruskals(graph<U>& g) {
                 curEdge = curEdge->next;
             }
         }
-
-        T.addEdge(minEdge);
-
+        //std::cout << "T: " << T << '\n';
 
         std::cout << "minEdge is " << *minEdge << " with weight " << minEdge->weight << '\n';
+        T.addEdge(minEdge);
+
         // add edge and nodes it connects to T
     }
 

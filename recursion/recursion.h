@@ -217,7 +217,7 @@ template <typename T> linkedList<node<T> >* recTopSort(graph<T>& g, node<T>* cur
     else {
         // need to call one iteration if it has nodes it can keep traversing
         // only add vertex once all children are explored or it has no children
-        if (g.untraversedNeighbours(current)->size() == 0) {
+        if (g.untraversedNeighbours(current, g.directed)->size() == 0) {
             current->traversed = true;
             if (!visited.contains(*current)) {
                 std::cout << "pushing " << *current << " to visited\n";

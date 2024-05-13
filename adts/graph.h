@@ -97,12 +97,6 @@ template <typename T> class graph {
     bool isCyclic;
 
     graph (bool isDirected) : directed(isDirected) {
-        if (directed == true) {
-            isCyclic = false;
-        }
-        else {
-            isCyclic = true;
-        }
     }
 
     // returns nodes and edges
@@ -247,57 +241,37 @@ template <typename T> class graph {
                 neighbours->insertTail(nodes.goToIndex(indexOfId(curEdge->data->start))->data);
                 //std::cout << "from " << curEdge->data << " adding " << curEdge->data->start << " to neighbours \n";
             }
-            if (i < edges.size() - 1) {
-                curEdge = curEdge->next;
+            if (curEdge->prev != nullptr) {
+                curEdge = curEdge->prev;
             }
         }
 
         return neighbours;
     }
 
-    linkedList<node>* untraversedNeighbours (node* center) {
+    linkedList<node>* untraversedNeighbours (node* center, bool directed) {
         //return nodes on opposite ends of edges that connect to graph
         listNode<edge>* curEdge = edges.returnTail();
         linkedList<node>* untNeighbours = new linkedList<node>;
 
         for (int i = 0; i < edges.size(); i++) {
             if (curEdge->data->start == center->id && !searchNodeID(curEdge->data->end)->traversed) {
-                untNeighbours->insertTail(nodes.goToIndex(indexOfId(curEdge->data->end))->data);
+                untNeighbours->insertTail(searchNodeID(curEdge->data->end));
                 //std::cout << "from " << curEdge->data << " adding " << curEdge->data->end << " to neighbours \n";
             }
-            else if (this->directed == false && curEdge->data->end == center->id && !searchNodeID(curEdge->data->start)->traversed) {
-                untNeighbours->insertTail(nodes.goToIndex(indexOfId(curEdge->data->start))->data);
+            else if (!directed && curEdge->data->end == center->id && !searchNodeID(curEdge->data->start)->traversed) {
+                untNeighbours->insertTail(searchNodeID(curEdge->data->start));
                 //std::cout << "from " << curEdge->data << " adding " << curEdge->data->start << " to neighbours \n";
             }
-            if (i < edges.size() - 1) {
+
+            if (curEdge->prev != nullptr) {
                 curEdge = curEdge->prev;
             }
         }
 
         return untNeighbours;
     }
-    
-    linkedList<node>* untraversedNeighboursUndirected (node* center) {
-        //return nodes on opposite ends of edges that connect to graph
-        listNode<edge>* curEdge = edges.returnTail();
-        linkedList<node>* untNeighbours = new linkedList<node>;
 
-        for (int i = 0; i < edges.size(); i++) {
-            if (curEdge->data->start == center->id && !searchNodeID(curEdge->data->end)->traversed) {
-                untNeighbours->insertTail(nodes.goToIndex(indexOfId(curEdge->data->end))->data);
-                //std::cout << "from " << curEdge->data << " adding " << curEdge->data->end << " to neighbours \n";
-            }
-            else if (curEdge->data->end == center->id && !searchNodeID(curEdge->data->start)->traversed) {
-                untNeighbours->insertTail(nodes.goToIndex(indexOfId(curEdge->data->start))->data);
-                //std::cout << "from " << curEdge->data << " adding " << curEdge->data->start << " to neighbours \n";
-            }
-            if (i < edges.size() - 1) {
-                curEdge = curEdge->prev;
-            }
-        }
-
-        return untNeighbours;
-    }
     // list of edges that an edge shares a common vertex with
     linkedList<edge>* incident (edge* centerEdge) {
         //return nodes on opposite ends of edges that connect to graph
@@ -415,6 +389,27 @@ template <typename T> class graph {
         return true;
     }
 
+    // writes the traversed and untraversed nodes to console, very useless
+    void displayTraversed() {
+        listNode<node>* curListNode = allNodes().returnHead();
+
+        linkedList<int> traversed;
+        linkedList<int> untraversed;
+        for (int i = 0; i < nodeCount(); i++) {
+            if (curListNode->data->traversed) {
+                traversed.insertTail(curListNode->data->id);
+            }
+            else {
+                untraversed.insertTail(curListNode->data->id);
+            }
+            if (curListNode->next != nullptr) {
+                curListNode = curListNode->next;
+            }
+        }
+        std::cout << "traversed: " << traversed << '\n';
+        std::cout << "untraversed: " << untraversed << '\n';
+    }
+
     // checks if each node id exists in at least one edge
     bool connected() {
         setAllNodesToUntraversed();
@@ -426,8 +421,10 @@ template <typename T> class graph {
         current->traversed = true;
         visited.insertTail(current);
 
-        while ((untraversedNeighboursUndirected(current)->size() > 0 || unvisited.size() > 0 || visited.size() < 1) && !allNodesAreTraversed()) {
-            linkedList<node>* untNeighbours = untraversedNeighboursUndirected(current);
+        displayTraversed();
+
+        while ((untraversedNeighbours(current, false)->size() > 0 || unvisited.size() > 0 || visited.size() < 1) && !allNodesAreTraversed()) {
+            linkedList<node>* untNeighbours = untraversedNeighbours(current, false);
             listNode<node>* curNode = untNeighbours->returnHead();
 
             for (int i = 0; i < untNeighbours->size(); i++) {
@@ -446,32 +443,39 @@ template <typename T> class graph {
             }
         }
 
-        std::cout << "yayayayayayaya " << visited << '\n';
+        std::cout << "connected DFS: " << visited << '\n';
 
         if (allNodesAreTraversed()) {
+            std::cout << "returning true\n";
             setAllNodesToUntraversed();
             return true;
         }
         else {
+            setAllNodesToUntraversed();
+            std::cout << "returning false\n";
             return false;
         }
     }
 
-    bool cycleCheck(node* current, linkedList<node>& visited, stack<node>& curStack) {
+    bool cycleCheck(node* current, stack<node>& curStack) {
+        // return cyclic if already in recursion stack
         if (curStack.contains(*current)) {
+            std::cout << *current << " is in curStack\n";
             return true;
         }
-
-        if (visited.contains(*current)) {
+        // return acyclic if node is visited but not in recursion stack
+        if (!current->traversed) {
             return false;
         }
-
-        visited.insertTail(current);
         curStack.push(current);
+        current->traversed = true;
 
-        listNode<node>* curNode = neighbours(current)->returnHead();
-        for (int i = 0; i < neighbours(current)->size(); i++) {
-            if (cycleCheck(curNode->data, visited, curStack)) {
+        // do this for all neighbours of this node
+        listNode<node>* curNode = untraversedNeighbours(current, false)->returnHead();
+
+        for (int i = 0; i < untraversedNeighbours(current, false)->size(); i++) {
+            if (cycleCheck(curNode->data, curStack)) {
+                std::cout << "return rec true\n";
                 return true;
             }
         }
@@ -483,12 +487,11 @@ template <typename T> class graph {
 
     // DFS return true and needs to set things back to untraversed afterwards
     bool cyclic() {
-        linkedList<node> visited;
         stack<node> curStack;
-        listNode<node>* curNode = allNodes().returnHead();
 
         for (int i = 0; i < nodeCount(); i++) {
-            if (cycleCheck(curNode->data, visited, curStack)) {
+            if (cycleCheck(allNodes().returnHead()->data, curStack)) {
+                std::cout << "return cyclic true\n";
                 return true;
             }
         }
