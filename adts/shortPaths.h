@@ -117,6 +117,9 @@ template<typename U> graph<U> kruskals(graph<U>& g) {
                     minEdge = curEdge->data;
                     minWeight = minEdge->weight;
                 }
+                else {
+                    std::cout << "when T has edge " << curEdge->data << " it is cyclic\n";
+                }
                 T.deleteEdge(curEdge->data);
             }
             if (curEdge->next != nullptr) {

@@ -5,9 +5,9 @@
 #include "recursion/recursion.h"
 
 int main() {
-    graph<int> g(true);
+    graph<int> g(false);
     
-    g.addNodes(11);
+    g.addNodes(10);
 
     g.addEdge(0, 3, 4);
     g.addEdge(0, 1, 10);
@@ -27,14 +27,21 @@ int main() {
     g.addEdge(6, 9, 12);
     g.addEdge(7, 9, 15);
     g.addEdge(8, 9, 5);
-    g.addEdge(10, 9, 6);
 
     //std::cout << "DFS: " << DFS(g, 0) << '\n';
     //std::cout << "BFS: " << BFS(g, 0) << '\n';
     //std::cout << "topSort: " << *topologicalSort(g) << '\n';
     //std::cout << "topSort: " << *recTopSortStart(g) << '\n';
     
-    std::cout << prims(g).connected() << '\n';
+    std::cout << prims(g) << '\n';
     std::cout << kruskals(g) << '\n';
+
+
+    graph<int> test(true);
+    test.addNodes(3);
+    test.addEdge(0, 1);
+    test.addEdge(1, 2);
+    test.addEdge(2, 0);
+    test.cyclic() << '\n';
     //displayMatrix2D(FWTC(g), g.nodeCount());*/
 }

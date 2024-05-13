@@ -197,7 +197,7 @@ template <typename T> class graph {
             std::cout << "you are trying to add edges to nodes that do not exsist in this graph. maybe try to add the node first \n";
             return;
         }
-        std::cout << "adding edge [" << add->start << ", " << add->end << "] to the edges list \n";
+        //std::cout << "adding edge [" << add->start << ", " << add->end << "] to the edges list \n";
         edges.insertTail(add);
     }
 
@@ -421,8 +421,6 @@ template <typename T> class graph {
         current->traversed = true;
         visited.insertTail(current);
 
-        displayTraversed();
-
         while ((untraversedNeighbours(current, false)->size() > 0 || unvisited.size() > 0 || visited.size() < 1) && !allNodesAreTraversed()) {
             linkedList<node>* untNeighbours = untraversedNeighbours(current, false);
             listNode<node>* curNode = untNeighbours->returnHead();
@@ -443,16 +441,12 @@ template <typename T> class graph {
             }
         }
 
-        std::cout << "connected DFS: " << visited << '\n';
-
         if (allNodesAreTraversed()) {
-            std::cout << "returning true\n";
             setAllNodesToUntraversed();
             return true;
         }
         else {
             setAllNodesToUntraversed();
-            std::cout << "returning false\n";
             return false;
         }
     }
@@ -464,7 +458,7 @@ template <typename T> class graph {
             return true;
         }
         // return acyclic if node is visited but not in recursion stack
-        if (!current->traversed) {
+        if (current->traversed) {
             return false;
         }
         curStack.push(current);
@@ -472,6 +466,7 @@ template <typename T> class graph {
 
         // do this for all neighbours of this node
         listNode<node>* curNode = untraversedNeighbours(current, false)->returnHead();
+        std::cout << *untraversedNeighbours(current, false) << '\n';
 
         for (int i = 0; i < untraversedNeighbours(current, false)->size(); i++) {
             if (cycleCheck(curNode->data, curStack)) {
@@ -491,11 +486,10 @@ template <typename T> class graph {
 
         for (int i = 0; i < nodeCount(); i++) {
             if (cycleCheck(allNodes().returnHead()->data, curStack)) {
-                std::cout << "return cyclic true\n";
+                std::cout << "cyclic true\n";
                 return true;
             }
         }
-
         return false;
     }
 
