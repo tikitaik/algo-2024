@@ -59,7 +59,7 @@ template<typename U> graph<U> prims(graph<U>& g, const int sourceNode) {
             crossingEdges.removeAtIndex(i - 1);
         }
 
-        std::cout << "smallest crossing edge is " << *toAdd << " with weight of " << toAdd->weight << '\n';
+        std::cout << "minimal crossing edge is " << *toAdd << " with weight of " << toAdd->weight << '\n';
         // add node before edge otherwise g class wont let me add the edge
         if (T.allNodes().contains(*g.searchNodeID(toAdd->start)) && !T.allNodes().contains(*g.searchNodeID(toAdd->end))) {
             T.addNode(g.searchNodeID(toAdd->end));
@@ -78,12 +78,10 @@ template<typename T> graph<T> prims(graph<T>& g) {
     return prims(g, g.allNodes().returnHead()->data->id);
 }
 
+// add the minimal node that doesnt make the graph cyclic until it is connected
 template<typename U> graph<U> kruskals(graph<U>& g) {
     typedef node<U> node;
-    // find lowest weight edge in A which doesnt form a cycle
-    // add to T until T is connected
-    
-    // works on undirected graphs best
+    // warning
     if (g.directed) {
         std::cout << "this may not work as kruskals doesnt always work on directed graphs\n";
     }
@@ -102,24 +100,22 @@ template<typename U> graph<U> kruskals(graph<U>& g) {
 
     // main loop
     while (!T.connected()) {
-    //for (int n = 0; n < 5; n++) {
         // find minimal edge that doesn't make the graph cyclic
         listNode<edge>* curEdge = g.allEdges().returnHead();
         edge* minEdge;
         int minWeight = 0;
 
         for (int i = 0; i < sourceEdgeCount; i++) {
+            // test each edge
             if ((curEdge->data->weight < minWeight || minWeight == 0) && !T.allEdges().contains(*curEdge->data)) {
 
                 T.addEdge(curEdge->data);
-
+                // this was a fucking pain to implement
                 if (!T.cyclic()) {
                     minEdge = curEdge->data;
                     minWeight = minEdge->weight;
                 }
-                else {
-                    std::cout << "when T has edge " << *curEdge->data << " it is cyclic\n";
-                }
+                // im so glad that this works like no way
                 T.deleteEdge(curEdge->data);
             }
             if (curEdge->next != nullptr) {
@@ -127,11 +123,9 @@ template<typename U> graph<U> kruskals(graph<U>& g) {
             }
         }
 
-        std::cout << "minEdge is " << *minEdge << " with weight " << minEdge->weight << '\n';
+        std::cout << "minimal edge is " << *minEdge << " with weight " << minEdge->weight << '\n';
+        // add edge and nodes that it connects to T
         T.addEdge(minEdge);
-        std::cout << "T: " << T << '\n';
-
-        // add edge and nodes it connects to T
     }
 
     return T;

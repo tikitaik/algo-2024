@@ -451,21 +451,22 @@ template <typename T> class graph {
         }
     }
 
+    // util for cyclic bool praise be to the internet
     bool cycleCheck(node* current, stack<node>& curStack, linkedList<node>& visited) {
         // return cyclic if already in recursion stack
         if (curStack.contains(*current)) {
-            std::cout << curStack << '\n';
-            std::cout << *current << " is in curStack\n";
+            //std::cout << "curStack: " << curStack << '\n';
+            //std::cout << *current << " is in curStack\n";
             return true;
         }
-        // return acyclic if node is visited but not in recursion stack
+        // return acyclic if node is visited but not in recursion stack im not actaully sure why this is false
         if (visited.contains(*current)) {
             return false;
         }
 
-        // do this for all neighbours of this node
+        // add all neighbours to list to check except the node we just came from
         linkedList<node> neighboursToCheck = *neighbours(current, directed);
-       // get rid of previous goober 
+       // get rid of previous node so we dont go backwards and shit ourselves
         if (curStack.size() > 0) {
             neighboursToCheck.removeKey(*curStack.top()->data);
         }
@@ -476,8 +477,7 @@ template <typename T> class graph {
         listNode<node>* curNode = neighboursToCheck.returnHead();
 
         for (int i = 0; i < neighboursToCheck.size(); i++) {
-            std::cout << "data " << *curNode->data << '\n';
-            std::cout << neighboursToCheck << '\n';
+            // loop to check each subtree from each node neighbouring this one
             if (cycleCheck(curNode->data, curStack, visited)) {
                 return true;
             }
@@ -485,7 +485,7 @@ template <typename T> class graph {
                 curNode = curNode->next;
             }
         }
-
+        // get rid of every instance of this node from curstack cos we're going backwards
         curStack.removeKey(*current);
         return false;
     }
@@ -498,14 +498,12 @@ template <typename T> class graph {
 
         for (int i = 0; i < nodeCount(); i++) {
             if (cycleCheck(curNode->data, curStack, visited)) {
-                std::cout << "graph is cyclic\n";
                 return true;
             }
             if (curNode->next != nullptr) {
                 curNode = curNode->next;
             }
         }
-        std::cout << "graph is acyclic\n";
         return false;
     }
 
