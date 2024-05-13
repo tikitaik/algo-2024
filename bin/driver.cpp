@@ -33,16 +33,16 @@ int main() {
     //std::cout << "topSort: " << *topologicalSort(g) << '\n';
     //std::cout << "topSort: " << *recTopSortStart(g) << '\n';
     
-    std::cout << prims(g) << '\n';
+    std::cout << prims(g).cyclic() << '\n';
     //std::cout << kruskals(g) << '\n';
-
 
     graph<int> test(false);
     test.addNodes(4);
-    test.addEdge(3, 1);
     test.addEdge(0, 1);
     test.addEdge(2, 1);
-    test.addEdge(2, 0);
-    std::cout << test.cyclic() << '\n';
+    test.addEdge(2, 3);
+    test.addEdge(3, 0);
+    test.cyclic();
+
     //displayMatrix2D(FWTC(g), g.nodeCount());*/
 }

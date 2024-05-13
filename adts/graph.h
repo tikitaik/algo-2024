@@ -229,7 +229,7 @@ template <typename T> class graph {
     // adjacent funcs
     linkedList<node>* neighbours (node* center, bool directed) {
         //return nodes on opposite ends of edges that connect to graph
-        listNode<edge>* curEdge = edges.returnHead();
+        listNode<edge>* curEdge = edges.returnTail();
         linkedList<node>* neighbours = new linkedList<node>;
 
         for (int i = 0; i < edges.size(); i++) {
@@ -452,9 +452,8 @@ template <typename T> class graph {
     }
 
     bool cycleCheck(node* current, stack<node>& curStack, linkedList<node>& visited) {
-        setAllNodesToUntraversed();
         // return cyclic if already in recursion stack
-        if (curStack.contains(*current) && !(*curStack.top()->data == *current)) {
+        if (curStack.contains(*current)) {
             std::cout << curStack << '\n';
             std::cout << *current << " is in curStack\n";
             return true;
@@ -463,21 +462,30 @@ template <typename T> class graph {
         if (visited.contains(*current)) {
             return false;
         }
-        curStack.push(current);
-        visited.insertTail(current);
-        current->traversed = true;
 
         // do this for all neighbours of this node
-        listNode<node>* curNode = untraversedNeighbours(current, directed)->returnHead();
+        linkedList<node> neighboursToCheck = *neighbours(current, directed);
+        listNode<node>* curNode = neighboursToCheck.returnHead();
+       // get rid of previous goober 
+        if (curStack.size() > 0) {
+            neighboursToCheck.removeKey(*curStack.top()->data);
+        }
+        //std::cout << neighboursToCheck << " at " << &neighboursToCheck << '\n';
 
-        for (int i = 0; i < untraversedNeighbours(current, directed)->size(); i++) {
+        curStack.push(current);
+        visited.insertTail(current);
+
+
+        for (int i = 0; i < neighboursToCheck.size(); i++) {
             if (cycleCheck(curNode->data, curStack, visited)) {
                 return true;
+            }
+            if (curNode->next != nullptr) {
+                curNode = curNode->next;
             }
         }
 
         curStack.removeKey(*current);
-        std::cout << "return false late\n";
         return false;
     }
 
@@ -489,13 +497,14 @@ template <typename T> class graph {
 
         for (int i = 0; i < nodeCount(); i++) {
             if (cycleCheck(curNode->data, curStack, visited)) {
-                std::cout << "cyclic true\n";
+                std::cout << "graph is cyclic\n";
                 return true;
             }
             if (curNode->next != nullptr) {
                 curNode = curNode->next;
             }
         }
+        std::cout << "graph is acyclic\n";
         return false;
     }
 
