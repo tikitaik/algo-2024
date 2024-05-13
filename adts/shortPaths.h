@@ -126,10 +126,10 @@ template<typename U> graph<U> kruskals(graph<U>& g) {
                 curEdge = curEdge->next;
             }
         }
-        std::cout << "T: " << T << '\n';
 
         std::cout << "minEdge is " << *minEdge << " with weight " << minEdge->weight << '\n';
         T.addEdge(minEdge);
+        std::cout << "T: " << T << '\n';
 
         // add edge and nodes it connects to T
     }

@@ -454,8 +454,8 @@ template <typename T> class graph {
     bool cycleCheck(node* current, stack<node>& curStack, linkedList<node>& visited) {
         // return cyclic if already in recursion stack
         if (curStack.contains(*current)) {
-            //std::cout << curStack << '\n';
-            //std::cout << *current << " is in curStack\n";
+            std::cout << curStack << '\n';
+            std::cout << *current << " is in curStack\n";
             return true;
         }
         // return acyclic if node is visited but not in recursion stack
@@ -465,19 +465,19 @@ template <typename T> class graph {
 
         // do this for all neighbours of this node
         linkedList<node> neighboursToCheck = *neighbours(current, directed);
-        listNode<node>* curNode = neighboursToCheck.returnHead();
-        //std::cout << neighboursToCheck << '\n';
        // get rid of previous goober 
         if (curStack.size() > 0) {
             neighboursToCheck.removeKey(*curStack.top()->data);
         }
-        //std::cout << neighboursToCheck << " at " << &neighboursToCheck << '\n';
 
         curStack.push(current);
         visited.insertTail(current);
 
+        listNode<node>* curNode = neighboursToCheck.returnHead();
 
         for (int i = 0; i < neighboursToCheck.size(); i++) {
+            std::cout << "data " << *curNode->data << '\n';
+            std::cout << neighboursToCheck << '\n';
             if (cycleCheck(curNode->data, curStack, visited)) {
                 return true;
             }
@@ -563,7 +563,7 @@ template<typename T> std::ostream& operator << (std::ostream& os, const graph<T>
     }
 
     if (*graph.edges.sptr == 0) {
-        os << "edges is empty \n";
+        os << "edges is empty";
     }
     else {
         os << "and graph contains edges: " << graph.edges;

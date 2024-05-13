@@ -36,13 +36,13 @@ int main() {
     std::cout << prims(g) << '\n';
     std::cout << kruskals(g) << '\n';
 
-    graph<int> test(false);
-    test.addNodes(4);
-    test.addEdge(0, 1);
-    test.addEdge(2, 1);
-    test.addEdge(2, 3);
-    test.addEdge(3, 0);
-    test.cyclic();
+    /*graph<int> test(false);
+    test.addNodes(10);
+    test.addEdge(4, 5);
+    test.addEdge(1, 3);
+    test.addEdge(0, 3);
+    test.addEdge(1, 2);
+    test.cyclic();*/
 
     //displayMatrix2D(FWTC(g), g.nodeCount());*/
 }
