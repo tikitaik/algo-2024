@@ -215,17 +215,20 @@ template <typename T> class linkedList {
         //std::cout << "removed listNode at index " << n << " with value of " << del->data <<"\n";
     }
 
-    // deletes all elements with this key in the list
+    // deletes the first node found in the list with this key, probably why switching the neighbours funcs add order made it better
     void removeKey(T key) {
         if (searchKey(key) != nullptr) {
             listNode* del = searchKey(key);
             remove(del);
         }
-        else {
-            std::cout << "could not find key and so nothing was removed\n";
-        }
     }
 
+    void removeAllKeys(T key) {
+        while (searchKey(key) != nullptr) {
+            listNode* del = searchKey(key);
+            remove(del);
+        }
+    }
     // outputs address and value of the head listNode
     void displayHead() {
         std::cout << "head is at " << this->head << " and value of head is " << head->data << "\n";
@@ -233,23 +236,6 @@ template <typename T> class linkedList {
     // outputs address and value of the tail listNode
     void displayTail() {
         std::cout << "tail is at " << this->tail << " and value of tail is " << tail->data << "\n";
-    }
-
-    // possibly redundant?
-    void displayAll() {
-        if (*sptr == 0) {
-            std::cout << "nothing to display \n";
-            return;
-        }
-
-        listNode* display = this->head;
-
-        for (int i = 0; i < *sptr - 1; i++) {
-            std::cout << *display->data << ", ";
-            display->inc();
-        }
-        std::cout << *display->data << '\n';
-        display = nullptr;
     }
 
     // returns mem address of the first listNode found from head with equal key

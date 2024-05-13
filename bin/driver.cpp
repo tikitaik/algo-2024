@@ -28,21 +28,13 @@ int main() {
     g.addEdge(7, 9, 15);
     g.addEdge(8, 9, 5);
 
-    //std::cout << "DFS: " << DFS(g, 0) << '\n';
-    //std::cout << "BFS: " << BFS(g, 0) << '\n';
+    std::cout << "DFS: " << DFS(g, 0) << '\n';
+    std::cout << "BFS: " << BFS(g, 0) << '\n';
     //std::cout << "topSort: " << *topologicalSort(g) << '\n';
     //std::cout << "topSort: " << *recTopSortStart(g) << '\n';
     
-    std::cout << prims(g) << '\n';
+    //std::cout << prims(g) << '\n';
     std::cout << kruskals(g) << '\n';
 
-    /*graph<int> test(false);
-    test.addNodes(10);
-    test.addEdge(4, 5);
-    test.addEdge(1, 3);
-    test.addEdge(0, 3);
-    test.addEdge(1, 2);
-    test.cyclic();*/
-
-    //displayMatrix2D(FWTC(g), g.nodeCount());*/
+    //displayMatrix2D(FWTC(g), g.nodeCount());
 }

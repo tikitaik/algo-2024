@@ -389,8 +389,8 @@ template <typename T> class graph {
         return true;
     }
 
-    // writes the traversed and untraversed nodes to console, very useless
-    void displayTraversed() {
+    // writes the traversed and untraversed nodes to console, quite useless
+    void displayTraversedNodes() {
         listNode<node>* curListNode = allNodes().returnHead();
 
         linkedList<int> traversed;

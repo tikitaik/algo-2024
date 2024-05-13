@@ -160,7 +160,7 @@ template <typename T> linkedList<node<T> > DFS (graph<T>& g, const int source) {
     visited.insertTail(current);
     
     // icy condition that means it'll terminate when theres no unvisited nodes or it has nowhere else to go
-    while ((g.neighbours(current)->size() > 0 || unvisited.size() > 0 || visited.size() < 1) && !g.allNodesAreTraversed()) {
+    while ((g.neighbours(current, g.directed)->size() > 0 || unvisited.size() > 0 || visited.size() < 1) && !g.allNodesAreTraversed()) {
 
         // add neighbouring nodes to unvisited stack if they have not been traversed
         // works in numerical order of node ID
@@ -194,7 +194,7 @@ template <typename T> linkedList<node<T> > BFS (graph<T>& g, const int source) {
     visited.insertTail(current);
     
     // icy condition that means it'll terminate when theres no unvisited nodes or it has nowhere else to go
-    while ((g.neighbours(current)->size() > 0 || unvisited.size() > 0 || visited.size() < 1) && !g.allNodesAreTraversed()) {
+    while ((g.neighbours(current, g.directed)->size() > 0 || unvisited.size() > 0 || visited.size() < 1) && !g.allNodesAreTraversed()) {
         // add neighbouring nodes to unvisited stack if they have not been traversed
         // this works in alphabetical order in DFS but not for BFS
         addUntraversedNeighbours(g, unvisited, current);
