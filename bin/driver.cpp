@@ -34,14 +34,15 @@ int main() {
     //std::cout << "topSort: " << *recTopSortStart(g) << '\n';
     
     std::cout << prims(g) << '\n';
-    std::cout << kruskals(g) << '\n';
+    //std::cout << kruskals(g) << '\n';
 
 
-    graph<int> test(true);
-    test.addNodes(3);
+    graph<int> test(false);
+    test.addNodes(4);
+    test.addEdge(3, 1);
     test.addEdge(0, 1);
-    test.addEdge(1, 2);
+    test.addEdge(2, 1);
     test.addEdge(2, 0);
-    test.cyclic() << '\n';
+    std::cout << test.cyclic() << '\n';
     //displayMatrix2D(FWTC(g), g.nodeCount());*/
 }
