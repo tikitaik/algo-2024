@@ -441,14 +441,10 @@ template <typename T> class graph {
             }
         }
 
-        if (allNodesAreTraversed()) {
-            setAllNodesToUntraversed();
-            return true;
-        }
-        else {
-            setAllNodesToUntraversed();
-            return false;
-        }
+        // nicer than what was here before
+        bool allTrav = allNodesAreTraversed();
+        setAllNodesToUntraversed();
+        return allTrav;
     }
 
     // util for cyclic bool praise be to the internet
