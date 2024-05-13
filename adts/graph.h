@@ -410,7 +410,7 @@ template <typename T> class graph {
         std::cout << "untraversed: " << untraversed << '\n';
     }
 
-    // checks if each node id exists in at least one edge
+    // does a DFS and returns if each node was traversed
     bool connected() {
         setAllNodesToUntraversed();
         // DFS aay
