@@ -229,7 +229,7 @@ template <typename T> class graph {
     // adjacent funcs
     linkedList<node>* neighbours (node* center, bool directed) {
         //return nodes on opposite ends of edges that connect to graph
-        listNode<edge>* curEdge = edges.returnHead();
+        listNode<edge>* curEdge = edges.returnTail();
         linkedList<node>* neighbours = new linkedList<node>;
 
         for (int i = 0; i < edges.size(); i++) {
@@ -241,8 +241,8 @@ template <typename T> class graph {
                 neighbours->insertTail(searchNodeID(curEdge->data->start));
                 //std::cout << "from " << curEdge->data << " adding " << curEdge->data->start << " to neighbours \n";
             }
-            if (curEdge->next != nullptr) {
-                curEdge = curEdge->next;
+            if (curEdge->prev != nullptr) {
+                curEdge = curEdge->prev;
             }
         }
 
@@ -251,7 +251,7 @@ template <typename T> class graph {
 
     linkedList<node>* untraversedNeighbours (node* center, bool directed) {
         //return nodes on opposite ends of edges that connect to graph
-        listNode<edge>* curEdge = edges.returnHead();
+        listNode<edge>* curEdge = edges.returnTail();
         linkedList<node>* untNeighbours = new linkedList<node>;
 
         for (int i = 0; i < edges.size(); i++) {
@@ -264,8 +264,8 @@ template <typename T> class graph {
                 //std::cout << "from " << curEdge->data << " adding " << curEdge->data->start << " to neighbours \n";
             }
 
-            if (curEdge->next != nullptr) {
-                curEdge = curEdge->next;
+            if (curEdge->prev != nullptr) {
+                curEdge = curEdge->prev;
             }
         }
 
@@ -455,7 +455,7 @@ template <typename T> class graph {
             //std::cout << *current << " is in curStack\n";
             return true;
         }
-        // return acyclic if node is visited but not in recursion stack im not actaully sure why this is false
+        // return acyclic if node is visited but not in recursion stack im not actaully sure why this should return false
         if (visited.contains(*current)) {
             return false;
         }

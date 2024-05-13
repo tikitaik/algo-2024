@@ -222,7 +222,7 @@ template <typename T> class linkedList {
             remove(del);
         }
     }
-
+    // same thing but every node
     void removeAllKeys(T key) {
         while (searchKey(key) != nullptr) {
             listNode* del = searchKey(key);
