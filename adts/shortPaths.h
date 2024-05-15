@@ -100,7 +100,7 @@ template<typename U> edge* findMinEdgeThatIsntCyclic (graph<U> g, graph<U> T) {
         // test each edge
         if ((curEdge->data->weight < minWeight || minWeight == 0) && !T.allEdges().contains(*curEdge->data)) {
 
-            T.addEdge(curEdge->data);
+            T.addEdge(*curEdge->data);
             // this was a fucking pain to implement
             if (!T.cyclic()) {
                 minEdge = curEdge->data;
@@ -146,7 +146,7 @@ template<typename U> graph<U> kruskals(graph<U> g) {
         edge* minEdge = findMinEdgeThatIsntCyclic(g, T);
 
         // add edge and nodes that it connects to T
-        T.addEdge(minEdge);
+        T.addEdge(*minEdge);
         //std::cout << "minimal edge is " << *minEdge << " with weight " << minEdge->weight << '\n';
     }
 
@@ -217,12 +217,12 @@ template <typename T> linkedList<node<T> > djikstras(graph<T> g, int sourceNodeI
 
     std::cout << "test\n";
     // DFS check to see if there is a path at all to sink node, if not return linkedlist with one thing
-    /*if (!DFS(g, sourceNodeID).contains(sinkNodeID)) {
+    if (!DFS(g, sourceNodeID).contains(sinkNodeID)) {
         linkedList<node> badCall;
         badCall.insertTail(g.searchNodeID(sourceNodeID));
         std::cout << "no path exists from node " << sourceNodeID << " to " << sinkNodeID << '\n';
         return badCall;
-    }*/
+    }
     
     g.setAllNodesToUntraversed();
     node* current = g.searchNodeID(sourceNodeID);

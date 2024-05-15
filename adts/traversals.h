@@ -160,8 +160,8 @@ template <typename T> linkedList<node<T> > DFS (graph<T>& g, const int source) {
     visited.insertTail(current);
     
     // icy condition that means it'll terminate when theres no unvisited nodes or it has nowhere else to go
+    //for (int i = 0; i < 10; i++) {
     while ((g.neighbours(current, g.directed)->size() > 0 || unvisited.size() > 0 || visited.size() < 1) && !g.allNodesAreTraversed()) {
-
         // add neighbouring nodes to unvisited stack if they have not been traversed
         // works in numerical order of node ID
         addUntraversedNeighbours(g, unvisited, current);
@@ -206,7 +206,7 @@ template <typename T> linkedList<node<T> > BFS (graph<T>& g, const int source) {
             unvisited.removeFront();
             current->traversed = true;
             if (!visited.contains(*current)) {
-                visited.insertTail(current);
+                visited.insertTail(*current);
             }
         }
     }
@@ -297,7 +297,7 @@ template <typename T> linkedList<node<T> >* topologicalSort(graph<T>& g) {
                         //std::cout << "pushing: " << *unvisited.top()->data << " to visited\n";
                         current = unvisited.pop()->data;
                         current->traversed = true;
-                        visited.push(current);
+                        visited.push(*current);
                         if (unvisited.size() == 0) { break; }
                     }
                 }
@@ -312,7 +312,7 @@ template <typename T> linkedList<node<T> >* topologicalSort(graph<T>& g) {
     linkedList<node>* sortOrdered = new linkedList<node>;
 
     for (int i = 0; i < g.nodeCount(); i++) {
-        sortOrdered->insertTail(visited.pop()->data);
+        sortOrdered->insertTail(*visited.pop()->data);
     }
     
     return sortOrdered;

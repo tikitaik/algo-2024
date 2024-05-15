@@ -29,6 +29,8 @@ struct edge {
     int start;
     int end;
     int weight;
+    
+    edge () {}
 
     edge (int start, int end) {
         this->start = start;
@@ -190,6 +192,12 @@ template <typename T> class graph {
         }
         //std::cout << "adding edge [" << add->start << ", " << add->end << "] to the edges list \n";
         edges.insertTail(add);
+    }
+
+    void addEdge (edge add) {
+        edge* toAdd = new edge;
+        *toAdd = add;
+        addEdge(toAdd);
     }
 
     void addEdge(int start, int end) {
@@ -383,7 +391,6 @@ template <typename T> class graph {
                 curNode = curNode->next;
             }
         }
-
     }
 
     // check if every node in graph's traversed attribute == true
@@ -406,11 +413,11 @@ template <typename T> class graph {
     // returns all traversed nodes
     linkedList<node> traversedNodes() {
         listNode<node>* curListNode = allNodes().returnHead();
-
         linkedList<node> traversed;
+
         for (int i = 0; i < nodeCount(); i++) {
             if (curListNode->data->traversed) {
-                traversed.insertTail(curListNode->data);
+                traversed.insertTail(*curListNode->data);
             }
             if (curListNode->next) {
                 curListNode = curListNode->next;
@@ -427,7 +434,7 @@ template <typename T> class graph {
         linkedList<node> untraversed;
         for (int i = 0; i < nodeCount(); i++) {
             if (!curListNode->data->traversed) {
-                untraversed.insertTail(curListNode->data);
+                untraversed.insertTail(*curListNode->data);
             }
             if (curListNode->next) {
                 curListNode = curListNode->next;
@@ -459,7 +466,7 @@ template <typename T> class graph {
             listNode<node>* curNode = untNeighbours->returnHead();
 
             for (int i = 0; i < untNeighbours->size(); i++) {
-                unvisited.push(curNode->data);
+                unvisited.push(*curNode->data);
                 if (curNode->next) {
                     curNode = curNode->next;
                 }
@@ -469,7 +476,7 @@ template <typename T> class graph {
                 current = unvisited.pop()->data;
                 current->traversed = true;
                 if (!visited.contains(*current)) {
-                    visited.insertTail(current);
+                    visited.insertTail(*current);
                 }
             }
         }

@@ -34,7 +34,7 @@ int main() {
     std::cout << "topSort: " << *recTopSortStart(g) << '\n';
 
     std::cout << "prims: " << prims(g) << '\n';
-    std::cout << "kruskals: " << kruskals(g) << '\n';
-    std::cout << djikstras(g, 4, 9) << '\n';
+    //std::cout << "kruskals: " << kruskals(g) << '\n';
+    //std::cout << djikstras(g, 4, 9) << '\n';
 
 }
