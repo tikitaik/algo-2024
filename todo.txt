@@ -1,4 +1,3 @@
-fix delete/ remove functions because they delete everything and not jsut deallocate the pointers
 bellman ford
 floyd-warshall shortest path
 binary trees

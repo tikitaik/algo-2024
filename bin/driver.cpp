@@ -32,11 +32,9 @@ int main() {
     std::cout << "BFS: " << BFS(g, 0) << '\n';
     //std::cout << "topSort: " << *topologicalSort(g) << '\n';
     //std::cout << "topSort: " << *recTopSortStart(g) << '\n';
-    
-    // bad boy deletes everything
-    std::cout << kruskals(g) << '\n';
 
-    std::cout << prims(g) << '\n';
-    std::cout << djikstras(g, 8, 0) << '\n';
+    std::cout << "prims: " << prims(g) << '\n';
+    std::cout << "kruskals" << kruskals(g) << '\n';
+    std::cout << djikstras(g, 4, 9) << '\n';
 
 }

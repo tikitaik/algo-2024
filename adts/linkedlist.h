@@ -21,7 +21,7 @@ template<typename T> struct listNode {
     }
 };
 
-// one type doubly linked list
+// single type doubly linked list
 template <typename T> class linkedList {
     protected:
     
@@ -35,6 +35,7 @@ template <typename T> class linkedList {
     int curSize;
 
     // thing that reassigns pointers to whats before & after them, if they are not head and/ or tail
+    // doesnt actually delete the listnode though, i should prolly figure that out
     void remove(listNode* del) {
         if (del == head && del == tail) {
             head = nullptr;
@@ -72,8 +73,8 @@ template <typename T> class linkedList {
         if (head) {
             head->prev = newNode;
         }
-        // TODO: this wont hold up in some case where tail is set to 0, may want to lazy instantiate the head and tail
-        if (tail == nullptr) {
+
+        if (!tail) {
             tail = newNode;
         }
 

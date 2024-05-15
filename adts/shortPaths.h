@@ -4,6 +4,51 @@
 #include "adts/graph.h"
 #include "adts/traversals.h"
 
+template<typename U> linkedList<edge> findCrossingEdges (graph<U> g, graph<U> T) {
+    
+    listNode<edge>* curEdge = g.allEdges().returnHead();
+    linkedList<edge> crossingEdges;
+
+    // find crossing edges for T and G - T
+    for (int i = 0; i < g.edgeCount(); i++) {
+        // i wish it looked better than this
+        // seg faults on this if statement
+        if ((T.allNodes().contains(*g.searchNodeID(curEdge->data->start)) && !T.allNodes().contains(*g.searchNodeID(curEdge->data->end))) || (T.allNodes().contains(*g.searchNodeID(curEdge->data->end)) && !T.allNodes().contains(*g.searchNodeID(curEdge->data->start)))) {
+            crossingEdges.insertTail(curEdge->data);
+            //std::cout << "adding edge " << *curEdge->data << " to crossingEdges\n";
+        } // enumerate yuhh
+        if (curEdge->next) {
+            curEdge = curEdge->next;
+        }
+    }
+
+    return crossingEdges;
+}
+
+edge* findMinimalCrossingEdge(linkedList<edge>& crossingEdges) {
+   // only works for positive integer weight 
+    int smallestWeight = 0;
+    listNode<edge>* curCrossingEdge = crossingEdges.returnHead();
+    edge* minimalEdge = crossingEdges.returnHead()->data;
+
+    for (int i = 0; i < crossingEdges.size(); i++) {
+        if (smallestWeight == 0 || curCrossingEdge->data->weight < smallestWeight) {
+            smallestWeight = curCrossingEdge->data->weight;
+            minimalEdge = curCrossingEdge->data;
+        }
+
+        if (curCrossingEdge->next) {
+            curCrossingEdge = curCrossingEdge->next;
+        }
+    }
+    // deletes everything in crossingEdges for clean up
+    for (int i = crossingEdges.size(); i > 0; i--) {
+        crossingEdges.removeAtIndex(i - 1);
+    }
+
+    return minimalEdge;
+}
+
 // given a connected g returns an MST using prims algorithm
 template<typename U> graph<U> prims(graph<U>& g, const int sourceNode) {
     typedef node<U> node;
@@ -21,53 +66,20 @@ template<typename U> graph<U> prims(graph<U>& g, const int sourceNode) {
     // main loop
     while (T.nodeCount() != sourceNodeCount)
     {
-        // boilerplatetetetatatet
-        listNode<edge>* curEdge = g.allEdges().returnHead();
-        linkedList<edge> crossingEdges;
-
-        // find crossing edges for T and G - T
-        for (int i = 0; i < sourceEdgeCount; i++) {
-            // i wish it looked better than this
-            // seg faults on this if statement
-            if ((T.allNodes().contains(*g.searchNodeID(curEdge->data->start)) && !T.allNodes().contains(*g.searchNodeID(curEdge->data->end))) || (T.allNodes().contains(*g.searchNodeID(curEdge->data->end)) && !T.allNodes().contains(*g.searchNodeID(curEdge->data->start)))) {
-                crossingEdges.insertTail(curEdge->data);
-                //std::cout << "adding edge " << *curEdge->data << " to crossingEdges\n";
-            }
-
-            if(curEdge->next) {
-                curEdge = curEdge->next;
-            }
-        }
+        linkedList<edge> crossingEdges = findCrossingEdges(g, T);
 
         // find minimal edge from crossingEdges
-        int smallestWeight = 0;
-        listNode<edge>* curCrossingEdge = crossingEdges.returnHead();
-        edge* toAdd = crossingEdges.returnHead()->data;
+        edge* minimalEdge = findMinimalCrossingEdge(crossingEdges);
+        //std::cout << "minimal crossing edge is " << *minimalEdge << " with weight of " << minimalEdge->weight << '\n';
 
-        for (int i = 0; i < crossingEdges.size(); i++) {
-            if (smallestWeight == 0 || curCrossingEdge->data->weight < smallestWeight) {
-                smallestWeight = curCrossingEdge->data->weight;
-                toAdd = curCrossingEdge->data;
-            }
-
-            if (curCrossingEdge->next) {
-                curCrossingEdge = curCrossingEdge->next;
-            }
-        }
-        // deletes everything in crossingEdges for clean up
-        for (int i = crossingEdges.size(); i > 0; i--) {
-            crossingEdges.removeAtIndex(i - 1);
-        }
-
-        std::cout << "minimal crossing edge is " << *toAdd << " with weight of " << toAdd->weight << '\n';
         // add node before edge otherwise g class wont let me add the edge
-        if (T.allNodes().contains(*g.searchNodeID(toAdd->start)) && !T.allNodes().contains(*g.searchNodeID(toAdd->end))) {
-            T.addNode(g.searchNodeID(toAdd->end));
+        if (T.allNodes().contains(*g.searchNodeID(minimalEdge->start)) && !T.allNodes().contains(*g.searchNodeID(minimalEdge->end))) {
+            T.addNode(g.searchNodeID(minimalEdge->end));
         }
         else {
-            T.addNode(g.searchNodeID(toAdd->start));
+            T.addNode(g.searchNodeID(minimalEdge->start));
         }
-        T.addEdge(toAdd);
+        T.addEdge(minimalEdge);
     }
 
     return T;
@@ -135,7 +147,7 @@ template<typename U> graph<U> kruskals(graph<U> g) {
 
         // add edge and nodes that it connects to T
         T.addEdge(minEdge);
-        std::cout << "minimal edge is " << *minEdge << " with weight " << minEdge->weight << '\n';
+        //std::cout << "minimal edge is " << *minEdge << " with weight " << minEdge->weight << '\n';
     }
 
     return T;
@@ -203,6 +215,7 @@ template <typename T> linkedList<node<T> > buildPath (graph<T> g, int sourceNode
 template <typename T> linkedList<node<T> > djikstras(graph<T> g, int sourceNodeID, int sinkNodeID) {
     typedef node<T> node;
 
+    // DFS check to see if there is a path at all to sink node, if not return linkedlist with one thing
     if (!DFS(g, sourceNodeID).contains(sinkNodeID)) {
         linkedList<node> badCall;
         badCall.insertTail(g.searchNodeID(sourceNodeID));
@@ -213,7 +226,7 @@ template <typename T> linkedList<node<T> > djikstras(graph<T> g, int sourceNodeI
     g.setAllNodesToUntraversed();
     node* current = g.searchNodeID(sourceNodeID);
     current->traversed = true;
-    std::cout << "current is starting at node " << *current << " and searching for path to node " << *g.searchNodeID(sinkNodeID) << '\n';
+    std::cout << "starting from node " << *current << " and searching for path to node " << *g.searchNodeID(sinkNodeID) << '\n';
 
     // array to store current minimal path costs, init all to -1 to represent infinite
     // can be used since djikstras is not for negative weight values
