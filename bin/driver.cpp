@@ -28,7 +28,7 @@ int main() {
     g.addEdge(7, 9, 15);
     g.addEdge(8, 9, 5);
 
-    std::cout << "DFS: " << DFS(g, 0) << '\n';
+    /*std::cout << "DFS: " << DFS(g, 0) << '\n';
     std::cout << "BFS: " << BFS(g, 0) << '\n';
     //std::cout << "topSort: " << *topologicalSort(g) << '\n';
     //std::cout << "topSort: " << *recTopSortStart(g) << '\n';
@@ -37,5 +37,6 @@ int main() {
     std::cout << kruskals(g) << '\n';
 
     std::cout << prims(g) << '\n';
-    std::cout << djikstras(g, 8, 0) << '\n';
+    std::cout << djikstras(g, 8, 0) << '\n';*/
+
 }
