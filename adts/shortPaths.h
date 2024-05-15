@@ -79,7 +79,7 @@ template<typename U> graph<U> prims(graph<U>& g, const int sourceNode) {
         else {
             T.addNode(g.searchNodeID(minimalEdge->start));
         }
-        T.addEdge(minimalEdge);
+        T.addEdge(*minimalEdge);
     }
 
     return T;
@@ -196,7 +196,6 @@ template <typename T> node<T>* findMinNode(graph<T> g, const double minimalDist[
     }
 
     minNode->traversed = true;
-
     return minNode;
 }
 
@@ -206,7 +205,7 @@ template <typename T> linkedList<node<T> > buildPath (graph<T> g, int sourceNode
     node<T>* toAdd = g.searchNodeID(sinkNodeID);
 
     while (toAdd) {
-        shortestPath.insertHead(toAdd);
+        shortestPath.insertHead(*toAdd);
         toAdd = prevNode[g.getIndexInAllNodes(toAdd->id)];
     }
     return shortestPath;
@@ -215,7 +214,6 @@ template <typename T> linkedList<node<T> > buildPath (graph<T> g, int sourceNode
 template <typename T> linkedList<node<T> > djikstras(graph<T> g, int sourceNodeID, int sinkNodeID) {
     typedef node<T> node;
 
-    std::cout << "test\n";
     // DFS check to see if there is a path at all to sink node, if not return linkedlist with one thing
     if (!DFS(g, sourceNodeID).contains(sinkNodeID)) {
         linkedList<node> badCall;
@@ -242,7 +240,7 @@ template <typename T> linkedList<node<T> > djikstras(graph<T> g, int sourceNodeI
     
     // main loop
     while (current != g.searchNodeID(sinkNodeID)) {
-        std::cout << "in while loop\n";
+
         updateAdjacents(g, current, minimalDist, prevNode);
 
         // choose current

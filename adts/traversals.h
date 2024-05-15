@@ -160,11 +160,17 @@ template <typename T> linkedList<node<T> > DFS (graph<T>& g, const int source) {
     visited.insertTail(current);
     
     // icy condition that means it'll terminate when theres no unvisited nodes or it has nowhere else to go
-    //for (int i = 0; i < 10; i++) {
     while ((g.neighbours(current, g.directed)->size() > 0 || unvisited.size() > 0 || visited.size() < 1) && !g.allNodesAreTraversed()) {
         // add neighbouring nodes to unvisited stack if they have not been traversed
-        // works in numerical order of node ID
-        addUntraversedNeighbours(g, unvisited, current);
+        linkedList<node>* untNeighbours = g.untraversedNeighbours(current, g.directed);
+        listNode<node>* curNode = untNeighbours->returnHead();
+
+        for (int i = 0; i < untNeighbours->size(); i++) {
+            unvisited.push(curNode->data);
+            if (curNode->next) {
+                curNode = curNode->next;
+            }
+        }
 
         // set current node to stack pop, set it to traversed, and add to visited stack
         // if visited stack doesnt contain it already
@@ -172,7 +178,7 @@ template <typename T> linkedList<node<T> > DFS (graph<T>& g, const int source) {
             current = unvisited.pop()->data;
             current->traversed = true;
             if (!visited.contains(*current)) {
-                visited.insertTail(current);
+                visited.insertTail(*current);
             }
         }
     }
@@ -196,8 +202,15 @@ template <typename T> linkedList<node<T> > BFS (graph<T>& g, const int source) {
     // icy condition that means it'll terminate when theres no unvisited nodes or it has nowhere else to go
     while ((g.neighbours(current, g.directed)->size() > 0 || unvisited.size() > 0 || visited.size() < 1) && !g.allNodesAreTraversed()) {
         // add neighbouring nodes to unvisited stack if they have not been traversed
-        // this works in alphabetical order in DFS but not for BFS
-        addUntraversedNeighbours(g, unvisited, current);
+        linkedList<node>* untNeighbours = g.untraversedNeighbours(current, g.directed);
+        listNode<node>* curNode = untNeighbours->returnHead();
+
+        for (int i = 0; i < untNeighbours->size(); i++) {
+            unvisited.enqueue(curNode->data);
+            if (curNode->next) {
+                curNode = curNode->next;
+            }
+        }
 
         // set current node to top of queue, remove it from the queue, set it to traversed,
         // and add to visited stack if visited doesnt contain it already

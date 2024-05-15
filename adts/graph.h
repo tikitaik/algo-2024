@@ -417,7 +417,7 @@ template <typename T> class graph {
 
         for (int i = 0; i < nodeCount(); i++) {
             if (curListNode->data->traversed) {
-                traversed.insertTail(*curListNode->data);
+                traversed.insertTail(curListNode->data);
             }
             if (curListNode->next) {
                 curListNode = curListNode->next;
@@ -434,7 +434,7 @@ template <typename T> class graph {
         linkedList<node> untraversed;
         for (int i = 0; i < nodeCount(); i++) {
             if (!curListNode->data->traversed) {
-                untraversed.insertTail(*curListNode->data);
+                untraversed.insertTail(curListNode->data);
             }
             if (curListNode->next) {
                 curListNode = curListNode->next;
@@ -459,7 +459,7 @@ template <typename T> class graph {
         node* current = allNodes().returnHead()->data;
 
         current->traversed = true;
-        visited.insertTail(current);
+        visited.insertTail(*current);
 
         while ((untraversedNeighbours(current, false)->size() > 0 || unvisited.size() > 0 || visited.size() < 1) && !allNodesAreTraversed()) {
             linkedList<node>* untNeighbours = untraversedNeighbours(current, false);

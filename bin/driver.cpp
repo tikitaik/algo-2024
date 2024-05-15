@@ -35,6 +35,6 @@ int main() {
 
     std::cout << "prims: " << prims(g) << '\n';
     std::cout << "kruskals: " << kruskals(g) << '\n';
-    std::cout << djikstras(g, 4, 9) << '\n';
+    std::cout << djikstras(g, 0, 9) << '\n';
 
 }
