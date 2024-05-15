@@ -215,14 +215,15 @@ template <typename T> linkedList<node<T> > buildPath (graph<T> g, int sourceNode
 template <typename T> linkedList<node<T> > djikstras(graph<T> g, int sourceNodeID, int sinkNodeID) {
     typedef node<T> node;
 
+    std::cout << "test\n";
     // DFS check to see if there is a path at all to sink node, if not return linkedlist with one thing
-    if (!DFS(g, sourceNodeID).contains(sinkNodeID)) {
+    /*if (!DFS(g, sourceNodeID).contains(sinkNodeID)) {
         linkedList<node> badCall;
         badCall.insertTail(g.searchNodeID(sourceNodeID));
         std::cout << "no path exists from node " << sourceNodeID << " to " << sinkNodeID << '\n';
         return badCall;
-    }
-
+    }*/
+    
     g.setAllNodesToUntraversed();
     node* current = g.searchNodeID(sourceNodeID);
     current->traversed = true;
@@ -241,6 +242,7 @@ template <typename T> linkedList<node<T> > djikstras(graph<T> g, int sourceNodeI
     
     // main loop
     while (current != g.searchNodeID(sinkNodeID)) {
+        std::cout << "in while loop\n";
         updateAdjacents(g, current, minimalDist, prevNode);
 
         // choose current

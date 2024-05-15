@@ -9,6 +9,11 @@ template<typename T> struct listNode {
     int id;
     T* data;
 
+    listNode() {
+        this->prev = (listNode*)malloc(sizeof(listNode));
+        this->next = (listNode*)malloc(sizeof(listNode));
+    }
+
     listNode (T* newData) : data(newData) {
         this->prev = (listNode*)malloc(sizeof(listNode));
         this->next = (listNode*)malloc(sizeof(listNode));
@@ -20,6 +25,13 @@ template<typename T> struct listNode {
         this->id = id;
     }
 };
+// how to print linkedlists
+template <typename T> std::ostream& operator << (std::ostream& os, const listNode<T> node) {
+
+    os << "next: " << node.next << ", prev: " << node.prev << ", id: " << node.id << ", data: " << *node.data << '\n';
+
+    return os;
+}
 
 // single type doubly linked list
 template <typename T> class linkedList {
@@ -35,7 +47,7 @@ template <typename T> class linkedList {
     int curSize;
 
     // thing that reassigns pointers to whats before & after them, if they are not head and/ or tail
-    // doesnt actually delete the listnode though, i should prolly figure that out
+    // doesnt actually delete the listnode though
     void remove(listNode* del) {
         if (del == head && del == tail) {
             head = nullptr;
@@ -53,6 +65,7 @@ template <typename T> class linkedList {
             del->prev->next = del->next;
             del->next->prev = del->prev;
         }
+        delete del;
         curSize--;
     }
 
@@ -374,8 +387,9 @@ template <typename T> class stack : public linkedList<T> {
             return nullptr;
         }
         else {
-            listNode* toReturn = this->tail;
-            this->remove(toReturn);
+            listNode* toReturn = new listNode;
+            *toReturn = *this->tail;
+            this->remove(this->tail);
             return toReturn;
         }
     }

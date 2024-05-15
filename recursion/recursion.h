@@ -224,7 +224,7 @@ template <typename T> linkedList<node<T> >* recTopSort(graph<T>& g, node<T>* cur
         if (g.untraversedNeighbours(current, g.directed)->size() == 0) {
             current->traversed = true;
             if (!visited.contains(*current)) {
-                std::cout << "pushing " << *current << " to visited\n";
+                //std::cout << "pushing " << *current << " to visited\n";
                 visited.push(current);
             } 
             if (unvisited.size() > 0) {
@@ -234,7 +234,7 @@ template <typename T> linkedList<node<T> >* recTopSort(graph<T>& g, node<T>* cur
             listNode<node>* curNode = g.allNodes().returnHead();
             for (int i = 0; i < g.nodeCount(); i++) {
                 if (!visited.contains(*curNode->data)) {
-                    std::cout << "visited does not contain node with id " << curNode->data->id << '\n';
+                    //std::cout << "visited does not contain node with id " << curNode->data->id << '\n';
                     return recTopSort(g, curNode->data, visited, unvisited);
                 }
                 else if (curNode->next) {
@@ -242,7 +242,7 @@ template <typename T> linkedList<node<T> >* recTopSort(graph<T>& g, node<T>* cur
                 }
             }
             // prints if all ndoes are in g after pushing last node to visited
-            std::cout << "i dont think this should be printing\n";
+            //std::cout << "i dont think this should be printing\n";
             return recTopSort(g, current, visited, unvisited);
         }
         // continute DFS if not fully explored 

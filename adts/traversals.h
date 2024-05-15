@@ -273,7 +273,7 @@ template <typename T> linkedList<node<T> >* topologicalSort(graph<T>& g) {
         listNode<node>* curNode = g.allNodes().returnHead();
         for (int j = 0; j < g.nodeCount(); j++) {
             if (!visited.contains(*curNode->data)) {
-                std::cout << "visited does not contain node with id " << curNode->data->id << '\n';
+                //std::cout << "visited does not contain node with id " << curNode->data->id << '\n';
                 current = curNode->data;
                 break;
             }
@@ -294,7 +294,7 @@ template <typename T> linkedList<node<T> >* topologicalSort(graph<T>& g) {
                 // repeat for every node going back until it has an untraversed child
                 if (unvisited.top() && g.untraversedNeighbours(unvisited.top()->data, g.directed)->size() <= 0 && !visited.contains(*unvisited.top()->data)) {
                     while (g.untraversedNeighbours(unvisited.top()->data, g.directed)->size() <= 0 && !visited.contains(*unvisited.top()->data)) {
-                        std::cout << "pushing: " << *unvisited.top()->data << " to visited\n";
+                        //std::cout << "pushing: " << *unvisited.top()->data << " to visited\n";
                         current = unvisited.pop()->data;
                         current->traversed = true;
                         visited.push(current);
