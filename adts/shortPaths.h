@@ -121,8 +121,11 @@ template<typename U> graph<U> kruskals(graph<U> g) {
     // add all nodes from g to T
     listNode<node>* curNode = g.allNodes().returnHead();
     for (int i = 0; i < sourceNodeCount; i++) {
-        T.addNode(curNode->data);
-        curNode->increment();
+        // need to add instances so that when they are removed they dont change the pointers in the og graph
+        T.addNode(*curNode->data);
+        if (curNode->next != nullptr) {
+            curNode = curNode->next;
+        }
     }
 
     // main loop

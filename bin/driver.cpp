@@ -5,7 +5,7 @@
 #include "recursion/recursion.h"
 
 int main() {
-    graph<int> g(true);
+    graph<int> g(false);
     
     g.addNodes(10);
 
@@ -34,7 +34,7 @@ int main() {
     //std::cout << "topSort: " << *recTopSortStart(g) << '\n';
     
     // bad boy deletes everything
-    //std::cout << kruskals(g) << '\n';
+    std::cout << kruskals(g) << '\n';
 
     std::cout << prims(g) << '\n';
     std::cout << djikstras(g, 8, 0) << '\n';

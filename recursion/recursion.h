@@ -106,7 +106,9 @@ bool oneCharAndEqual (linkedList<std::string> words, std::string wordToCheck) {
             std::cout << "returning true" << '\n';
             return true;
         }
-        curNode->increment();
+        if (curNode->next != nullptr) {
+            curNode = curNode->next;
+        }
     }
 
     return false;
@@ -137,7 +139,9 @@ bool wordCheck (linkedList<std::string> words, std::string wordToCheck) {
                 // get rid of first letter in each string, shortens words until one will be equal
                 words.searchKey(*curWordNode->data)->data->erase(0, 1);
             }
-            curWordNode->increment();
+            if (curWordNode->next != nullptr) {
+                curWordNode = curWordNode->next;
+            }
         }
         return wordCheck(words, wordToCheck.erase(0, 1));
     }

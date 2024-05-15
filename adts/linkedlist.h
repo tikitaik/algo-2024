@@ -284,7 +284,6 @@ template <typename T> class linkedList {
                 searchKey = searchKey->next;
             }
         }
-        free(searchKey);
         return -1;
     }
     // does this list contain a node w this key
