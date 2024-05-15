@@ -147,7 +147,7 @@ bool wordCheck (linkedList<std::string> words, std::string wordToCheck) {
     }
 }
 
-template <typename T> linkedList<node<T> >* recursiveDFSStart(graph<T>& g, const int sourceNodeID) {
+template <typename T> linkedList<node<T> >* recDFSStart(graph<T>& g, const int sourceNodeID) {
     if (!g.connected() || g.directed) {
         std::cout << "wont run because might seg fault\n";
         return nullptr;
@@ -171,7 +171,7 @@ template <typename T> linkedList<node<T> > recursiveDFS(graph<T>& g, node<T>* cu
         current->traversed = true;
 
         if (!visited.contains(*current)) {
-            visited.insertTail(current);
+            visited.insertTail(*current);
         }
 
         addUntraversedNeighbours(g, unvisited, current);
@@ -225,7 +225,7 @@ template <typename T> linkedList<node<T> >* recTopSort(graph<T>& g, node<T>* cur
             current->traversed = true;
             if (!visited.contains(*current)) {
                 //std::cout << "pushing " << *current << " to visited\n";
-                visited.push(current);
+                visited.push(*current);
             } 
             if (unvisited.size() > 0) {
                 return recTopSort(g, unvisited.pop()->data, visited, unvisited);
@@ -310,7 +310,7 @@ template <typename T> graph<T> recPrims(graph<T>& g, graph<T>& MST) {
             crossingEdges.removeAtIndex(i - 1);
         }
 
-        std::cout << "smallest crossing edge is " << *toAdd << " with weight of " << toAdd->weight << '\n';
+        //std::cout << "smallest crossing edge is " << *toAdd << " with weight of " << toAdd->weight << '\n';
         // add edge and node it leads to to graph
         if (MST.allNodes().contains(*g.searchNodeID(toAdd->start)) && !MST.allNodes().contains(*g.searchNodeID(toAdd->end))) {
             MST.addNode(g.searchNodeID(toAdd->end));
