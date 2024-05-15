@@ -41,6 +41,5 @@ int main() {
     std::cout << kruskals(g) << '\n';
 */
     //displayMatrix2D(FWTC(g), g.nodeCount());
-    std::cout << g.traversedNodes() << '\n';
-    std::cout << djikstras(g, 0, 9) << '\n';
+    std::cout << djikstras(g, 0, 8) << '\n';
 }

@@ -178,13 +178,23 @@ template <typename T> node<T>* findMinNode(graph<T> g, const double minimalDist[
     return minNode;
 }
 
-template <typename T> linkedList<node<T> > djikstras(graph<T> g, int source, int sink) {
+template <typename T> linkedList<node<T> > buildPath (graph<T> g, int sourceNodeID, int sinkNodeID, node<T>* prevNode[]) {
+    linkedList<node<T> > shortestPath;
+    node<T>* toAdd = g.searchNodeID(sinkNodeID);
+    while (toAdd != nullptr) {
+        shortestPath.insertHead(toAdd);
+        toAdd = prevNode[g.getIndexInAllNodes(toAdd->id)];
+    }
+    return shortestPath;
+}
+
+template <typename T> linkedList<node<T> > djikstras(graph<T> g, int sourceNodeID, int sinkNodeID) {
     typedef node<T> node;
 
     g.setAllNodesToUntraversed();
-    node* current = g.searchNodeID(source);
+    node* current = g.searchNodeID(sourceNodeID);
     current->traversed = true;
-    std::cout << "current is starting at node " << *current << '\n';
+    std::cout << "current is starting at node " << *current << " and searching for path to node " << *g.searchNodeID(sinkNodeID) << '\n';
 
     // array to store current minimal path costs, init all to -1 to represent infinite
     // can be used since djikstras is not for negative weight values
@@ -194,25 +204,18 @@ template <typename T> linkedList<node<T> > djikstras(graph<T> g, int source, int
         minimalDist[i] = -1;
         prevNode[i] = nullptr;
     }
-    minimalDist[g.getIndexInAllNodes(source)] = 0;
-    // array that stores pointer to previous listnode in the shortest path
-
-    while (current != g.searchNodeID(sink)) {
-        // update adjacent nodes
+    // set init distance to 0 
+    minimalDist[g.getIndexInAllNodes(sourceNodeID)] = 0;
+    
+    // main loop
+    while (current != g.searchNodeID(sinkNodeID)) {
         updateAdjacents(g, current, minimalDist, prevNode);
 
         // choose current
         current = findMinNode(g, minimalDist);
-        std::cout << "new current: " << *current << '\n';
     }
 
     // go back and make path
-    linkedList<node> shortestPath;
-    node* toAdd = g.searchNodeID(sink);
-    while (prevNode[g.getIndexInAllNodes(toAdd->id)] != nullptr) {
-        shortestPath.insertHead(toAdd);
-        toAdd = prevNode[g.getIndexInAllNodes(toAdd->id)];
-    }
 
-    return shortestPath;
+    return buildPath(g, sourceNodeID, sinkNodeID, prevNode);
 }
