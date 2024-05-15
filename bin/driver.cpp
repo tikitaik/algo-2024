@@ -5,7 +5,7 @@
 #include "recursion/recursion.h"
 
 int main() {
-    graph<int> g(false);
+    graph<int> g(true);
     
     g.addNodes(10);
 

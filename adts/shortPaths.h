@@ -200,6 +200,13 @@ template <typename T> linkedList<node<T> > buildPath (graph<T> g, int sourceNode
 template <typename T> linkedList<node<T> > djikstras(graph<T> g, int sourceNodeID, int sinkNodeID) {
     typedef node<T> node;
 
+    if (!DFS(g, sourceNodeID).contains(sinkNodeID)) {
+        linkedList<node> badCall;
+        badCall.insertTail(g.searchNodeID(sourceNodeID));
+        std::cout << "no path exists from node " << sourceNodeID << " to " << sinkNodeID << '\n';
+        return badCall;
+    }
+
     g.setAllNodesToUntraversed();
     node* current = g.searchNodeID(sourceNodeID);
     current->traversed = true;
