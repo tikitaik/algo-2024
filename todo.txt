@@ -1,5 +1,5 @@
-Djikstras
 A* (also not urgent)
+fix seg fault after kruskals 
 bellman ford
 floyd-warshall shortest path
 binary trees

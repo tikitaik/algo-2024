@@ -391,6 +391,7 @@ template <typename T> class graph {
                 curNode = curNode->next;
             }
         }
+
     }
 
     // check if every node in graph's traversed attribute == true
@@ -589,14 +590,14 @@ template <typename T> class graph {
 };
 
 template<typename T> std::ostream& operator << (std::ostream& os, const graph<T>& graph) {
-    if (*graph.nodes.sptr == 0) {
+    if (graph.nodes.size() == 0) {
         os << "nodes is empty \n";
     }
     else {
         os << "graph contains nodes: " << graph.nodes << '\n';
     }
 
-    if (*graph.edges.sptr == 0) {
+    if (graph.edges.size() == 0) {
         os << "edges is empty";
     }
     else {

@@ -65,12 +65,10 @@ template <typename T> class linkedList {
     }
 
     public:
-    const int* sptr;
 
     // yah yah yah constructor lets goo
     linkedList() {
         curSize = 0;
-        sptr = &curSize;
         this->head = nullptr;
         this->tail = nullptr;
     }
@@ -154,12 +152,12 @@ template <typename T> class linkedList {
     // inserts value at index specified
     void insertAtIndex(int index, T* add) {
         // good on me for making such a robust program
-        if ((*sptr != 0 && index > *sptr) || index < 0) {
+        if ((curSize != 0 && index > curSize) || index < 0) {
             std::cout << "index is beyond bounds of list + 1 (index starts at 0) \n";
             return;
         }
 
-        if (*sptr == 0) {
+        if (curSize == 0) {
             insertHead(add);
             return;
         }
@@ -175,7 +173,7 @@ template <typename T> class linkedList {
         if (index == 0) { 
             insertHead(add); 
         }
-        else if (index == *sptr) {
+        else if (index == curSize) {
             insertTail(add);
         }
         else {
@@ -206,7 +204,7 @@ template <typename T> class linkedList {
     
     // deletes listNode at given index
     void removeAtIndex(int n) {
-        if (n > *sptr - 1 || n < 0) {
+        if (n > curSize - 1 || n < 0) {
             std::cout << "index is beyond bounds of list (index starts at 0) \n";
             return;
         }
@@ -250,7 +248,7 @@ template <typename T> class linkedList {
     listNode* searchKey(const T key) {
         listNode* searchKey = this->head;
 
-        for (int i = 0; i < *sptr; i++) {
+        for (int i = 0; i < curSize; i++) {
             if (*searchKey->data == key) {
                 return searchKey;
             }
@@ -264,7 +262,7 @@ template <typename T> class linkedList {
     listNode* searchID(int key) {
         listNode* searchKey = this->head;
 
-        for (int i = 0; i < *sptr; i++) {
+        for (int i = 0; i < curSize; i++) {
             if (searchKey->id == key) {
                 return searchKey;
             }
@@ -278,7 +276,7 @@ template <typename T> class linkedList {
     int getIndex(const T* key) {
         listNode* searchKey = this->head;
 
-        for (int i = 0; i < *sptr; i++) {
+        for (int i = 0; i < curSize; i++) {
             if (*searchKey->data == *key) {
                 return i;
             }
@@ -293,7 +291,7 @@ template <typename T> class linkedList {
     bool contains(const T key) {
         listNode* searchKey = this->head;
 
-        for (int i = 0; i < *sptr; i++) {
+        for (int i = 0; i < curSize; i++) {
             if (*searchKey->data == key) {
                 //std::cout << "contains return true\n";
                 return true;
@@ -325,15 +323,15 @@ template <typename T> class linkedList {
         return this->tail;
     }
 
-    int size() {
+    int size() const {
         return curSize;
     }
 
     bool isEmpty() {
-        if (*sptr == 0) {
+        if (curSize == 0) {
             return true;
         }
-        else if (*sptr < 0) {
+        else if (curSize < 0) {
             std::cout << "size is < 0 \n";
             return true;
         }

@@ -78,6 +78,33 @@ template<typename T> graph<T> prims(graph<T> g) {
     return prims(g, g.allNodes().returnHead()->data->id);
 }
 
+// kruskals util
+template<typename U> edge* findMinEdgeThatIsntCyclic (graph<U> g, graph<U> T) {
+    listNode<edge>* curEdge = g.allEdges().returnHead();
+    edge* minEdge;
+    int minWeight = 0;
+
+    for (int i = 0; i < g.edgeCount(); i++) {
+        // test each edge
+        if ((curEdge->data->weight < minWeight || minWeight == 0) && !T.allEdges().contains(*curEdge->data)) {
+
+            T.addEdge(curEdge->data);
+            // this was a fucking pain to implement
+            if (!T.cyclic()) {
+                minEdge = curEdge->data;
+                minWeight = minEdge->weight;
+            }
+            // im so glad that this works like no way
+            T.deleteEdge(curEdge->data);
+        } // enumerate
+        if (curEdge->next != nullptr) {
+            curEdge = curEdge->next;
+        }
+    }
+
+    return minEdge;
+}
+
 // add the minimal node that doesnt make the graph cyclic until it is connected
 template<typename U> graph<U> kruskals(graph<U> g) {
     typedef node<U> node;
@@ -101,33 +128,14 @@ template<typename U> graph<U> kruskals(graph<U> g) {
     // main loop
     while (!T.connected()) {
         // find minimal edge that doesn't make the graph cyclic
-        listNode<edge>* curEdge = g.allEdges().returnHead();
-        edge* minEdge;
-        int minWeight = 0;
+        edge* minEdge = findMinEdgeThatIsntCyclic(g, T);
 
-        for (int i = 0; i < sourceEdgeCount; i++) {
-            // test each edge
-            if ((curEdge->data->weight < minWeight || minWeight == 0) && !T.allEdges().contains(*curEdge->data)) {
-
-                T.addEdge(curEdge->data);
-                // this was a fucking pain to implement
-                if (!T.cyclic()) {
-                    minEdge = curEdge->data;
-                    minWeight = minEdge->weight;
-                }
-                // im so glad that this works like no way
-                T.deleteEdge(curEdge->data);
-            }
-            if (curEdge->next != nullptr) {
-                curEdge = curEdge->next;
-            }
-        }
-
-        std::cout << "minimal edge is " << *minEdge << " with weight " << minEdge->weight << '\n';
         // add edge and nodes that it connects to T
         T.addEdge(minEdge);
+        std::cout << "minimal edge is " << *minEdge << " with weight " << minEdge->weight << '\n';
     }
 
+    std::cout << "1";
     return T;
 }
 
@@ -145,7 +153,6 @@ template <typename T> void updateAdjacents(graph<T> g, node<T>* current, double 
         if (costToNeighbour < minimalDist[indexOfNeighbour] || minimalDist[indexOfNeighbour] == -1) {
             // set minimal distance of neighbour to new cost to neighbour
             minimalDist[indexOfNeighbour] = costToNeighbour;
-            // set prevNode[neighbour] to current
             prevNode[indexOfNeighbour] = current;
         } // enumerate
         if (curNeighbour->next != nullptr) {
@@ -164,10 +171,11 @@ template <typename T> node<T>* findMinNode(graph<T> g, const double minimalDist[
 
     for (int i = 0; i < untraversed.size(); i++) {
         int distOfCur = minimalDist[g.getIndexInAllNodes(curNode->data->id)];
+
         if (distOfCur != -1 && (distOfCur < minDistance || minDistance == -1)) {
             minDistance = distOfCur;
             minNode = curNode->data;
-        }
+        } // enumerate
         if (curNode->next != nullptr) {
             curNode = curNode->next;
         }
@@ -178,9 +186,11 @@ template <typename T> node<T>* findMinNode(graph<T> g, const double minimalDist[
     return minNode;
 }
 
+// makes linkedlist of path back to sourcenode 
 template <typename T> linkedList<node<T> > buildPath (graph<T> g, int sourceNodeID, int sinkNodeID, node<T>* prevNode[]) {
     linkedList<node<T> > shortestPath;
     node<T>* toAdd = g.searchNodeID(sinkNodeID);
+
     while (toAdd != nullptr) {
         shortestPath.insertHead(toAdd);
         toAdd = prevNode[g.getIndexInAllNodes(toAdd->id)];
