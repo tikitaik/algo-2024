@@ -34,7 +34,7 @@ template<typename U> graph<U> prims(graph<U>& g, const int sourceNode) {
                 //std::cout << "adding edge " << *curEdge->data << " to crossingEdges\n";
             }
 
-            if(curEdge->next != nullptr) {
+            if(curEdge->next) {
                 curEdge = curEdge->next;
             }
         }
@@ -50,7 +50,7 @@ template<typename U> graph<U> prims(graph<U>& g, const int sourceNode) {
                 toAdd = curCrossingEdge->data;
             }
 
-            if (curCrossingEdge->next != nullptr) {
+            if (curCrossingEdge->next) {
                 curCrossingEdge = curCrossingEdge->next;
             }
         }
@@ -97,7 +97,7 @@ template<typename U> edge* findMinEdgeThatIsntCyclic (graph<U> g, graph<U> T) {
             // im so glad that this works like no way
             T.deleteEdge(curEdge->data);
         } // enumerate
-        if (curEdge->next != nullptr) {
+        if (curEdge->next) {
             curEdge = curEdge->next;
         }
     }
@@ -123,7 +123,7 @@ template<typename U> graph<U> kruskals(graph<U> g) {
     for (int i = 0; i < sourceNodeCount; i++) {
         // need to add instances so that when they are removed they dont change the pointers in the og graph
         T.addNode(*curNode->data);
-        if (curNode->next != nullptr) {
+        if (curNode->next) {
             curNode = curNode->next;
         }
     }
@@ -157,7 +157,7 @@ template <typename T> void updateAdjacents(graph<T> g, node<T>* current, double 
             minimalDist[indexOfNeighbour] = costToNeighbour;
             prevNode[indexOfNeighbour] = current;
         } // enumerate
-        if (curNeighbour->next != nullptr) {
+        if (curNeighbour->next) {
             curNeighbour = curNeighbour->next;
         }
     }
@@ -178,7 +178,7 @@ template <typename T> node<T>* findMinNode(graph<T> g, const double minimalDist[
             minDistance = distOfCur;
             minNode = curNode->data;
         } // enumerate
-        if (curNode->next != nullptr) {
+        if (curNode->next) {
             curNode = curNode->next;
         }
     }
@@ -193,7 +193,7 @@ template <typename T> linkedList<node<T> > buildPath (graph<T> g, int sourceNode
     linkedList<node<T> > shortestPath;
     node<T>* toAdd = g.searchNodeID(sinkNodeID);
 
-    while (toAdd != nullptr) {
+    while (toAdd) {
         shortestPath.insertHead(toAdd);
         toAdd = prevNode[g.getIndexInAllNodes(toAdd->id)];
     }

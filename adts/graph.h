@@ -66,7 +66,7 @@ template <typename T> class graph {
                 return i;
             }
             else {
-                if (curNode->next != nullptr) {
+                if (curNode->next) {
                     curNode = curNode->next;
                 }
             }
@@ -144,7 +144,7 @@ template <typename T> class graph {
             if (highestID < curListNode->data->id) {
                 highestID = curListNode->data->id;
             }
-            if (curListNode->next != nullptr) {
+            if (curListNode->next) {
                 curListNode = curListNode->next;
             }
         }
@@ -232,7 +232,7 @@ template <typename T> class graph {
                 neighbours->insertTail(searchNodeID(curEdge->data->start));
                 //std::cout << "from " << curEdge->data << " adding " << curEdge->data->start << " to neighbours \n";
             }
-            if (curEdge->next != nullptr) {
+            if (curEdge->next) {
                 curEdge = curEdge->next;
             }
         }
@@ -255,7 +255,7 @@ template <typename T> class graph {
                 //std::cout << "from " << curEdge->data << " adding " << curEdge->data->start << " to neighbours \n";
             }
 
-            if (curEdge->next != nullptr) {
+            if (curEdge->next) {
                 curEdge = curEdge->next;
             }
         }
@@ -276,7 +276,7 @@ template <typename T> class graph {
                 }
             }
             // dont want to go out of the bounds of the list
-            if (curEdge->next != nullptr) {
+            if (curEdge->next) {
                 curEdge = curEdge->next;
             }
         }
@@ -292,7 +292,7 @@ template <typename T> class graph {
             if (curEdge->data->start == id || curEdge->data->end == id) {
                 degree++;
             }
-            if (curEdge->next != nullptr) {
+            if (curEdge->next) {
                 curEdge = curEdge->next;
             }
         }
@@ -308,7 +308,7 @@ template <typename T> class graph {
                 return curNode->data;
             }
             //else if (i < allNodes().size() - 1) {
-            else if (curNode->next != nullptr) {
+            else if (curNode->next) {
                 curNode = curNode->next;
             }
         }
@@ -331,7 +331,7 @@ template <typename T> class graph {
             else if (!directed && curEdge->data->start == end && curEdge->data->end == start) {
                 return curEdge->data;
             }
-            else if (curEdge->next != nullptr){
+            else if (curEdge->next){
                 curEdge = curEdge->next;
             }
         }
@@ -379,7 +379,7 @@ template <typename T> class graph {
         // loop and enum again
         for (int i = 0; i < nodeCount(); i++) {
             curNode->data->traversed = false;
-            if (curNode->next != nullptr) {
+            if (curNode->next) {
                 curNode = curNode->next;
             }
         }
@@ -395,7 +395,7 @@ template <typename T> class graph {
             if (!curListNode->data->traversed) {
                 return false;
             }
-            if (curListNode->next != nullptr) {
+            if (curListNode->next) {
                 curListNode = curListNode->next;
             }
         }
@@ -412,7 +412,7 @@ template <typename T> class graph {
             if (curListNode->data->traversed) {
                 traversed.insertTail(curListNode->data);
             }
-            if (curListNode->next != nullptr) {
+            if (curListNode->next) {
                 curListNode = curListNode->next;
             }
         }
@@ -429,7 +429,7 @@ template <typename T> class graph {
             if (!curListNode->data->traversed) {
                 untraversed.insertTail(curListNode->data);
             }
-            if (curListNode->next != nullptr) {
+            if (curListNode->next) {
                 curListNode = curListNode->next;
             }
         }
@@ -460,7 +460,7 @@ template <typename T> class graph {
 
             for (int i = 0; i < untNeighbours->size(); i++) {
                 unvisited.push(curNode->data);
-                if (curNode->next != nullptr) {
+                if (curNode->next) {
                     curNode = curNode->next;
                 }
             }
@@ -510,7 +510,7 @@ template <typename T> class graph {
             if (cycleCheck(curNode->data, curStack, visited)) {
                 return true;
             }
-            if (curNode->next != nullptr) {
+            if (curNode->next) {
                 curNode = curNode->next;
             }
         }
@@ -529,7 +529,7 @@ template <typename T> class graph {
             if (cycleCheck(curNode->data, curStack, visited)) {
                 return true;
             }
-            if (curNode->next != nullptr) {
+            if (curNode->next) {
                 curNode = curNode->next;
             }
         }
@@ -556,11 +556,11 @@ template <typename T> class graph {
                 if (!edgeExists(edge)) {
                     addEdge(start->data->id, end->data->id);
                 }
-                if (end->next != nullptr) {
+                if (end->next) {
                     end = end->next;
                 }
             }
-            if (start->next != nullptr) {
+            if (start->next) {
                 start = start->next;
             }
             end = nodes.returnHead();
@@ -639,7 +639,7 @@ template <typename T> class binaryTree {
             if (curNode->data->id == id) {
                 return &curNode->data;
             }
-            else if (curNode->next != nullptr) {
+            else if (curNode->next) {
                 curNode = curNode->next;
             }
         }
@@ -653,7 +653,7 @@ template <typename T> class binaryTree {
     // thing to add a node
     void addNode(int id, int keyIn, bool isALeftNode) {
         // if there is no node with same id and parent node is in the binary tree add
-        if (searchBinNodeID(id) == nullptr && searchBinNodeID(keyIn) != nullptr) {
+        if (searchBinNodeID(id) == nullptr && searchBinNodeID(keyIn)) {
             binNode* toAdd = new binNode(id);
             binNode& ref = *toAdd;
             
@@ -674,7 +674,7 @@ template <typename T> class binaryTree {
                 std::cout << "parent node already has left/right child\n";
             }
         }
-        else if (searchBinNodeID(id) != nullptr) {
+        else if (searchBinNodeID(id)) {
             std::cout << "id already exists in binary tree\n";
         }
         else if (searchBinNodeID(keyIn) == nullptr) {

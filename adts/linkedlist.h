@@ -19,15 +19,6 @@ template<typename T> struct listNode {
         this->next = (listNode*)malloc(sizeof(listNode));
         this->id = id;
     }
-
-    void increment() {
-        if (next != nullptr) {
-            prev = this;
-            id =next->id;
-            data = next->data;
-            next = next->next;
-        }
-    }
 };
 
 // one type doubly linked list
@@ -78,7 +69,7 @@ template <typename T> class linkedList {
         curSize++;
         listNode* newNode = new listNode(add);
 
-        if (head != nullptr) {
+        if (head) {
             head->prev = newNode;
         }
         // TODO: this wont hold up in some case where tail is set to 0, may want to lazy instantiate the head and tail
@@ -104,7 +95,7 @@ template <typename T> class linkedList {
         curSize++;
         listNode* newNode = new listNode(add);
 
-        if (tail != nullptr) {
+        if (tail) {
             tail->next = newNode;
         }
         if (head == nullptr) {
@@ -122,7 +113,7 @@ template <typename T> class linkedList {
         curSize++;
         listNode* newNode = new listNode(add, id);
 
-        if (tail != nullptr) {
+        if (tail) {
             tail->next = newNode;
         }
         if (head == nullptr) {
@@ -215,14 +206,14 @@ template <typename T> class linkedList {
 
     // deletes the first node found in the list with this key, probably why switching the neighbours funcs add order made it better
     void removeKey(T key) {
-        if (searchKey(key) != nullptr) {
+        if (searchKey(key)) {
             listNode* del = searchKey(key);
             remove(del);
         }
     }
 
     void removeKey(T* key) {
-        if (searchKey(*key) != nullptr) {
+        if (searchKey(*key)) {
             listNode* del = searchKey(*key);
             remove(del);
         }
@@ -230,7 +221,7 @@ template <typename T> class linkedList {
 
     // same thing but every node
     void removeAllKeys(T key) {
-        while (searchKey(key) != nullptr) {
+        while (searchKey(key)) {
             listNode* del = searchKey(key);
             remove(del);
         }
@@ -295,7 +286,7 @@ template <typename T> class linkedList {
                 //std::cout << "contains return true\n";
                 return true;
             }
-            else if (searchKey->next != nullptr) {
+            else if (searchKey->next) {
                 searchKey = searchKey->next;
             }
         }
@@ -441,7 +432,7 @@ template <typename T> class priorityQueue : public queue<T> {
         while (priority <= *curP->data) {
             std::cout << "curP.data = " << curP->data << '\n';
             index++;
-            if (curP->next != nullptr) {
+            if (curP->next) {
                 curP = curP->next;
             }
             else {

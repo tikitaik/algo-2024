@@ -12,7 +12,7 @@ template <typename T, typename U> void addUntraversedNeighbours(graph<T>& g, U& 
     // loops through each neighbour and adds it
     for (int i = 0; i < untNeighbours->size(); i++) {
         list.insertTail(neighbourListNode->data);
-        if (neighbourListNode->next != nullptr) {
+        if (neighbourListNode->next) {
             neighbourListNode = neighbourListNode->next;
         }
     }
@@ -133,7 +133,7 @@ stack<int> adjDFS(int* matrix, const int nodeCount, const int source) {
         
         // sets cur to top of stack if there is an element in the stack and pushes the top
         // if it isnt in there already
-        if (unvisited.top() != nullptr) {
+        if (unvisited.top()) {
             int* ref = unvisited.pop()->data;
             if (!traversed.contains(*ref)) {
                 traversed.push(ref);
@@ -277,7 +277,7 @@ template <typename T> linkedList<node<T> >* topologicalSort(graph<T>& g) {
                 current = curNode->data;
                 break;
             }
-            else if (curNode->next != nullptr) {
+            else if (curNode->next) {
                 curNode = curNode->next;
             }
         }
@@ -292,7 +292,7 @@ template <typename T> linkedList<node<T> >* topologicalSort(graph<T>& g) {
 
                 // if node has no untraversed neighbours and isnt already in the visited stack add it to the topSort stack
                 // repeat for every node going back until it has an untraversed child
-                if (unvisited.top() != nullptr && g.untraversedNeighbours(unvisited.top()->data, g.directed)->size() <= 0 && !visited.contains(*unvisited.top()->data)) {
+                if (unvisited.top() && g.untraversedNeighbours(unvisited.top()->data, g.directed)->size() <= 0 && !visited.contains(*unvisited.top()->data)) {
                     while (g.untraversedNeighbours(unvisited.top()->data, g.directed)->size() <= 0 && !visited.contains(*unvisited.top()->data)) {
                         std::cout << "pushing: " << *unvisited.top()->data << " to visited\n";
                         current = unvisited.pop()->data;
@@ -301,7 +301,7 @@ template <typename T> linkedList<node<T> >* topologicalSort(graph<T>& g) {
                         if (unvisited.size() == 0) { break; }
                     }
                 }
-                else if (unvisited.top() != nullptr) {
+                else if (unvisited.top()) {
                     current = unvisited.top()->data;
                 }
             }

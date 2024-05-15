@@ -106,7 +106,7 @@ bool oneCharAndEqual (linkedList<std::string> words, std::string wordToCheck) {
             std::cout << "returning true" << '\n';
             return true;
         }
-        if (curNode->next != nullptr) {
+        if (curNode->next) {
             curNode = curNode->next;
         }
     }
@@ -139,7 +139,7 @@ bool wordCheck (linkedList<std::string> words, std::string wordToCheck) {
                 // get rid of first letter in each string, shortens words until one will be equal
                 words.searchKey(*curWordNode->data)->data->erase(0, 1);
             }
-            if (curWordNode->next != nullptr) {
+            if (curWordNode->next) {
                 curWordNode = curWordNode->next;
             }
         }
@@ -237,7 +237,7 @@ template <typename T> linkedList<node<T> >* recTopSort(graph<T>& g, node<T>* cur
                     std::cout << "visited does not contain node with id " << curNode->data->id << '\n';
                     return recTopSort(g, curNode->data, visited, unvisited);
                 }
-                else if (curNode->next != nullptr) {
+                else if (curNode->next) {
                     curNode = curNode->next;
                 }
             }
@@ -284,7 +284,7 @@ template <typename T> graph<T> recPrims(graph<T>& g, graph<T>& MST) {
                 //std::cout << "adding edge " << *curEdge->data << " to crossingEdges\n";
             }
 
-            if(curEdge->next != nullptr) {
+            if(curEdge->next) {
                 curEdge = curEdge->next;
             }
         }
@@ -300,7 +300,7 @@ template <typename T> graph<T> recPrims(graph<T>& g, graph<T>& MST) {
                 toAdd = curCrossingEdge->data;
             }
 
-            if (curCrossingEdge->next != nullptr) {
+            if (curCrossingEdge->next) {
                 curCrossingEdge = curCrossingEdge->next;
             }
         }
