@@ -4,10 +4,6 @@
 #include "adts/shortPaths.h"
 #include "recursion/recursion.h"
 
-void makeArr(int arr[]) {
-    arr[0] = 1;
-}
-
 int main() {
     graph<int> g(false);
     
@@ -41,5 +37,5 @@ int main() {
     std::cout << kruskals(g) << '\n';
 */
     //displayMatrix2D(FWTC(g), g.nodeCount());
-    std::cout << djikstras(g, 0, 8) << '\n';
+    std::cout << djikstras(g, 8, 0) << '\n';
 }

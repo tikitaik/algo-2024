@@ -216,6 +216,5 @@ template <typename T> linkedList<node<T> > djikstras(graph<T> g, int sourceNodeI
     }
 
     // go back and make path
-
     return buildPath(g, sourceNodeID, sinkNodeID, prevNode);
 }
