@@ -78,7 +78,7 @@ template <typename T> class linkedList {
     // add listNode as new head but its pointer so its dynamic
     void insertHead(T* add) {
         curSize++;
-        listNode* newNode = new listNode(*add);
+        listNode* newNode = new listNode(add);
 
         if (head != nullptr) {
             head->prev = newNode;
@@ -222,6 +222,14 @@ template <typename T> class linkedList {
             remove(del);
         }
     }
+
+    void removeKey(T* key) {
+        if (searchKey(*key) != nullptr) {
+            listNode* del = searchKey(*key);
+            remove(del);
+        }
+    }
+
     // same thing but every node
     void removeAllKeys(T key) {
         while (searchKey(key) != nullptr) {

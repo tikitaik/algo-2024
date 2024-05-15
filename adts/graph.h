@@ -309,6 +309,7 @@ template <typename T> class graph {
         return degree;
     }
 
+    // misc
     node* searchNodeID (int id) {
         listNode<node>* curNode = allNodes().returnHead();
         for (int i = 0; i < allNodes().size(); i++) {
@@ -324,7 +325,27 @@ template <typename T> class graph {
         return nullptr;
     }
 
-    // misc
+    int getIndexInAllNodes(int id) {
+        return nodes.getIndex(searchNodeID(id));
+    }
+
+    edge* searchEdge (int start, int end) {
+        listNode<edge>* curEdge = edges.returnHead();
+        // O(n)
+        for (int i = 0; i < edges.size(); i++) {
+            if (curEdge->data->start == start && curEdge->data->end == end) {
+                return curEdge->data;
+            }
+            else if (!directed && curEdge->data->start == end && curEdge->data->end == start) {
+                return curEdge->data;
+            }
+            else if (curEdge->next != nullptr){
+                curEdge = curEdge->next;
+            }
+        }
+        return nullptr;
+    }
+
     bool edgeExists (edge edgeToCheck) {
         listNode<edge>* curEdge = edges.returnHead();
         // O(n)
@@ -389,25 +410,44 @@ template <typename T> class graph {
         return true;
     }
 
-    // writes the traversed and untraversed nodes to console, quite useless
-    void displayTraversedNodes() {
+    // returns all traversed nodes
+    linkedList<node> traversedNodes() {
         listNode<node>* curListNode = allNodes().returnHead();
 
-        linkedList<int> traversed;
-        linkedList<int> untraversed;
+        linkedList<node> traversed;
         for (int i = 0; i < nodeCount(); i++) {
             if (curListNode->data->traversed) {
-                traversed.insertTail(curListNode->data->id);
-            }
-            else {
-                untraversed.insertTail(curListNode->data->id);
+                traversed.insertTail(curListNode->data);
             }
             if (curListNode->next != nullptr) {
                 curListNode = curListNode->next;
             }
         }
-        std::cout << "traversed: " << traversed << '\n';
-        std::cout << "untraversed: " << untraversed << '\n';
+
+        return traversed;
+    }
+
+    // returns all untraversed nodes
+    linkedList<node> untraversedNodes() {
+        listNode<node>* curListNode = allNodes().returnHead();
+
+        linkedList<node> untraversed;
+        for (int i = 0; i < nodeCount(); i++) {
+            if (!curListNode->data->traversed) {
+                untraversed.insertTail(curListNode->data);
+            }
+            if (curListNode->next != nullptr) {
+                curListNode = curListNode->next;
+            }
+        }
+
+        return untraversed;
+    }
+
+    // writes the traversed and untraversed nodes to console, quite useless
+    void displayTraversedNodes() {
+        std::cout << "traversed: " << traversedNodes() << '\n';
+        std::cout << "untraversed: " << untraversedNodes() << '\n';
     }
 
     // does a DFS and returns if each node was traversed

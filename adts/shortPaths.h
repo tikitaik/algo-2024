@@ -74,12 +74,12 @@ template<typename U> graph<U> prims(graph<U>& g, const int sourceNode) {
 }
 
 // for when you dont want to define source node
-template<typename T> graph<T> prims(graph<T>& g) {
+template<typename T> graph<T> prims(graph<T> g) {
     return prims(g, g.allNodes().returnHead()->data->id);
 }
 
 // add the minimal node that doesnt make the graph cyclic until it is connected
-template<typename U> graph<U> kruskals(graph<U>& g) {
+template<typename U> graph<U> kruskals(graph<U> g) {
     typedef node<U> node;
     // warning
     if (g.directed) {
@@ -129,4 +129,90 @@ template<typename U> graph<U> kruskals(graph<U>& g) {
     }
 
     return T;
+}
+
+template <typename T> void updateAdjacents(graph<T> g, node<T>* current, double minimalDist[], node<T>* prevNode[]) {
+    typedef node<T> node;
+
+    linkedList<node>* untNeighbours = g.untraversedNeighbours(current, g.directed); 
+    listNode<node>* curNeighbour = untNeighbours->returnHead();
+    
+    for (int i = 0; i < untNeighbours->size(); i++) {
+
+        const int indexOfNeighbour = g.getIndexInAllNodes(curNeighbour->data->id);
+        const double costToNeighbour = minimalDist[g.getIndexInAllNodes(current->id)] + (double)g.searchEdge(current->id, curNeighbour->data->id)->weight;
+        // if this new path is minimal or the minimal distance is "infinity" update it
+        if (costToNeighbour < minimalDist[indexOfNeighbour] || minimalDist[indexOfNeighbour] == -1) {
+            // set minimal distance of neighbour to new cost to neighbour
+            minimalDist[indexOfNeighbour] = costToNeighbour;
+            // set prevNode[neighbour] to current
+            prevNode[indexOfNeighbour] = current;
+        } // enumerate
+        if (curNeighbour->next != nullptr) {
+            curNeighbour = curNeighbour->next;
+        }
+    }
+}
+
+template <typename T> node<T>* findMinNode(graph<T> g, const double minimalDist[]) {
+    typedef node<T> node;
+
+    linkedList<node> untraversed = g.untraversedNodes(); 
+    listNode<node>* curNode = untraversed.returnHead();
+    node* minNode;
+    int minDistance = -1;
+
+    for (int i = 0; i < untraversed.size(); i++) {
+        int distOfCur = minimalDist[g.getIndexInAllNodes(curNode->data->id)];
+        if (distOfCur != -1 && (distOfCur < minDistance || minDistance == -1)) {
+            minDistance = distOfCur;
+            minNode = curNode->data;
+        }
+        if (curNode->next != nullptr) {
+            curNode = curNode->next;
+        }
+    }
+
+    minNode->traversed = true;
+
+    return minNode;
+}
+
+template <typename T> linkedList<node<T> > djikstras(graph<T> g, int source, int sink) {
+    typedef node<T> node;
+
+    g.setAllNodesToUntraversed();
+    node* current = g.searchNodeID(source);
+    current->traversed = true;
+    std::cout << "current is starting at node " << *current << '\n';
+
+    // array to store current minimal path costs, init all to -1 to represent infinite
+    // can be used since djikstras is not for negative weight values
+    double minimalDist[g.nodeCount()];
+    node* prevNode[g.nodeCount()];
+    for (int i = 0; i < g.nodeCount(); i++) {
+        minimalDist[i] = -1;
+        prevNode[i] = nullptr;
+    }
+    minimalDist[g.getIndexInAllNodes(source)] = 0;
+    // array that stores pointer to previous listnode in the shortest path
+
+    while (current != g.searchNodeID(sink)) {
+        // update adjacent nodes
+        updateAdjacents(g, current, minimalDist, prevNode);
+
+        // choose current
+        current = findMinNode(g, minimalDist);
+        std::cout << "new current: " << *current << '\n';
+    }
+
+    // go back and make path
+    linkedList<node> shortestPath;
+    node* toAdd = g.searchNodeID(sink);
+    while (prevNode[g.getIndexInAllNodes(toAdd->id)] != nullptr) {
+        shortestPath.insertHead(toAdd);
+        toAdd = prevNode[g.getIndexInAllNodes(toAdd->id)];
+    }
+
+    return shortestPath;
 }
