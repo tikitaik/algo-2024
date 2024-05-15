@@ -7,7 +7,6 @@
 // given a connected g returns an MST using prims algorithm
 template<typename U> graph<U> prims(graph<U>& g, const int sourceNode) {
     typedef node<U> node;
-
     // works on undirected graphs best
     if (g.directed) {
         std::cout << "this may not work as prim's doesnt always work on directed graphs\n";
@@ -27,8 +26,9 @@ template<typename U> graph<U> prims(graph<U>& g, const int sourceNode) {
         linkedList<edge> crossingEdges;
 
         // find crossing edges for T and G - T
-        for(int i = 0; i < sourceEdgeCount; i++) {
+        for (int i = 0; i < sourceEdgeCount; i++) {
             // i wish it looked better than this
+            // seg faults on this if statement
             if ((T.allNodes().contains(*g.searchNodeID(curEdge->data->start)) && !T.allNodes().contains(*g.searchNodeID(curEdge->data->end))) || (T.allNodes().contains(*g.searchNodeID(curEdge->data->end)) && !T.allNodes().contains(*g.searchNodeID(curEdge->data->start)))) {
                 crossingEdges.insertTail(curEdge->data);
                 //std::cout << "adding edge " << *curEdge->data << " to crossingEdges\n";
@@ -50,7 +50,7 @@ template<typename U> graph<U> prims(graph<U>& g, const int sourceNode) {
                 toAdd = curCrossingEdge->data;
             }
 
-            if (i < crossingEdges.size() - 1) {
+            if (curCrossingEdge->next != nullptr) {
                 curCrossingEdge = curCrossingEdge->next;
             }
         }
@@ -135,7 +135,6 @@ template<typename U> graph<U> kruskals(graph<U> g) {
         std::cout << "minimal edge is " << *minEdge << " with weight " << minEdge->weight << '\n';
     }
 
-    std::cout << "1";
     return T;
 }
 

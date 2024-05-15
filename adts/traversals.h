@@ -20,15 +20,15 @@ template <typename T, typename U> void addUntraversedNeighbours(graph<T>& g, U& 
 
 // returns an adjacency matrix in a 1D array, given a graph
 // but is printed as 2D by the displayMatrix2D function
-template <typename T> int* adjMatrix2D(graph<T>& graph) {
+template <typename T> int* adjMatrix2D(graph<T>& g) {
     typedef node<T> node;
-    const int nodeCount = graph.allNodes().size();
-    const int edgeCount = graph.allEdges().size();
+    const int nodeCount = g.allNodes().size();
+    const int edgeCount = g.allEdges().size();
     int* matrixArr = new int [nodeCount * nodeCount + 1];
 
     // cheeky extra cell is used for storing the count in an extra element, not very useful though
     matrixArr[nodeCount * nodeCount] = nodeCount;
-    listNode<edge>* curEdge = graph.allEdges().returnHead();
+    listNode<edge>* curEdge = g.allEdges().returnHead();
 
     // O(n^2) sets all values to 0
     for (int i = 0; i < nodeCount; i++) {
@@ -41,7 +41,7 @@ template <typename T> int* adjMatrix2D(graph<T>& graph) {
     for (int i = 0; i < edgeCount; i++) {
         matrixArr[(curEdge->data->start) * nodeCount + (curEdge->data->end)] = curEdge->data->weight;
 
-        if (!graph.directed) {
+        if (!g.directed) {
             matrixArr[(curEdge->data->end) * nodeCount + (curEdge->data->start)] = curEdge->data->weight;
         }
         curEdge = curEdge->next;
@@ -213,16 +213,16 @@ template <typename T> linkedList<node<T> > BFS (graph<T>& g, const int source) {
     return visited;
 }
 
-template <typename U> int* FWTC(graph<U>& graph) { 
+template <typename U> int* FWTC(graph<U>& g) { 
     //let T be |V|x|V| matrix of transitive closure initialized to run on a directed graph G={V,E}
-    const int nodeCount = graph.nodeCount();
+    const int nodeCount = g.nodeCount();
     int* T = new int[nodeCount * nodeCount];
 
     // row
     for (int i = 0; i < nodeCount; i++) {
         // column
         for(int j = 0; j < nodeCount; j++) {
-            if ((i == j) || (graph.edgeExists(i, j))) {
+            if ((i == j) || (g.edgeExists(i, j))) {
                 T[nodeCount * i + j] = 1; //there is a path
             }
             else {

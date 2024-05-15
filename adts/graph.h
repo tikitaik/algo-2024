@@ -83,21 +83,12 @@ template <typename T> class graph {
         }
     }
 
-    int start (const edge& edge) {
-        return nodes.goToIndex(0)->data->id;
-    }
-
-    int end (const edge& edge) {
-        return nodes.goToIndex(nodes.size() - 1)->data->id;
-    }
-
     public:
 
     const bool directed;
     bool isCyclic;
 
-    graph (bool isDirected) : directed(isDirected) {
-    }
+    graph (bool isDirected) : directed(isDirected) {}
 
     // returns nodes and edges
     linkedList<node>& allNodes () {
@@ -153,7 +144,7 @@ template <typename T> class graph {
             if (highestID < curListNode->data->id) {
                 highestID = curListNode->data->id;
             }
-            if (i < nodes.size() - 1) {
+            if (curListNode->next != nullptr) {
                 curListNode = curListNode->next;
             }
         }
@@ -285,7 +276,7 @@ template <typename T> class graph {
                 }
             }
             // dont want to go out of the bounds of the list
-            if (i < edges.size() - 1) {
+            if (curEdge->next != nullptr) {
                 curEdge = curEdge->next;
             }
         }
@@ -316,7 +307,8 @@ template <typename T> class graph {
             if (curNode->data->id == id) {
                 return curNode->data;
             }
-            else if (i < allNodes().size() - 1) {
+            //else if (i < allNodes().size() - 1) {
+            else if (curNode->next != nullptr) {
                 curNode = curNode->next;
             }
         }
@@ -564,11 +556,11 @@ template <typename T> class graph {
                 if (!edgeExists(edge)) {
                     addEdge(start->data->id, end->data->id);
                 }
-                if (j < nodes.size() - 1) {
+                if (end->next != nullptr) {
                     end = end->next;
                 }
             }
-            if (i < nodes.size() - 1) {
+            if (start->next != nullptr) {
                 start = start->next;
             }
             end = nodes.returnHead();

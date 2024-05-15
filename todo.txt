@@ -1,8 +1,8 @@
-A* (also not urgent)
-fix seg fault after kruskals 
+fix delete/ remove functions because they delete everything and not jsut deallocate the pointers
 bellman ford
 floyd-warshall shortest path
 binary trees
 trees
 use array to add things to linkedlist
 get rid of *sptr from linkedlist file
+A* (also not urgent)
