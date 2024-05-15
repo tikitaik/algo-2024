@@ -281,7 +281,7 @@ template <typename T> linkedList<node<T> >* topologicalSort(graph<T>& g) {
                 curNode = curNode->next;
             }
         }
-        unvisited.push(*current);
+        unvisited.push(current);
 
         // this is the DFS starting from each node on the directed g
         for (int j = 0; j < g.nodeCount(); j++) {
@@ -297,7 +297,7 @@ template <typename T> linkedList<node<T> >* topologicalSort(graph<T>& g) {
                         //std::cout << "pushing: " << *unvisited.top()->data << " to visited\n";
                         current = unvisited.pop()->data;
                         current->traversed = true;
-                        visited.push(*current);
+                        visited.push(current);
                         if (unvisited.size() == 0) { break; }
                     }
                 }

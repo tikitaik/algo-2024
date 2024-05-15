@@ -466,7 +466,7 @@ template <typename T> class graph {
             listNode<node>* curNode = untNeighbours->returnHead();
 
             for (int i = 0; i < untNeighbours->size(); i++) {
-                unvisited.push(*curNode->data);
+                unvisited.push(curNode->data);
                 if (curNode->next) {
                     curNode = curNode->next;
                 }
