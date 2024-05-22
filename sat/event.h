@@ -2,6 +2,8 @@
 # include "adts/linkedlist.h"
 # include "adts/graph.h"
 # include "adts/traversals.h"
+# include "sat/goal.h"
+# include "sat/team.h"
 
 
 class rogaineEvent {
