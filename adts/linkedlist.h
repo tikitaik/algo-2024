@@ -122,8 +122,28 @@ template <typename T> class linkedList {
         this->tail = newNode;
     }
 
+    // using array to add
+    void insertTail(T valueArr[], int size) {
+        for (int i = 0; i < size; i++) {
+            curSize++;
+            listNode* newNode = new listNode(&valueArr[i]);
+
+            if (tail) {
+                tail->next = newNode;
+            }
+            if (head == nullptr) {
+                head = newNode;
+            }
+
+            newNode->next = nullptr;
+            newNode->prev = tail;
+
+            this->tail = newNode;
+        }
+    }
+
     // add listNode as new tail
-    void insertTail(T* add, int id) {
+    /*void insertTail(T* add, int id) {
         curSize++;
         listNode* newNode = new listNode(add, id);
 
@@ -138,7 +158,7 @@ template <typename T> class linkedList {
         newNode->prev = tail;
 
         this->tail = newNode;
-    }
+    }*/
 
     // add listNode as new tail static
     void insertTail(T add) {
