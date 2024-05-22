@@ -43,4 +43,7 @@ int main() {
 
     pair<int, int> p(4, 6);
     std::cout << p << '\n';
+    linkedList<pair<int, std::string> > l;
+    l.insertTail(pair<int, std::string>(5, "hi"));
+    std::cout << l << '\n';
 }

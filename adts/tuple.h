@@ -9,6 +9,7 @@ protected :
     U* two;
     
 public:
+    pair () {};
     pair (T* oneIn, U* twoIn) {
         one = oneIn;
         two = twoIn;
