@@ -10,14 +10,14 @@ task :
 |   |   end coordinates (float array)
 |   |   linked list of teams
 |   |   bracket array (type is team data type, size is 6 according to brief)
-|   |   dictionary of goals, and pair of team and time
+|   |   dictionary for goals, and pair of team and time
 | 
 |   team ADT
 |   |   team member count (int)
 |   |   team member names and ages (linkedList of pairs of strings and age)
 |   |   time of arrival (time date type)
 |   |   time of finishing (time data type)
-|   |   armband register (linkedList of nodes : format : goal, time visited)
+|   |   armband register (linkedList of pairs <goal, time visited>)
 |
 |   goal ADT
 |   |   x coordinate (float)

@@ -10,8 +10,8 @@ class team {
     public :
         int memberCount;
         linkedList<pair<std::string, int> > members;
-        uint arrivalTime;
-        uint finishTime;
+        timePlaceholder arrivalTime;
+        timePlaceholder finishTime;
         // linkedList of goals recorded : armbandRegister
         linkedList<pair<goal, timePlaceholder> > goalHistory;
 };
