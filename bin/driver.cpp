@@ -1,11 +1,12 @@
 # include "adts/linkedlist.h"
+# include "adts/tuple.h"
 # include "adts/graph.h"
 # include "adts/traversals.h"
 # include "adts/shortPaths.h"
 # include "recursion/recursion.h"
 
 int main() {
-    /*
+
     graph<int> g(false);
     
     g.addNodes(10);
@@ -38,9 +39,8 @@ int main() {
     std::cout << "prims: " << prims(g) << '\n';
     std::cout << "recPrims: " << recPrimsStart(g) << '\n';
     std::cout << "kruskals: " << kruskals(g) << '\n';
-    std::cout << djikstras(g, 9, 1) << '\n';*/
+    std::cout << djikstras(g, 9, 1) << '\n';
 
-    linkedList<int> test;
-    test.insertTail((int[]) { 0, 5, 6, 7, 1, 5 }, 10);
-    std::cout << test << '\n';
+    pair<int, int> p(4, 6);
+    std::cout << p << '\n';
 }
