@@ -1,7 +1,11 @@
 #include <iostream>
-#include "event_abstraction.h"
+#include "sat/rogaineEvent.h"
 
 int main () {
-    rogaineEvent rEvent;
+    
+    float start[2] = { 0.252f, 0.134f };
+    float end[2] = { 0.234532f, 1.2525f }; 
+
+    rogaineEvent rEvent(start, end);
     rEvent.addGoal(0.123f, 0.252f, 4.0f);
 }

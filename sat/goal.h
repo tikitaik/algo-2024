@@ -1,7 +1,7 @@
 # pragma once
 
 # include <iostream>
-# include "linkedlist.h"
+# include "adts/linkedlist.h"
 
 class goal {
     public:
@@ -10,7 +10,7 @@ class goal {
         const float y;
         // linkedList of teams that visited this goal
 
-        goal (int points, float xCoord, float yCoord) : points(pointReward), x(xCoord), y(yCoord) {
+        goal (int pointReward, float xCoord, float yCoord) : points(pointReward), x(xCoord), y(yCoord) {
             std::cout << "goal initialised !\n";
         }
 };

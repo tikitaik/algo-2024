@@ -13,7 +13,7 @@ class rogaineEvent {
     float end[2];
 
     // linkedList to keep track of all of the goals, can update the linkedList lib later
-    linkedList<linkedList<float> > goals;    
+    linkedList<goal> goals;    
 
     // register
     linkedList<teamData> teamRegister;
@@ -29,5 +29,7 @@ class rogaineEvent {
 };
 
 void rogaineEvent::addGoal(float points, float x, float y) {
-    goal 
+    goal* newGoal = new goal(points, x, y);
+    goals.insertTail(newGoal);
 }
+        // array of tuples of goals;
