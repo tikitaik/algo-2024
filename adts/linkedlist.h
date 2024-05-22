@@ -25,7 +25,7 @@ template<typename T> struct listNode {
         this->id = id;
     }
 };
-// how to print linkedlists
+// how to print nodes
 template <typename T> std::ostream& operator << (std::ostream& os, const listNode<T> node) {
 
     os << "next: " << node.next << ", prev: " << node.prev << ", id: " << node.id << ", data: " << *node.data << '\n';

@@ -3,6 +3,7 @@
 # include "adts/graph.h"
 # include "adts/traversals.h"
 # include "adts/shortPaths.h"
+# include "time/time.h"
 # include "recursion/recursion.h"
 
 int main() {
@@ -46,4 +47,8 @@ int main() {
     linkedList<pair<int, std::string> > l;
     l.insertTail(pair<int, std::string>(5, "hi"));
     std::cout << l << '\n';
+
+    timePlaceholder t;
+    t.time = 864000;
+    std::cout << t << '\n';
 }
