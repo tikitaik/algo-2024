@@ -1,14 +1,14 @@
-#pragma once
+# pragma once
 
-#include <iostream>
-#include "linkedlist.h"
+# include <iostream>
+# include "linkedlist.h"
 
 class teamData {
     public :
         int memberCount;
         dictionary<string, int> members;
         uint arrivalTime;
-        uint finishTimel
+        uint finishTime;
         linkedList<teamData> bracket;
         // linkedList of goals recorded : armbandRegister
 }

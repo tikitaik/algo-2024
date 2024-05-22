@@ -3,17 +3,6 @@
 # include "adts/graph.h"
 # include "adts/traversals.h"
 
-class goal {
-    public:
-        const int points;
-        const float x;
-        const float y;
-        // linkeList of teams that visited this goal
-
-        goal (int points, float xCoord, float yCoord) : points(pointReward), x(xCoord), y(yCoord) {
-            std::cout << "goal initialised !\n";
-        }
-};
 
 class rogaineEvent {
 
@@ -25,7 +14,9 @@ class rogaineEvent {
     linkedList<linkedList<float> > goals;    
 
     // register
-    linkedList<teamData>
+    linkedList<teamData> teamRegister;
+
+
     public:
 
     rogaineEvent(float start[2], float end[2]) {
@@ -36,10 +27,5 @@ class rogaineEvent {
 };
 
 void rogaineEvent::addGoal(float points, float x, float y) {
-    linkedList<float> goal;
-    goal.insertTail(points);
-    goal.insertTail(x);
-    goal.insertTail(y);
-
-    goals.insertTail(goal);
+    goal 
 }

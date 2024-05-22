@@ -10,12 +10,22 @@ to store points:
     dictionary?
 
 event register
+    start coordinates
+    end coordinates
+    linked list of goals
+    linked list of teams
+    
+
+team ADT
     team member count (int)
-    team member names and ages (dictionary of strings and names), size is team member count
+    team member names and ages (dictionary <strings, names>, or linkedList of tuple of strings and name), size is team member count
     time of arrival (time date type)
     time of finishing (time data type)
     starting bracket (something about leaving 10 minutes apart, six of them)
+    armband register (linkedList of nodes : format : goal, time visited)
 
-team armband register (linkedList of nodes : format : goal, time visited)
-
-location register (dictionary <team, time visited>, or linkedList of nodes that have team and time visited)
+goal ADT
+    x coordinate (float)
+    y coordinate (float)
+    point reward (int)
+    location register (dictionary <team, time visited>, or linkedList of nodes that have team and time visited)
