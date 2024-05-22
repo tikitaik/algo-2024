@@ -105,12 +105,12 @@ void displayMatrix2D(const int* matrix, const int nodeCount) {
 }
 
 
-// depth first search on an adjaency matrix
-stack<int> adjDFS(int* matrix, const int nodeCount, const int source) {
-    stack<int> traversed;
-    stack<int> unvisited;
-    int* traversedArr = new int[nodeCount];
-    int cur;
+// depth first search on an adjacency matrix
+template <typename T> stack<T> adjDFS(int* matrix, const int nodeCount, const int source) {
+    stack<T> traversed;
+    stack<T> unvisited;
+    T* traversedArr = new T[nodeCount];
+    T cur;
     int sourcePush = source;
     traversedArr[source] = 1;
     traversed.push(sourcePush);
@@ -125,7 +125,7 @@ stack<int> adjDFS(int* matrix, const int nodeCount, const int source) {
             // if an edge between node with id cur and nodeCount + j exists and it is not a
             // traversed node then add it to the unvisited stack
             if (matrix[cur * nodeCount + j] != 0 && traversedArr[j] == 0) {
-                int* toPush = new int;
+                T* toPush = new T;
                 *toPush = j;
                 unvisited.push(toPush);
             }
@@ -134,10 +134,11 @@ stack<int> adjDFS(int* matrix, const int nodeCount, const int source) {
         // sets cur to top of stack if there is an element in the stack and pushes the top
         // if it isnt in there already
         if (unvisited.top()) {
-            int* ref = unvisited.pop()->data;
+            T* ref = unvisited.pop()->data;
             if (!traversed.contains(*ref)) {
-                traversed.push(ref);
+                traversed.push(*ref);
             }
+            delete ref;
         }
     }
 
@@ -180,6 +181,7 @@ template <typename T> linkedList<node<T> > DFS (graph<T>& g, const int source) {
             if (!visited.contains(*current)) {
                 visited.insertTail(*current);
             }
+            unvisited.removeKey(*current);
         }
     }
     return visited;
@@ -221,6 +223,7 @@ template <typename T> linkedList<node<T> > BFS (graph<T>& g, const int source) {
             if (!visited.contains(*current)) {
                 visited.insertTail(*current);
             }
+            unvisited.removeKey(*current);
         }
     }
     return visited;
@@ -311,6 +314,7 @@ template <typename T> linkedList<node<T> >* topologicalSort(graph<T>& g) {
                         current = unvisited.pop()->data;
                         current->traversed = true;
                         visited.push(*current);
+                        unvisited.removeKey(*current);
                         if (unvisited.size() == 0) { break; }
                     }
                 }
@@ -326,6 +330,7 @@ template <typename T> linkedList<node<T> >* topologicalSort(graph<T>& g) {
 
     for (int i = 0; i < g.nodeCount(); i++) {
         sortOrdered->insertTail(*visited.pop()->data);
+        visited.removeKey(*sortOrdered->returnTail()->data);
     }
     
     return sortOrdered;

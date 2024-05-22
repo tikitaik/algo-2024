@@ -478,6 +478,7 @@ template <typename T> class graph {
                 if (!visited.contains(*current)) {
                     visited.insertTail(*current);
                 }
+                unvisited.removeKey(*current);
             }
         }
 

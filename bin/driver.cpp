@@ -32,11 +32,10 @@ int main() {
     std::cout << "recDFS: " << *recDFSStart(g, 0) << '\n';
     std::cout << "BFS: " << BFS(g, 0) << '\n';
     //std::cout << "topSort: " << *topologicalSort(g) << '\n';
-    //std::cout << "topSort: " << *recTopSortStart(g) << '\n';
+    //std::cout << "recTopSort: " << *recTopSortStart(g) << '\n';
 
     std::cout << "prims: " << prims(g) << '\n';
     std::cout << "recPrims: " << recPrimsStart(g) << '\n';
     std::cout << "kruskals: " << kruskals(g) << '\n';
-    std::cout << djikstras(g, 0, 9) << '\n';
-
+    std::cout << djikstras(g, 9, 1) << '\n';
 }

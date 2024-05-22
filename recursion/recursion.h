@@ -212,7 +212,9 @@ template <typename T> linkedList<node<T> >* recTopSort(graph<T>& g, node<T>* cur
         // reverse it
         linkedList<node>* orderedTopSort = new linkedList<node>;
         for (int i = 0; i < g.nodeCount(); i++) {
-            orderedTopSort->insertTail(visited.pop()->data);
+            node* add = visited.pop()->data;
+            orderedTopSort->insertTail(*add);
+            delete add;
         }
 
         return orderedTopSort;
