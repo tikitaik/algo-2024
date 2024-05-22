@@ -19,7 +19,7 @@ class rogaineEvent {
     linkedList<team> bracketArr[6];
 
     //register of goals, maps to teams that visit them that visited goals
-    dictionary<goal, linkedList<pair<team, int> > > goalRegister;
+    dictionary<goal, linkedList<pair<team, timePlaceholder> > > goalRegister;
 
     public:
 
@@ -32,6 +32,6 @@ class rogaineEvent {
 
 void rogaineEvent::addGoal(float x, float y, int points) {
     goal* newGoal = new goal(points, x, y);
-    linkedList<pair<team, int> >* visitedTeams = new linkedList<pair<team, int> >;
+    linkedList<pair<team, timePlaceholder> >* visitedTeams = new linkedList<pair<team, timePlaceholder> >;
     goalRegister.insert(newGoal, visitedTeams);
 }
