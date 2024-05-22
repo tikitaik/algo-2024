@@ -8,19 +8,18 @@ task :
 |   event register
 |   |   start coordinates (float array)
 |   |   end coordinates (float array)
-|   |   linked list of goals using goal data type
-|   |   linked list of teams using teamData data type
+|   |   linked list of teams
+|   |   bracket array (type is team data type, size is 6 according to brief)
+|   |   dictionary of goals, and pair of team and time
 | 
 |   team ADT
 |   |   team member count (int)
-|   |   team member names and ages (dictionary <strings, names>, or linkedList of tuple of strings and name), size is team member count
+|   |   team member names and ages (linkedList of pairs of strings and age)
 |   |   time of arrival (time date type)
 |   |   time of finishing (time data type)
-|   |   starting bracket (something about leaving 10 minutes apart, six of them)
 |   |   armband register (linkedList of nodes : format : goal, time visited)
 |
 |   goal ADT
 |   |   x coordinate (float)
 |   |   y coordinate (float)
 |   |   point reward (int)
-|   |   location register (dictionary <team, time visited>, or linkedList of nodes that have team and time visited)

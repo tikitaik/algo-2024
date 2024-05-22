@@ -2,13 +2,15 @@
 
 # include <iostream>
 # include "adts/linkedlist.h"
+# include "adts/tuple.h"
+# include "sat/goal.h"
 
-class teamData {
+class team {
     public :
         int memberCount;
-        dictionary<std::string, int> members;
+        linkedList<pair<std::string, int> > members;
         uint arrivalTime;
         uint finishTime;
-        linkedList<teamData> bracket;
         // linkedList of goals recorded : armbandRegister
+        linkedList<pair<goal, int> > goalHistory;
 };

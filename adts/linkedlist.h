@@ -491,7 +491,7 @@ template <typename K, typename V> class dictionary : linkedList<K>, linkedList<V
     // insert kvp, i want to make key const so that they cant be changed later to not be unique
     void insert(K* key, V* value) {
         // do check for unique ID
-        if (keys.contains(key)) {
+        if (keys.contains(*key)) {
             std::cout << "key already exists in dictionary!\n";
             return;
         }

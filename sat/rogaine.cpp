@@ -1,4 +1,6 @@
 # include <iostream>
+# include "sat/goal.h"
+# include "sat/team.h"
 # include "sat/rogaineEvent.h"
 
 int main () {
@@ -7,5 +9,5 @@ int main () {
     float end[2] = { 0.234532f, 1.2525f }; 
 
     rogaineEvent rEvent(start, end);
-    rEvent.addGoal(0.123f, 0.252f, 4.0f);
+    rEvent.addGoal(0.123f, 0.252f, 112);
 }
