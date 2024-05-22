@@ -1,4 +1,4 @@
-make indexable tuple data type that i can use in linkedLists
+make indexable tuple data type that i can use in linkedLists (for dev branch)
 time lib
 bellman ford
 floyd-warshall shortest path

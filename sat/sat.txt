@@ -1,31 +1,26 @@
 - as many points in time limit
 
 task :  
-    define model to hold required information for an event
-    develop algo for optimal path through the park
-    use the model to compare team efficiency
-
-to store points: 
-    linkedlist of float array (int points, x coord, y coord)?
-    dictionary?
-
-event register
-    start coordinates
-    end coordinates
-    linked list of goals
-    linked list of teams
-    
-
-team ADT
-    team member count (int)
-    team member names and ages (dictionary <strings, names>, or linkedList of tuple of strings and name), size is team member count
-    time of arrival (time date type)
-    time of finishing (time data type)
-    starting bracket (something about leaving 10 minutes apart, six of them)
-    armband register (linkedList of nodes : format : goal, time visited)
-
-goal ADT
-    x coordinate (float)
-    y coordinate (float)
-    point reward (int)
-    location register (dictionary <team, time visited>, or linkedList of nodes that have team and time visited)
+|   define model to hold required information for an event
+|   develop algo for optimal path through the park
+|   use the model to compare team efficiency
+|
+|   event register
+|   |   start coordinates (float array)
+|   |   end coordinates (float array)
+|   |   linked list of goals using goal data type
+|   |   linked list of teams using teamData data type
+| 
+|   team ADT
+|   |   team member count (int)
+|   |   team member names and ages (dictionary <strings, names>, or linkedList of tuple of strings and name), size is team member count
+|   |   time of arrival (time date type)
+|   |   time of finishing (time data type)
+|   |   starting bracket (something about leaving 10 minutes apart, six of them)
+|   |   armband register (linkedList of nodes : format : goal, time visited)
+|
+|   goal ADT
+|   |   x coordinate (float)
+|   |   y coordinate (float)
+|   |   point reward (int)
+|   |   location register (dictionary <team, time visited>, or linkedList of nodes that have team and time visited)

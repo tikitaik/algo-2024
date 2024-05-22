@@ -1,4 +1,4 @@
-#include <iostream>
+# include <iostream>
 
 long double next (size_t n) {
     if (n == 0) {

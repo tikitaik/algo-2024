@@ -1,6 +1,6 @@
-#pragma once
+# pragma once
 
-#include <iostream>
+# include <iostream>
 
 // listNode with data that constitutes the linked list
 template<typename T> struct listNode {
@@ -541,7 +541,7 @@ template <typename K, typename V> class dictionary : linkedList<K>, linkedList<V
     }
 };
 
-#include "adts/graph.h"
+# include "adts/graph.h"
 template<typename T> bool operator == (const node<T> n1, const node<T> n2) {
     return n1.id == n2.id;
 }

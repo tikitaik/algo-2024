@@ -1,5 +1,5 @@
-#include <iostream>
-#include "sat/rogaineEvent.h"
+# include <iostream>
+# include "sat/rogaineEvent.h"
 
 int main () {
     

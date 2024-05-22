@@ -1,3 +1,5 @@
+# pragma once
+
 # include <iostream>
 # include "adts/linkedlist.h"
 # include "adts/graph.h"

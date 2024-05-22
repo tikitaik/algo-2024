@@ -1,8 +1,8 @@
-#include "adts/linkedlist.h"
-#include "adts/graph.h"
-#include "adts/traversals.h"
-#include "adts/shortPaths.h"
-#include "recursion/recursion.h"
+# include "adts/linkedlist.h"
+# include "adts/graph.h"
+# include "adts/traversals.h"
+# include "adts/shortPaths.h"
+# include "recursion/recursion.h"
 
 int main() {
     graph<int> g(false);

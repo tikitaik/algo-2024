@@ -1,8 +1,8 @@
 # pragma once
 
-#include "adts/linkedlist.h"
-#include "adts/graph.h"
-#include "adts/traversals.h"
+# include "adts/linkedlist.h"
+# include "adts/graph.h"
+# include "adts/traversals.h"
 
 template<typename U> linkedList<edge> findCrossingEdges (graph<U> g, graph<U> T) {
     

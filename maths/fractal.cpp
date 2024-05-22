@@ -1,5 +1,5 @@
-#include "../raylib/raylib.h"
-#include <iostream>
+# include "../raylib/raylib.h"
+# include <iostream>
 
 Vector2 windowSize = {1400, 900};
 
