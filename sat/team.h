@@ -3,6 +3,7 @@
 # include <iostream>
 # include "adts/linkedlist.h"
 # include "adts/tuple.h"
+# include "time/time.h"
 # include "sat/goal.h"
 
 class team {
@@ -12,5 +13,5 @@ class team {
         uint arrivalTime;
         uint finishTime;
         // linkedList of goals recorded : armbandRegister
-        linkedList<pair<goal, int> > goalHistory;
+        linkedList<pair<goal, timePlaceholder> > goalHistory;
 };
