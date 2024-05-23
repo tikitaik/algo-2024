@@ -4,22 +4,22 @@ task :
 |   define model to hold required information for an event
 |   develop algo for optimal path through the park
 |   use the model to compare team efficiency
-|
-|   event register
-|   |   start coordinates (float array)
-|   |   end coordinates (float array)
-|   |   linked list of teams
-|   |   bracket array (type is team data type, size is 6 according to brief)
-|   |   dictionary for goals, and pair of team and time
-| 
-|   team ADT
-|   |   team member count (int)
-|   |   team member names and ages (linkedList of pairs of strings and age)
-|   |   time of arrival (time date type)
-|   |   time of finishing (time data type)
-|   |   armband register (linkedList of pairs <goal, time visited>)
-|
-|   goal ADT
-|   |   x coordinate (float)
-|   |   y coordinate (float)
-|   |   point reward (int)
+
+event register
+|   start coordinates (float array)
+|   end coordinates (float array)
+|   linked list of teams
+|   bracket array (type is team data type, size is 6 according to brief)
+|   dictionary for goals, and pair of team and time
+ 
+team ADT
+|   team member count (int)
+|   team member names and ages (linkedList of pairs of strings and age)
+|   time of arrival (time date type)
+|   time of finishing (time data type)
+|   armband register (linkedList of pairs <goal, time visited>)
+
+goal ADT
+|   x coordinate (float)
+|   y coordinate (float)
+|   point reward (int)
