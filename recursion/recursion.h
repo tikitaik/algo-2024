@@ -326,4 +326,9 @@ template <typename T> graph<T> recPrims(graph<T>& g, graph<T>& MST) {
         return recPrims(g, MST);
         // easy
     }
+
+    int** recSquareMatrixMultiplication(static int** matA, static int** matB, static int len) {
+        // do the multiplication
+        // repeat len times
+    }
 }
