@@ -326,9 +326,61 @@ template <typename T> graph<T> recPrims(graph<T>& g, graph<T>& MST) {
         return recPrims(g, MST);
         // easy
     }
+}
 
-    int** recSquareMatrixMultiplication(static int** matA, static int** matB, static int len) {
-        // do the multiplication
-        // repeat len times
+int** recSquareMatrixMultiplication(int row, int col, int** matA, int** matB, int** product, int len) {
+    // do the multiplication
+    // repeat len times
+    static int i = 0, j = 0, k = 0;
+
+    if (i >= len)
+        return product;
+
+    // If i < row1
+    if (j < len) {
+        if (k < len) {
+            product[i][j] += matA[i][k] * matB[k][j];
+            k++;
+
+            recSquareMatrixMultiplication(row, col, matA, matB, product, len);
+        }
+
+        k = 0;
+        j++;
+        recSquareMatrixMultiplication(row, col, matA, matB, product, len);
+    }
+
+    j = 0;
+    i++;
+    recSquareMatrixMultiplication(row, col, matA, matB, product, len);
+    
+    return product;
+}
+
+int** recSquareMatrixMultiplication(int** matA, int** matB, int len) {
+    // do the multiplication
+    // repeat len times
+    
+    // init product array
+    int** product =  new int* [len];
+    for (int i = 0; i < len; i++) {
+
+        product[i] = new int [len];
+
+        for (int j = 0; j < len; j++) {
+            product[i][j] = 0;
+        }
+    }
+
+    // go along row for matA and down column for matB
+    return recSquareMatrixMultiplication(0, 0, matA, matB, product, len);
+}
+
+void printProductMatrix(int** product, int len) {
+    for (int i = 0; i < len; i++) {
+        for (int j = 0; j < len; j++) {
+            std::cout << product[i][j] << ' ';
+        }
+        std::cout << '\n';
     }
 }

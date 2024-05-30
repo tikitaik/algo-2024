@@ -6,6 +6,10 @@
 # include "time/time.h"
 # include "recursion/recursion.h"
 
+void test(int n, int** arr) {
+    std::cout << "hi!" << '\n';
+}
+
 int main() {
 
     graph<int> g(false);
@@ -41,14 +45,23 @@ int main() {
     std::cout << "recPrims: " << recPrimsStart(g) << '\n';
     std::cout << "kruskals: " << kruskals(g) << '\n';
     std::cout << djikstras(g, 9, 1) << '\n';
+    
+    std::cout << '\n';
 
-    pair<int, int> p(4, 6);
-    std::cout << p << '\n';
-    linkedList<pair<int, std::string> > l;
-    l.insertTail(pair<int, std::string>(5, "hi"));
-    std::cout << l << '\n';
+    int** matA = new int* [4];
+    int** matB = new int* [4];
 
-    timePlaceholder t;
-    t.time = 864000;
-    std::cout << t << '\n';
+    for (int i = 0; i < 4; i++) {
+        matA[i] = new int[4];
+        matB[i] = new int[4];
+    }
+
+    for (int i = 0; i < 4; i++) {
+        for (int j = 0; j < 4; j++) {
+            matA[i][j] = i + j;
+            matB[3 - i][3 - j] = i + j;
+        }
+    }
+
+    printProductMatrix(recSquareMatrixMultiplication(matA, matB, 4), 4);
 }
