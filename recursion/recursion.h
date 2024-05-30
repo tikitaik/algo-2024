@@ -328,6 +328,15 @@ template <typename T> graph<T> recPrims(graph<T>& g, graph<T>& MST) {
     }
 }
 
+void printProductMatrix(int** product, int len) {
+    for (int i = 0; i < len; i++) {
+        for (int j = 0; j < len; j++) {
+            std::cout << product[i][j] << ' ';
+        }
+        std::cout << '\n';
+    }
+}
+
 int** recSquareMatrixMultiplication(int row, int col, int** matA, int** matB, int** product, int len) {
     // do the multiplication
     // repeat len times
@@ -374,13 +383,4 @@ int** recSquareMatrixMultiplication(int** matA, int** matB, int len) {
 
     // go along row for matA and down column for matB
     return recSquareMatrixMultiplication(0, 0, matA, matB, product, len);
-}
-
-void printProductMatrix(int** product, int len) {
-    for (int i = 0; i < len; i++) {
-        for (int j = 0; j < len; j++) {
-            std::cout << product[i][j] << ' ';
-        }
-        std::cout << '\n';
-    }
 }
