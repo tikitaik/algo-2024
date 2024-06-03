@@ -328,6 +328,20 @@ template <typename T> graph<T> recPrims(graph<T>& g, graph<T>& MST) {
     }
 }
 
+bool isPowerOfTwo (int n) {
+    if (n == 1) {
+        return false;
+    }
+    while (n % 2 == 0 && n != 1) {
+        n = n / 2;
+    }
+
+    if (n == 1) {
+        return true;
+    }
+    else return false;
+}
+
 void printProductMatrix(int** product, int len) {
     for (int i = 0; i < len; i++) {
         for (int j = 0; j < len; j++) {
@@ -366,10 +380,14 @@ int** recSquareMatrixMultiplication(int row, int col, int** matA, int** matB, in
     return product;
 }
 
+// only works for square arrays of size 2^n
 int** recSquareMatrixMultiplication(int** matA, int** matB, int len) {
-    // do the multiplication
-    // repeat len times
-    
+    // check that len is a power of two
+    if (!isPowerOfTwo(len)) {
+        std::cout << "len is not a power of 2 therefore cannot multiply!\n";
+        return nullptr;
+    }
+
     // init product array
     int** product =  new int* [len];
     for (int i = 0; i < len; i++) {
