@@ -351,6 +351,19 @@ void printProductMatrix(int** product, int len) {
     }
 }
 
+/* int** recSquareMatrixMultiplication(int row, int col, int** matA, int** matB, int** product, int len) {
+ * n = a.rows 
+ * let c be a new n x n matrix
+ * if n == 1
+ *     c11 = a11 * b11
+ * else partition a, b, c as in equations 4.9
+ *     c11 = recFunc (a11, b11) + recFunc(a12 + b21)
+ *     c12 = recFunc (a11, b12) + recFunc(a12, b22)
+ *     c21 = recFunc (a21, b11) + recFunc(a22, b21)
+ *     c22 = recFunc (a21, b12) + recFunc(a22, b22)
+ *
+ * return c
+ }*/
 int** recSquareMatrixMultiplication(int row, int col, int** matA, int** matB, int** product, int len) {
     // do the multiplication
     // repeat len times
