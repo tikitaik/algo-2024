@@ -1,3 +1,4 @@
+# include <iostream>
 # include "adts/linkedlist.h"
 # include "adts/tuple.h"
 # include "adts/graph.h"
@@ -5,6 +6,8 @@
 # include "adts/shortPaths.h"
 # include "time/time.h"
 # include "recursion/recursion.h"
+# include "searchAndSortAlgorithms/search.h"
+# include "searchAndSortAlgorithms/sort.h"
 
 void test(int n, int** arr) {
     std::cout << "hi!" << '\n';
@@ -45,23 +48,7 @@ int main() {
     std::cout << "recPrims: " << recPrimsStart(g) << '\n';
     std::cout << "kruskals: " << kruskals(g) << '\n';
     std::cout << djikstras(g, 9, 1) << '\n';
-    
-    std::cout << '\n';
 
-    int** matA = new int* [4];
-    int** matB = new int* [4];
-
-    for (int i = 0; i < 4; i++) {
-        matA[i] = new int[4];
-        matB[i] = new int[4];
-    }
-
-    for (int i = 0; i < 4; i++) {
-        for (int j = 0; j < 4; j++) {
-            matA[i][j] = i + j;
-            matB[3 - i][3 - j] = i + j;
-        }
-    }
-
-    printProductMatrix(recSquareMatrixMultiplication(matA, matB, 4), 4);
+    int test[10] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+    binarySearch(test, 10, 9);
 }
