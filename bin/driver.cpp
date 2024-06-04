@@ -1,4 +1,3 @@
-# include <iostream>
 # include "adts/linkedlist.h"
 # include "adts/tuple.h"
 # include "adts/graph.h"
@@ -6,12 +5,6 @@
 # include "adts/shortPaths.h"
 # include "time/time.h"
 # include "recursion/recursion.h"
-# include "searchAndSortAlgorithms/search.h"
-# include "searchAndSortAlgorithms/sort.h"
-
-void test(int n, int** arr) {
-    std::cout << "hi!" << '\n';
-}
 
 int main() {
 
@@ -49,11 +42,13 @@ int main() {
     std::cout << "kruskals: " << kruskals(g) << '\n';
     std::cout << djikstras(g, 9, 1) << '\n';
 
-    int test[10] = {677, 1424, 5, 1241, -1, 73, 13, 568, 8, -124 };
-    binarySearch(test, 10, 9);
-    int* sorted = insertionSort(test, 10);
-    for (int i = 0; i < 9; i++) {
-        std::cout << sorted[i] << ", ";
-    }
-    std::cout << sorted[9] << '\n';
+    pair<int, int> p(4, 6);
+    std::cout << p << '\n';
+    linkedList<pair<int, std::string> > l;
+    l.insertTail(pair<int, std::string>(5, "hi"));
+    std::cout << l << '\n';
+
+    timePlaceholder t;
+    t.time = 864000;
+    std::cout << t << '\n';
 }
