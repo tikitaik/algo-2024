@@ -327,3 +327,91 @@ template <typename T> graph<T> recPrims(graph<T>& g, graph<T>& MST) {
         // easy
     }
 }
+
+bool isPowerOfTwo (int n) {
+    if (n == 1) {
+        return false;
+    }
+    while (n % 2 == 0 && n != 1) {
+        n = n / 2;
+    }
+
+    if (n == 1) {
+        return true;
+    }
+    else return false;
+}
+
+void printProductMatrix(int** product, int len) {
+    for (int i = 0; i < len; i++) {
+        for (int j = 0; j < len; j++) {
+            std::cout << product[i][j] << ' ';
+        }
+        std::cout << '\n';
+    }
+}
+
+/* int** recSquareMatrixMultiplication(int row, int col, int** matA, int** matB, int** product, int len) {
+ * n = a.rows 
+ * let c be a new n x n matrix
+ * if n == 1
+ *     c11 = a11 * b11
+ * else partition a, b, c as in equations 4.9
+ *     c11 = recFunc (a11, b11) + recFunc(a12 + b21)
+ *     c12 = recFunc (a11, b12) + recFunc(a12, b22)
+ *     c21 = recFunc (a21, b11) + recFunc(a22, b21)
+ *     c22 = recFunc (a21, b12) + recFunc(a22, b22)
+ *
+ * return c
+ }*/
+int** recSquareMatrixMultiplication(int row, int col, int** matA, int** matB, int** product, int len) {
+    // do the multiplication
+    // repeat len times
+    static int i = 0, j = 0, k = 0;
+
+    if (i >= len)
+        return product;
+
+    // If i < row1
+    if (j < len) {
+        if (k < len) {
+            product[i][j] += matA[i][k] * matB[k][j];
+            k++;
+
+            recSquareMatrixMultiplication(row, col, matA, matB, product, len);
+        }
+
+        k = 0;
+        j++;
+        recSquareMatrixMultiplication(row, col, matA, matB, product, len);
+    }
+
+    j = 0;
+    i++;
+    recSquareMatrixMultiplication(row, col, matA, matB, product, len);
+    
+    return product;
+}
+
+// only works for square arrays of size 2^n
+int** recSquareMatrixMultiplication(int** matA, int** matB, int len) {
+    // check that len is a power of two
+    if (!isPowerOfTwo(len)) {
+        std::cout << "len is not a power of 2 therefore cannot multiply!\n";
+        return nullptr;
+    }
+
+    // init product array
+    int** product =  new int* [len];
+    for (int i = 0; i < len; i++) {
+
+        product[i] = new int [len];
+
+        for (int j = 0; j < len; j++) {
+            product[i][j] = 0;
+        }
+    }
+
+    // go along row for matA and down column for matB
+    return recSquareMatrixMultiplication(0, 0, matA, matB, product, len);
+}

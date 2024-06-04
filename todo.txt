@@ -1,3 +1,5 @@
+ recursive matrix
+
 make indexable (or walkable) tuple data type that i can use in linkedLists (for dev branch)
 time lib
 use array to add things to linkedlist
