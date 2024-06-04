@@ -351,7 +351,7 @@ void printProductMatrix(int** product, int len) {
     }
 }
 
-int** recSquareMatrixMultiplication(int row, int col, int** matA, int** matB, int** product, int len) {
+int** recSquareMatrixMultiplication(int** matA, int** matB, int** product, int len) {
     // do the multiplication
     // repeat len times
     static int i = 0, j = 0, k = 0;
@@ -365,17 +365,17 @@ int** recSquareMatrixMultiplication(int row, int col, int** matA, int** matB, in
             product[i][j] += matA[i][k] * matB[k][j];
             k++;
 
-            recSquareMatrixMultiplication(row, col, matA, matB, product, len);
+            recSquareMatrixMultiplication(matA, matB, product, len);
         }
 
         k = 0;
         j++;
-        recSquareMatrixMultiplication(row, col, matA, matB, product, len);
+        recSquareMatrixMultiplication(matA, matB, product, len);
     }
 
     j = 0;
     i++;
-    recSquareMatrixMultiplication(row, col, matA, matB, product, len);
+    recSquareMatrixMultiplication(matA, matB, product, len);
     
     return product;
 }
@@ -400,5 +400,5 @@ int** recSquareMatrixMultiplication(int** matA, int** matB, int len) {
     }
 
     // go along row for matA and down column for matB
-    return recSquareMatrixMultiplication(0, 0, matA, matB, product, len);
+    return recSquareMatrixMultiplication(matA, matB, product, len);
 }
