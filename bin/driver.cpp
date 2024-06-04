@@ -49,6 +49,11 @@ int main() {
     std::cout << "kruskals: " << kruskals(g) << '\n';
     std::cout << djikstras(g, 9, 1) << '\n';
 
-    int test[10] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+    int test[10] = {677, 1424, 5, 1241, -1, 73, 13, 568, 8, -124 };
     binarySearch(test, 10, 9);
+    int* sorted = insertionSort(test, 10);
+    for (int i = 0; i < 9; i++) {
+        std::cout << sorted[i] << ", ";
+    }
+    std::cout << sorted[9] << '\n';
 }
