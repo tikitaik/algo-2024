@@ -29,3 +29,9 @@ std::ostream& operator << (std::ostream& os, const timePlaceholder tm) {
 
     return os;
 }
+
+void getCurrentTime() {
+    timePlaceholder t;
+    t.time = 69696969;
+    return t;
+}
