@@ -35,10 +35,3 @@ template <typename V, typename W> std::ostream& operator << (std::ostream& os, c
 
     return os;
 }
-
-
-
-
-template <typename... types> struct tuple {
-
-};
