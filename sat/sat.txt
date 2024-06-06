@@ -5,7 +5,7 @@ task :
 |   develop algo for optimal path through the park
 |   use the model to compare team efficiency
 
-event register
+event
 |   
 |   array<float> size 2 <- start coordinates
 |   array<float> size 2 <- end coordinate 
@@ -13,11 +13,14 @@ event register
 |   array<linkedList<teams> > size 6 <- brackets
 |   dictionary <goal, linked list<pair <team, time> > >
 |
+|   name event
+|   import graph, linked list, index, team, checkpoint
+|   
 |   operations
-|   newEvent: graph, start coordiantes, end coordinates, checkpoint linkedlist -> event
-|   addTeamToBracket: team x index -> event
-|   optimalRouteForBracket: index -> linkedlist of nodes
-|   addTeamToCheckpoint: checkpoint x team x time -> event
+|   newEvent: graph, start coordiantes, end coordinates, checkpoint linked list -> event
+|   addTeamToBracket: event x team x index -> event register
+|   optimalRouteForBracket: event x index -> linkedlist of nodes
+|   addTeamToCheckpoint: event x checkpoint x team x time -> event
  
 team ADT
 |   int <- team member count
@@ -26,12 +29,15 @@ team ADT
 |   time <- finishing
 |   armband register (linkedList of pairs <goal, time visited>)
 |
+|   name team
+|   import linked list, time, checkpoint
+|   
 |   operations
-|   newTeam: linkedlist (empty and can be added later, or partially/ fully filled with members) -> team
+|   newTeam: linked list (empty and can be added later, or partially/ fully filled with members) -> team
 |   teamSize: team -> int
 |   teamMembers: team -> linkedlist of teams
-|   setStartTime: team -> team
-|   setEndTime: team -> team
+|   setStartTime: team x time -> team
+|   setEndTime: team x time -> team
 |   getElapsedTime: team -> time
 |   addCheckpointToArmband: team x checkpoint -> team
 
@@ -40,7 +46,55 @@ checkpoint ADT
 |   float <- y coordinate
 |   int <- point reward
 |
+|   name checkpoint
+|   import float
+|   
 |   operations
-|   newGoal: float, float, int -> goal
-|   getLocation: goal -> float array size 2
-|   getPoints: goal -> int
+|   newGoal: float x float x int -> goal
+|   getLocation: checkpoint -> pair of floats
+|   getPoints: checkpoint -> int
+
+other signatures
+
+linked list ADT
+|   name linked list
+|   import element
+|   
+|   operations
+|   newLinkedList: -> linked list
+|   insertTail: element x linked list -> linked list
+|   insertHead: element x linked list -> linked list
+|   removeKey: element x linked list -> linked list
+|   size: linked list -> int
+|   head: linked list -> element
+
+graph ADT
+|   name graph
+|   import node, edge, attribute
+|   
+|   operations
+|   newGraph: -> graph
+|   allNodes: graph -> linked list of nodes
+|   allEdges: graph -> linked list of edges
+|   nodeCount: graph -> int
+|   edgeCount: graph -> int
+|   addNode: graph x node x attribute -> graph
+|   addNodes: graph x int -> graph
+|   addEdge: graph x edge -> graph
+|   deleteNode: graph x node -> graph
+|   deleteEdge: graph x edge -> graph
+|   neighbours: graph x node -> linked list of nodes
+|   untraversedNeighbours: graph x node -> linked list of nodes
+|   incident: graph x node -> linked list of nodes
+|   degree: graph x node -> int
+|   edgeExists: graph x edge: bool
+|   setAllNodesToUntraversed: graph -> graph
+|   allNodesAreTraversed: graph -> bool
+|   connected: graph -> bool
+|   cyclic: graph -> bool
+
+pair
+|   name pair
+|   import element type 1, element type 2
+|   operations 
+|   newPair: element type 1 x element type 2-> pair
