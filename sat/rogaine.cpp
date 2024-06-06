@@ -8,8 +8,12 @@ int main () {
     float start[2] = { 0.252f, 0.134f };
     float end[2] = { 0.234532f, 1.2525f }; 
 
-    rogaineEvent rEvent(start, end);
-    rEvent.addGoal(0.123f, 0.252f, 112);
+    linkedList<goal> points;
 
-    
+    graph<goal> eventMap(true);
+
+    rogaineEvent rEvent(eventMap, start, end);
+
+    team t;
+    rEvent.addTeamToBracket(t, 0); 
 }
