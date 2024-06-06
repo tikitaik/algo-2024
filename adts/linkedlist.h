@@ -517,6 +517,10 @@ template <typename K, typename V> class dictionary : private linkedList<pair<K, 
             return false;
         } 
     }
+
+    bool containsKey(K* key) {
+        return containsKey(*key);
+    }
     
 
     public:
@@ -554,6 +558,10 @@ template <typename K, typename V> class dictionary : private linkedList<pair<K, 
         pair<K, V> toPrint = *pairSearch(key);
         this->removeKey(*pairSearch(key));
         std::cout << "removed pair " << toPrint << '\n';
+    }
+
+    void remove (K* key) {
+        remove(*key);
     }
 
     V getValue(const K key) {
