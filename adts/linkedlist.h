@@ -1,6 +1,7 @@
 # pragma once
 
 # include <iostream>
+# include "adts/pair.h"
 
 // listNode with data that constitutes the linked list
 template<typename T> struct listNode {
@@ -482,66 +483,115 @@ template <typename T> class priorityQueue : public queue<T> {
     }
 };
 
-template <typename K, typename V> class dictionary : linkedList<K>, linkedList<V> {
-    linkedList<K> keys;
-    linkedList<V> values;
+template <typename K, typename V> class dictionary : private linkedList<pair<K, V> > {
+
+    pair<K, V>* pairSearch(K key) {
+        if (this->curSize == 0) {
+            return nullptr;
+        }
+
+        listNode<pair<K, V> >* walk = this->head;
+
+        while (walk->next) {
+            if (*walk->data->one == key) {
+                return walk->data;
+            }
+            walk = walk->next;
+        }
+
+        if (*walk->data->one == key) {
+            return walk->data;
+        }
+        else return nullptr;
+    }
+
+    pair<K, V>* pairSearch(K* key) {
+        return pairSearch(*key);
+    }
+
+    bool containsKey(K key) {
+        if (pairSearch(key)) {
+            return true;
+        }
+        else {
+            return false;
+        } 
+    }
+    
 
     public:
 
     // insert kvp, i want to make key const so that they cant be changed later to not be unique
     void insert(K* key, V* value) {
         // do check for unique ID
-        if (keys.contains(*key)) {
+        if (containsKey(key)) {
             std::cout << "key already exists in dictionary!\n";
             return;
         }
 
-        keys.insertTail(key);
-        values.insertTail(value);
+        this->insertTail(pair<K, V>(key, value));
         //std::cout << "inserted key " << key << "; with value " << value << '\n';
     }
 
+    void insert(K key, V value) {
+        //do check for unique ID
+        if (containsKey(key)) {
+            std::cout << "key already exists in dictionary!\n";
+            return;
+        }
+
+        this->insertTail(pair<K, V>(key, value));
+        //std::cout << "inserted key " << key << "; with value " << value << '\n';
+    }
+    
     // delete kvp using the key
-    void remove (K* key) {
-        if (!keys.contains(key)) {
+    void remove (K key) {
+        if (!containsKey(key)) {
             std::cout << "no such key exists in dictionary, cannot delete\n";
             return;
         }
 
-        int index = keys.getIndex(key);
-        K keyPrint = keys.goToIndex(index)->data;
-        V valuePrint = values.goToIndex(index)->data;
-        keys.removeAtIndex(index);
-        values.removeAtIndex(index);
-        std::cout << "removed value " << valuePrint << " and key " << keyPrint << " from dictionary\n";
+        pair<K, V> toPrint = *pairSearch(key);
+        this->removeKey(*pairSearch(key));
+        std::cout << "removed pair " << toPrint << '\n';
     }
 
-    V& getValue(const K* key) {
-        int index = keys.getIndex(key);
-        return values.goToIndex(index)->data;
-    }
-
-    void display() {
-        if (keys.size() == 0) {
-            std::cout << "nothing to display \n";
-            return;
+    V getValue(const K key) {
+        if (!containsKey(key)) {
+            std::cout << "will segfault cos key dont exist in dictionary\n";
         }
-
-        std::cout << "displaying list in [key, value] format:\n";
-
-        listNode<K>* keyDisplay = keys.returnHead();
-        listNode<V>* valueDisplay = values.returnHead();
-
-        for (int i = 0; i < keys.size() - 1; i++) {
-            std::cout << "[" << keyDisplay->data << "; " << valueDisplay->data << "], "; 
-            keyDisplay = keyDisplay->next;
-            valueDisplay = valueDisplay->next;
-        }
-        std::cout << "[" << keyDisplay->data << "; " << valueDisplay->data << "]\n"; 
+        return *pairSearch(key)->two;
     }
+
+    V getValue(const K* key) {
+        getValue(*key);
+    }
+    
+    template <typename L, typename W> friend std::ostream& operator << (std::ostream& os, const dictionary<L, W> dictionary);
 };
 
+// how to print linkedlists
+template <typename K, typename V> std::ostream& operator << (std::ostream& os, const dictionary<K, V> dictionary) {
+
+    int size = dictionary.curSize;
+    if (size == 0) {
+            return os << "nothing to display";
+        }
+
+    listNode<pair<K, V> >* display = dictionary.head;
+
+    for (int i = 0; i < size - 1; i++) {
+        os << *display->data << ", "; 
+        display = display->next;
+    }
+    os << *display->data;
+    display = nullptr;
+
+    return os;
+}
+
 # include "adts/graph.h"
+
 template<typename T> bool operator == (const node<T> n1, const node<T> n2) {
     return n1.id == n2.id;
 }

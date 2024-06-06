@@ -51,4 +51,10 @@ int main() {
     timePlaceholder t;
     t.time = 864000;
     std::cout << t << '\n';
+
+    dictionary<int, char> d;
+    d.insert(4, 'g');
+    d.insert(6, 'w');
+    std::cout << d << '\n';
+    std::cout << d.getValue(6) << '\n';
 }
