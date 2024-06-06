@@ -2,6 +2,7 @@
 
 # include <iostream>
 # include "adts/linkedlist.h"
+# include "adts/pair.h"
 # include "adts/graph.h"
 # include "adts/traversals.h"
 # include "time/time.h"

@@ -42,16 +42,19 @@ int main() {
     std::cout << "kruskals: " << kruskals(g) << '\n';
     std::cout << djikstras(g, 9, 1) << '\n';
 
+    // pair testing
     pair<int, int> p(4, 6);
     std::cout << p << '\n';
     linkedList<pair<int, std::string> > l;
     l.insertTail(pair<int, std::string>(5, "hi"));
     std::cout << l << '\n';
 
+    // time testing
     timePlaceholder t;
     t.time = 864000;
     std::cout << t << '\n';
 
+    // dictionary testing
     dictionary<int, char> d;
     d.insert(4, 'g');
     d.insert(6, 'w');

@@ -2,7 +2,7 @@
 
 # include <iostream>
 # include "adts/linkedlist.h"
-# include "adts/tuple.h"
+# include "adts/pair.h"
 
 struct goal {
     public:
