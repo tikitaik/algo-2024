@@ -572,7 +572,7 @@ template <typename K, typename V> class dictionary : private linkedList<pair<K, 
     }
 
     V getValue(const K* key) {
-        getValue(*key);
+        return getValue(*key);
     }
     
     template <typename L, typename W> friend std::ostream& operator << (std::ostream& os, const dictionary<L, W> dictionary);

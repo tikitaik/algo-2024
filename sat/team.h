@@ -15,18 +15,18 @@ class team {
         // linkedList of goals recorded : armbandRegister
         linkedList<pair<goal, timePlaceholder> > goalHistory;
 
-        public team() {}
+        team() {}
 
-        public team(linkedList<pair<std::string, int> > mems) {
+        team(linkedList<pair<std::string, int> > mems) {
             members = mems;
         }
 
         int teamSize();
-        linkedlist<pair<std::string, int> > teamMembers();
+        linkedList<pair<std::string, int> > teamMembers();
         void setStartTime(timePlaceholder s);
         void setEndTime(timePlaceholder e);
         timePlaceholder getElapsedTime();
-        void addCheckpointToArmband(goal point);
+        void addCheckpointToArmband(goal* point);
 };
 
 int team::teamSize() {
@@ -46,11 +46,16 @@ void team::setEndTime(timePlaceholder e) {
 }
 
 timePlaceholder team::getElapsedTime() {
-    return getCurrentTime() - startTime;
+    timePlaceholder t;
+    t.time = getCurrentTime().time - startTime.time;
+    return t;
 }
 
-void team::addCheckpointToArmband(goal point) {
-    pair<goal, timePlaceholder> add(goal, getCurrentTime());
+void team::addCheckpointToArmband(goal* point) {
+    timePlaceholder t = getCurrentTime();
+    pair<goal, timePlaceholder> add;
+    add.one = point;
+    *add.two = getCurrentTime();
     std::cout << "adding " << add << "to armbandregister\n";
     goalHistory.insertTail(add);
 }

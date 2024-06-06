@@ -9,11 +9,15 @@ int main () {
     float end[2] = { 0.234532f, 1.2525f }; 
 
     linkedList<goal> points;
+    
+    goal g(1.2, 52.232, 1212);
 
     graph<goal> eventMap(true);
+    linkedList<goal> goals;
+    goals.insertTail(&g);
 
-    rogaineEvent rEvent(eventMap, start, end);
+    rogaineEvent rEvent(eventMap, start, end, goals);
 
     team t;
-    rEvent.addTeamToBracket(t, 0); 
+    rEvent.addTeamToBracket(&t, 0); 
 }

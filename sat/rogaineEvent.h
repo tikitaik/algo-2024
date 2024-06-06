@@ -18,6 +18,7 @@ class rogaineEvent {
 
     // map
     const graph<goal> eventMap;
+    const linkedList<goal> goals;
 
     // register for teams
     linkedList<team> teamRegister;
@@ -28,7 +29,7 @@ class rogaineEvent {
 
     public:
     // epic constructor
-    rogaineEvent(graph<goal> mapIn, float startIn[2], float endIn[2]) : eventMap(mapIn) {
+    rogaineEvent(graph<goal> mapIn, float startIn[2], float endIn[2], linkedList<goal> goalList) : eventMap(mapIn), goals(goalList) {
         // set start and end
         float start[2] = { startIn[0], startIn[1] };
         float end[2] = { endIn[0], endIn[1] };
@@ -36,9 +37,24 @@ class rogaineEvent {
         std::cout << "map: " << eventMap << '\n';
     }
 
-    void addTeamToBracket(team t, int index);
+    void addTeamToBracket(team* t, int index);
+    linkedList<goal> optimalRoute(int bracket);
+    void addTeamToCheckpoint(goal* g, team* t, timePlaceholder time);
 };
 
-void rogaineEvent::addTeamToBracket(team t, int index) {
+void rogaineEvent::addTeamToBracket(team* t, int index) {
     bracketArr[index].insertTail(t);
+}
+
+// algorithm shit
+linkedList<goal> rogaineEvent::optimalRoute(int bracket) {
+    linkedList<goal> route;
+    return route;
+}
+
+void rogaineEvent::addTeamToCheckpoint(goal* g, team* t, timePlaceholder time) {
+    pair<team, timePlaceholder> add;
+    add.one = t;
+    *add.two = time;
+    goalRegister.getValue(g).insertTail(add);
 }
