@@ -10,4 +10,6 @@ int main () {
 
     rogaineEvent rEvent(start, end);
     rEvent.addGoal(0.123f, 0.252f, 112);
+
+    
 }

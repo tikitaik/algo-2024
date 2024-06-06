@@ -23,16 +23,19 @@ class rogaineEvent {
     dictionary<goal, linkedList<pair<team, timePlaceholder> > > goalRegister;
 
     public:
-
-    rogaineEvent(float start[2], float end[2]) {
+    // epic constructor
+    rogaineEvent(float startIn[2], float endIn[2]) {
         // set start and end
+        float start[2] = { startIn[0], startIn[1] };
+        float end[2] = { endIn[0], endIn[1] };
+        std::cout << "start at [" << start[0] << ", " << start[1] << "], end at [" << end[0] << ", " << end[1] << "]\n";
     }
 
     void addGoal(float x, float y, int points);
 };
 
 void rogaineEvent::addGoal(float x, float y, int points) {
-    goal* newGoal = new goal(points, x, y);
+    goal* newGoal = new goal(x, y, points);
     linkedList<pair<team, timePlaceholder> >* visitedTeams = new linkedList<pair<team, timePlaceholder> >;
     goalRegister.insert(newGoal, visitedTeams);
 }

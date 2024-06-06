@@ -6,20 +6,41 @@ task :
 |   use the model to compare team efficiency
 
 event register
-|   start coordinates (float array)
-|   end coordinates (float array)
-|   linked list of teams
-|   bracket array (type is team data type, size is 6 according to brief)
-|   dictionary for goals, and pair of team and time
+|   
+|   array<float> size 2 <- start coordinates
+|   array<float> size 2 <- end coordinate 
+|   linked list <- teams
+|   array<linkedList<teams> > size 6 <- brackets
+|   dictionary <goal, linked list<pair <team, time> > >
+|
+|   operations
+|   newEvent: graph, start coordiantes, end coordinates, checkpoint linkedlist -> event
+|   addTeamToBracket: team x index -> event
+|   optimalRouteForBracket: index -> linkedlist of nodes
+|   addTeamToCheckpoint: checkpoint x team x time -> event
  
 team ADT
-|   team member count (int)
-|   team member names and ages (linkedList of pairs of strings and age)
-|   time of arrival (time date type)
-|   time of finishing (time data type)
+|   int <- team member count
+|   linkedList<pairs<string, age> > <- team member names and ages
+|   time <- time of arrival 
+|   time <- finishing
 |   armband register (linkedList of pairs <goal, time visited>)
+|
+|   operations
+|   newTeam: linkedlist (empty and can be added later, or partially/ fully filled with members) -> team
+|   teamSize: team -> int
+|   teamMembers: team -> linkedlist of teams
+|   setStartTime: team -> team
+|   setEndTime: team -> team
+|   getElapsedTime: team -> time
+|   addCheckpointToArmband: team x checkpoint -> team
 
-goal ADT
-|   x coordinate (float)
-|   y coordinate (float)
-|   point reward (int)
+checkpoint ADT
+|   float <- x coordinate
+|   float <- y coordinate
+|   int <- point reward
+|
+|   operations
+|   newGoal: float, float, int -> goal
+|   getLocation: goal -> float array size 2
+|   getPoints: goal -> int

@@ -4,14 +4,14 @@
 # include "adts/linkedlist.h"
 # include "adts/tuple.h"
 
-class goal {
+struct goal {
     public:
         const float x;
         const float y;
         const int points;
 
         goal (float xCoord, float yCoord, int pointsReward)  : x(xCoord), y(yCoord), points(pointsReward)  {
-            std::cout << "goal initialised !\n";
+            std::cout << "goal initialised: [" << x << ", " << y <<  "], reward: " << points << '\n';
         }
 };
 
