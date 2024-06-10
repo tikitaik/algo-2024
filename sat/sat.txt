@@ -98,3 +98,13 @@ pair
 |   import element type 1, element type 2
 |   operations 
 |   newPair: element type 1 x element type 2-> pair
+
+dictionary
+|   name dictionary
+|   import key, value
+|   operations
+|   newDictionary: -> dictionary
+|   insert: key x value -> dictionary
+|   remove: key -> dictionary
+|   getValue: key -> value
+|   changeValue: key x value -> dictionary
