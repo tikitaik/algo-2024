@@ -1,22 +1,21 @@
 # include <iostream>
+# include "time/time.h"
 # include "sat/goal.h"
 # include "sat/team.h"
 # include "sat/rogaineEvent.h"
 
 int main () {
     
-    float start[2] = { 0.252f, 0.134f };
-    float end[2] = { 0.234532f, 1.2525f }; 
-
-    linkedList<goal> points;
-    
-    goal g(1.2, 52.232, 1212);
+    goal g(1.2, 52.232, 0);
+    timePlaceholder timeLimit;
+    timeLimit.time = 10 * 60 * 60;
 
     graph<goal> eventMap(true);
-    linkedList<goal> goals;
-    goals.insertTail(&g);
+    node<goal> n;
+    n.attribute = &g;
+    eventMap.addNode(&n);
 
-    rogaineEvent rEvent(eventMap, start, end, goals);
+    rogaineEvent rEvent(eventMap, eventMap.allNodes(), eventMap.allNodes().returnHead()->data, eventMap.allNodes().returnHead()->data, timeLimit, 1.5f);
 
     team t;
     rEvent.addTeamToBracket(&t, 0); 
