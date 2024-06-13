@@ -104,6 +104,15 @@ void displayMatrix2D(const int* matrix, const int nodeCount) {
     std::cout << " ]\n";
 }
 
+void displayMatrix2D(int** arr, int size) {
+    for (int i = 0; i < size; i++) {
+        for (int j = 0; j < size; j++) {
+            std::cout << arr[i][j] << ' ';
+        }
+        std::cout << '\n';
+    }
+}
+
 
 // depth first search on an adjacency matrix
 template <typename T> stack<T> adjDFS(int* matrix, const int nodeCount, const int source) {
@@ -229,30 +238,74 @@ template <typename T> linkedList<node<T> > BFS (graph<T>& g, const int source) {
     return visited;
 }
 
-template <typename U> int* FWTC(graph<U>& g) { 
+template <typename U> int** FWTC(graph<U>& g) { 
     //let T be |V|x|V| matrix of transitive closure initialized to run on a directed graph G={V,E}
     const int nodeCount = g.nodeCount();
-    int* T = new int[nodeCount * nodeCount];
+    int** T = new int*[nodeCount];
+    for (int i = 0; i < nodeCount; i++) {
+        T[i] = new int[nodeCount];
+    }
 
     // row
     for (int i = 0; i < nodeCount; i++) {
         // column
         for(int j = 0; j < nodeCount; j++) {
             if ((i == j) || (g.edgeExists(i, j))) {
-                T[nodeCount * i + j] = 1; //there is a path
+                T[i][j] = 1; //there is a path
             }
             else {
-                T[nodeCount * i + j] = 0; //path not yet found
+                T[i][j] = 0; //path not yet found
             }
         }
     }
         
-    //construct T
+    // actual algorithm
     for (int i = 0; i < nodeCount; i++) {
         for (int j = 0; j < nodeCount; j++) {
             for (int k = 0; k < nodeCount; k++) {
                 //Check for path from k to j via i
-                T[nodeCount * k + j] = T[nodeCount * k + j] || (T[nodeCount * k + i] && T[nodeCount * i + j]);
+                T[k][j] = T[k][j] || (T[k][i] && T[i][j]);
+            } 
+        }
+    }
+
+    return T;
+}
+
+template <typename U> int** FWSP(graph<U>& g) { 
+    const int INF = -1;
+
+    //let T be |V|x|V| matrix of transitive closure initialized to run on a directed graph G={V,E}
+    const int nodeCount = g.nodeCount();
+    int** T = new int*[nodeCount];
+    for (int i = 0; i < nodeCount; i++) {
+        T[i] = new int[nodeCount];
+    }
+
+    // row
+    for (int i = 0; i < nodeCount; i++) {
+        // column
+        for(int j = 0; j < nodeCount; j++) {
+            if (i == j) {
+                T[i][j] = 0;
+            }
+            else if (g.edgeExists(i, j)) {
+                T[i][j] = g.searchEdge(i, j)->weight; //there is a path
+            }
+            else {
+                T[i][j] = INF; //path not yet found
+            }
+        }
+    }
+        
+    // actual algorithm
+    for (int i = 0; i < nodeCount; i++) {
+        for (int j = 0; j < nodeCount; j++) {
+            for (int k = 0; k < nodeCount; k++) {
+                //Check for path from k to j via i
+                if (T[k][j] > T[k][i] + T[i][j] && T[k][i] != INF && T[i][j] != INF) {
+                    T[k][j] = T[k][i] + T[i][j];
+                }
             } 
         }
     }

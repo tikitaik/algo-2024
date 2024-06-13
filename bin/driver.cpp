@@ -15,7 +15,7 @@ void test(int n, int** arr) {
 
 int main() {
 
-    graph<int> g(false);
+    graph<int> g(true);
     
     g.addNodes(10);
 
@@ -39,19 +39,19 @@ int main() {
     g.addEdge(8, 9, 5);
 
     std::cout << "DFS: " << DFS(g, 0) << '\n';
-    std::cout << "recDFS: " << *recDFSStart(g, 0) << '\n';
+    //std::cout << "recDFS: " << *recDFSStart(g, 0) << '\n';
     std::cout << "BFS: " << BFS(g, 0) << '\n';
     //std::cout << "topSort: " << *topologicalSort(g) << '\n';
     //std::cout << "recTopSort: " << *recTopSortStart(g) << '\n';
 
-    std::cout << "prims: " << prims(g) << '\n';
-    std::cout << "recPrims: " << recPrimsStart(g) << '\n';
-    std::cout << "kruskals: " << kruskals(g) << '\n';
-    std::cout << djikstras(g, 9, 1) << '\n';
+    //std::cout << "prims: " << prims(g) << '\n';
+    //std::cout << "recPrims: " << recPrimsStart(g) << '\n';
+    //std::cout << "kruskals: " << kruskals(g) << '\n';
+    //std::cout << djikstras(g, 9, 1) << '\n';
 
-    dictionary<int, char> d;
-    d.insert(4, 'g');
-    d.insert(6, 'w');
-    std::cout << d << '\n';
-    std::cout << d.getValue(6) << '\n';
+    int** f = FWTC(g);
+    int** s = FWSP(g);
+
+    displayMatrix2D(s, 10);
+    std::cout << djikstras(g, 0, 9) << '\n';
 }
