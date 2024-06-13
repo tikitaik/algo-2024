@@ -49,9 +49,19 @@ int main() {
     //std::cout << "kruskals: " << kruskals(g) << '\n';
     //std::cout << djikstras(g, 9, 1) << '\n';
 
-    int** f = FWTC(g);
-    int** s = FWSP(g);
+    graph<int> h(false);
+    h.addNodes(5);
+    h.addEdge(0, 1, 2);
+    h.addEdge(0, 3, 8);
+    h.addEdge(1, 2, 3);
+    h.addEdge(1, 4, 7);
+    h.addEdge(2, 3, 1);
+    h.addEdge(2, 4, 5);
+    h.addEdge(3, 4, 4);
 
-    displayMatrix2D(s, 10);
-    std::cout << djikstras(g, 0, 9) << '\n';
+    int** f = FWTC(h);
+    int** s = FWSP(h);
+
+    displayMatrix2D(s, 5);
+    std::cout << djikstras(h, 0, 4) << '\n';
 }

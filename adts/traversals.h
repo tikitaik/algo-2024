@@ -303,7 +303,7 @@ template <typename U> int** FWSP(graph<U>& g) {
         for (int j = 0; j < nodeCount; j++) {
             for (int k = 0; k < nodeCount; k++) {
                 //Check for path from k to j via i
-                if (T[k][j] > T[k][i] + T[i][j] && T[k][i] != INF && T[i][j] != INF) {
+                if ((T[k][j] > T[k][i] + T[i][j] || T[k][j] == INF) && T[k][i] != INF && T[i][j] != INF) {
                     T[k][j] = T[k][i] + T[i][j];
                 }
             } 
