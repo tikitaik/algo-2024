@@ -578,7 +578,7 @@ template <typename K, typename V> class dictionary : private linkedList<pair<K, 
     template <typename L, typename W> friend std::ostream& operator << (std::ostream& os, const dictionary<L, W> dictionary);
 };
 
-// how to print linkedlists
+// how to print dictionary
 template <typename K, typename V> std::ostream& operator << (std::ostream& os, const dictionary<K, V> dictionary) {
 
     int size = dictionary.curSize;

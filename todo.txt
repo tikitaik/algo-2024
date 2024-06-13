@@ -6,6 +6,5 @@ binary trees
 trees (b trees?)
 A* (not urgent)
 
-add FWSP algorithm
 make djikstras use priority queue
 make djikstras return pred array not the one path: use path build func to get path
