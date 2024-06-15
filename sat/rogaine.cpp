@@ -15,5 +15,5 @@ int main () {
     std::cout << eventMap << '\n';
 
     rogaineEvent rEvent(eventMap, eventMap.allNodes(), eventMap.allNodes().returnHead()->data, eventMap.allNodes().returnHead()->data, timeLimit, walkSpeed);
-    std::cout << getPathTime(eventMap.searchNodeID(0), eventMap.searchNodeID(39), walkSpeed, -1, 0, 0) << '\n';
+    std::cout << getPathTime(eventMap.searchNodeID(0), eventMap.searchNodeID(39), walkSpeed, -1, 1, 0) << '\n';
 }

@@ -84,7 +84,7 @@ float getPathTime(const node<checkpoint>* startNode, const node<checkpoint>* end
         distance *= 0.8333;
     }
 
-    std::cout << "distance after uphill/downhill" << distance << '\n';
+    std::cout << "distance after uphill/downhill " << distance << '\n';
 
     // year 7 physics finally applying to the real world
     // speed in m/s
