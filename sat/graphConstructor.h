@@ -4,7 +4,7 @@
 # include "adts/graph.h"
 # include "adts/pair.h"
 
-# define METER 1 / 0.190 // one km is 190 pixels
+# define METER 1 / 0.190 // one m is 0.190 pixels
 
 graph<checkpoint> initGraphCheckpoints() {
     graph<checkpoint> g(true);
@@ -75,12 +75,16 @@ float getPathTime(const node<checkpoint>* startNode, const node<checkpoint>* end
     distance = distance * roadCoefficient + (1 - roadCoefficient) * distance * 1.429; // slows down according to road coefficient
     distance /= 1 - obstacleDifficultyCoefficient;
 
+    std::cout << "distance after road and obstacle calcs: " << distance << '\n';
+
     if (uphill > 0) {
         distance *= 1.25;
     }
     else if (uphill < 0) {
         distance *= 0.8333;
     }
+
+    std::cout << "distance after uphill/downhill" << distance << '\n';
 
     // year 7 physics finally applying to the real world
     // speed in m/s
