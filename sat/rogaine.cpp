@@ -1,17 +1,17 @@
 # include <iostream>
 # include "time/time.h"
-# include "sat/goal.h"
+# include "sat/checkpoint.h"
 # include "sat/team.h"
 # include "sat/rogaineEvent.h"
 
 int main () {
     
-    goal g(1.2, 52.232, 0);
+    checkpoint g(1.2, 52.232, 0);
     timePlaceholder timeLimit;
     timeLimit.time = 10 * 60 * 60;
 
-    graph<goal> eventMap(true);
-    node<goal> n;
+    graph<checkpoint> eventMap(true);
+    node<checkpoint> n;
     n.attribute = &g;
     eventMap.addNode(&n);
 

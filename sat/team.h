@@ -4,7 +4,7 @@
 # include "adts/linkedlist.h"
 # include "adts/pair.h"
 # include "time/time.h"
-# include "sat/goal.h"
+# include "sat/checkpoint.h"
 
 class team {
     public :
@@ -12,8 +12,8 @@ class team {
         linkedList<pair<std::string, int> > members;
         timePlaceholder startTime;
         timePlaceholder endTime;
-        // linkedList of goals recorded : armbandRegister
-        linkedList<pair<goal, timePlaceholder> > goalHistory;
+        // linkedList of checkpoints recorded : armbandRegister
+        linkedList<pair<checkpoint, timePlaceholder> > checkpointHistory;
 
         team() {}
 
@@ -26,7 +26,7 @@ class team {
         void setStartTime(timePlaceholder s);
         void setEndTime(timePlaceholder e);
         timePlaceholder getElapsedTime();
-        void addCheckpointToArmband(goal* point);
+        void addCheckpointToArmband(checkpoint* point);
 };
 
 int team::teamSize() {
@@ -51,11 +51,11 @@ timePlaceholder team::getElapsedTime() {
     return t;
 }
 
-void team::addCheckpointToArmband(goal* point) {
+void team::addCheckpointToArmband(checkpoint* point) {
     timePlaceholder t = getCurrentTime();
-    pair<goal, timePlaceholder> add;
+    pair<checkpoint, timePlaceholder> add;
     add.one = point;
     *add.two = getCurrentTime();
     std::cout << "adding " << add << "to armbandregister\n";
-    goalHistory.insertTail(add);
+    checkpointHistory.insertTail(add);
 }

@@ -11,7 +11,7 @@ event
 |   array<float> size 2 <- end coordinate 
 |   linked list <- teams
 |   array<linkedList<teams> > size 6 <- brackets
-|   dictionary <goal, linked list<pair <team, time> > >
+|   dictionary <checkpoint, linked list<pair <team, time> > >
 |
 |   name event
 |   import graph, linked list, index, team, checkpoint
@@ -27,7 +27,7 @@ team ADT
 |   linkedList<pairs<string, age> > <- team member names and ages
 |   time <- time of arrival 
 |   time <- finishing
-|   armband register (linkedList of pairs <goal, time visited>)
+|   armband register (linkedList of pairs <checkpoint, time visited>)
 |
 |   name team
 |   import linked list, time, checkpoint
@@ -50,7 +50,7 @@ checkpoint ADT
 |   import float
 |   
 |   operations
-|   newGoal: float x float x int -> goal
+|   newCheckpoint: float x float x int -> checkpoint
 |   getLocation: checkpoint -> pair of floats
 |   getPoints: checkpoint -> int
 

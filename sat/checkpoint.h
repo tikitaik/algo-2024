@@ -4,12 +4,12 @@
 # include "adts/linkedlist.h"
 # include "adts/pair.h"
 
-class goal {
+class checkpoint {
     public:
         const pair<float, float> coords;
         const int points;
 
-        goal (float xCoord, float yCoord, int pointsReward)  : coords(pair<float, float>(xCoord, yCoord)), points(pointsReward)  {
+        checkpoint (float xCoord, float yCoord, int pointsReward)  : coords(pair<float, float>(xCoord, yCoord)), points(pointsReward)  {
 
             std::cout << coords << ", " << points << '\n';
         }
@@ -18,15 +18,15 @@ class goal {
         int getPoints();
 };
 
-pair<float, float> goal::getCoordinates() {
+pair<float, float> checkpoint::getCoordinates() {
     return coords;
 }
 
-int goal::getPoints() {
+int checkpoint::getPoints() {
     return points;
 }
 
-bool operator == (const goal g1, const goal g2) {
+bool operator == (const checkpoint g1, const checkpoint g2) {
     if (g1.points == g2.points && g1.coords == g2.coords) {
         return true;
     }
@@ -35,7 +35,7 @@ bool operator == (const goal g1, const goal g2) {
     }
 }
 
-std::ostream& operator << (std::ostream& os, const goal g) {
+std::ostream& operator << (std::ostream& os, const checkpoint g) {
     os << g.coords << ", " << g.points;
     return os;
 }
