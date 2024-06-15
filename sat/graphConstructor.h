@@ -4,7 +4,7 @@
 # include "adts/graph.h"
 # include "adts/pair.h"
 
-# define KM 190 // one km is 190 pixels
+# define METER 1 / 0.190 // one km is 190 pixels
 
 graph<checkpoint> initGraphCheckpoints() {
     graph<checkpoint> g(true);
@@ -54,11 +54,38 @@ graph<checkpoint> initGraphCheckpoints() {
     return g;
 }
 
-float getPathTime(const node<checkpoint>* startNode, const node<checkpoint>* endNode, int isUphill, float roadCoefficient, float obstacleCoefficient) {
-    float distSq = (startNode->attribute->coords.one - endNode->attribute->coords.one) * (startNode->attribute->coords.one - endNode->attribute->coords.one) + (startNode->attribute->coords.two - endNode->attribute->coords.two) * (startNode->attribute->coords.two - endNode->attribute->coords.two);
-    float distInMeters = distSq;
+// time in minutes
+float getPathTime(const node<checkpoint>* startNode, const node<checkpoint>* endNode, int uphill, float roadCoefficient, float obstacleDifficultyCoefficient) {
+    if (roadCoefficient > 1 || roadCoefficient < 0) {
+        std::cout << "incorrect road coefficient!\n";
+        return -1;
+    }
+    else if (obstacleDifficultyCoefficient >= 1 || obstacleDifficultyCoefficient < 0) {
+        std::cout << "incorrect obstacle difficulty coefficient!\n";
+        return -1;
+    }
+    // ewwwwww
+    float distance = sqrt((*startNode->attribute->coords.one - *endNode->attribute->coords.one) *
+        (*startNode->attribute->coords.one - *endNode->attribute->coords.one)
+        + (*startNode->attribute->coords.two - *endNode->attribute->coords.two)
+        * (*startNode->attribute->coords.two - *endNode->attribute->coords.two)) 
+        * METER;
+    std::cout << "distance in meters: " <<  distance << '\n';
+
+    distance = distance * roadCoefficient + (1 - roadCoefficient) * distance * 1.429; // slows down according to road coefficient
+    distance /= 1 - obstacleDifficultyCoefficient;
+
+    if (uphill > 0) {
+        distance *= 1.25;
+    }
+    else if (uphill < 0) {
+        distance *= 0.8333;
+    }
+
+    return distance / 60;
 }
 
 graph<checkpoint> constructGraph() {
-    return initGraphCheckpoints();
+    graph<checkpoint> g = initGraphCheckpoints();
+    return g;
 }

@@ -10,10 +10,12 @@ template <typename T> struct node {
     
     node () {
         traversed = false;
+        attribute = nullptr;
     }
 
     node (int id) {
         this->id = id;
+        attribute = nullptr;
         traversed = false;
     }
 
@@ -36,6 +38,9 @@ template <typename T> std::ostream& operator << (std::ostream& os, const node<T>
 {
     //os << "node id is " << node.id << " node attribute is " << node.attribute;
     os << node.id;
+    if (node.attribute) {
+        os << ": " << *node.attribute;
+    }
     return os;
 }
 
@@ -143,7 +148,7 @@ template <typename T> class graph {
     }
     // static implementation
     void addNode (node add) {
-        node* ptr = new node(add.id);
+        node* ptr = new node(add.id, add.attribute);
         addNode(ptr);
     }
 
@@ -595,7 +600,7 @@ template <typename T> class graph {
     }
 
     void displayAttribute(listNode<node>* listNode) {
-        std::cout << listNode->data->attribute;
+        std::cout << *listNode->data->attribute << '\n';
     }
 
     void displayNodeAndAttributes(listNode<node>* nodeSelect) {

@@ -117,8 +117,8 @@ SYSTEM FOR IDS OF CHECKPOINTS: ID INCREASES FROM BOTTOM (real south) OF THE LEFT
 time estimate function
 -   coordinates for start and end: used to give baseline time/ distance
 -   isUphill int: used to multiply time by 1.25 if uphill (1) or 0.833 if downhill (-1) or do nothing if neutral
--   road coefficient: if it is one then road can be used as direct route to next node, 0 means no road
--   obstacle coefficient: if 1 then lots of road/ river crossings and obstacle avoidance (e.g. lakes, houses)
+-   road coefficient: the percentage of time that could be spent on the road in the optimal route
+-   obstacle coefficient: percentage of time spent not moving towards goal due to obstacles. As such should never equal 1
     if 0 then no extra time for crossings
 -   add 2 minutes on each edge for finding scanning point
 
