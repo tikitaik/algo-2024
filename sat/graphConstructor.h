@@ -55,7 +55,7 @@ graph<checkpoint> initGraphCheckpoints() {
 }
 
 // time in minutes
-float getPathTime(const node<checkpoint>* startNode, const node<checkpoint>* endNode, int uphill, float roadCoefficient, float obstacleDifficultyCoefficient) {
+float getPathTime(const node<checkpoint>* startNode, const node<checkpoint>* endNode, const float walkSpeed, const int uphill, const float roadCoefficient, const float obstacleDifficultyCoefficient) {
     if (roadCoefficient > 1 || roadCoefficient < 0) {
         std::cout << "incorrect road coefficient!\n";
         return -1;
@@ -82,7 +82,11 @@ float getPathTime(const node<checkpoint>* startNode, const node<checkpoint>* end
         distance *= 0.8333;
     }
 
-    return distance / 60;
+    // year 7 physics finally applying to the real world
+    // speed in m/s
+    float edgeTime = distance / walkSpeed;
+    // convert to minutes
+    return edgeTime / 60;
 }
 
 graph<checkpoint> constructGraph() {
