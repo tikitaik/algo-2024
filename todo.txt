@@ -4,5 +4,7 @@ bellman ford
 floyd-warshall shortest path
 binary trees
 trees (b trees?)
-A* (also not urgent)
+A* (not urgent)
+
 make djikstras use priority queue
+make djikstras return pred array not the one path: use path build func to get path

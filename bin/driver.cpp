@@ -60,4 +60,21 @@ int main() {
     d.insert(6, 'w');
     std::cout << d << '\n';
     std::cout << d.getValue(6) << '\n';
+
+    graph<int> h(false);
+    h.addNodes(5);
+    h.addEdge(0, 1, 2);
+    h.addEdge(0, 3, 8);
+    h.addEdge(1, 2, 3);
+    h.addEdge(1, 4, 7);
+    h.addEdge(2, 3, 1);
+    h.addEdge(2, 4, 5);
+    h.addEdge(3, 4, 4);
+
+    int** f = FWTC(h);
+    int** s = FWSP(h);
+
+    displayMatrix2D(f, 5);
+    displayMatrix2D(s, 5);
+    std::cout << djikstras(h, 0, 4) << '\n';
 }
