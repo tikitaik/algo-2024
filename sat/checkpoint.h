@@ -6,19 +6,20 @@
 
 class checkpoint {
     public:
-        const pair<float, float> coords;
-        const int points;
+        pair<int, int> coords;
+        int points;
 
-        checkpoint (float xCoord, float yCoord, int pointsReward)  : coords(pair<float, float>(xCoord, yCoord)), points(pointsReward)  {
+        checkpoint () {};
+        checkpoint (int xCoord, int yCoord, int pointsReward)  : coords(pair<int, int>(xCoord, yCoord)), points(pointsReward)  {
 
             std::cout << coords << ", " << points << '\n';
         }
 
-        pair<float, float> getCoordinates();
+        pair<int, int> getCoordinates();
         int getPoints();
 };
 
-pair<float, float> checkpoint::getCoordinates() {
+pair<int, int> checkpoint::getCoordinates() {
     return coords;
 }
 

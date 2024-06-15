@@ -108,3 +108,21 @@ dictionary
 |   remove: key -> dictionary
 |   getValue: key -> value
 |   changeValue: key x value -> dictionary
+
+SYSTEM FOR IDS OF CHECKPOINTS: ID INCREASES FROM BOTTOM (real south) OF THE LEFT MOST NORTH LINES COLUMN
+-   SO BOTTOM (actual south) CHECKPOINT IN LEFT MOST COLUMN HAS ID 1
+-   TOP (most actual north) CHECKPOINT IN RIGHT MOST COLUMN HAS ID 38
+-   HASH HOUSE has id of 0 and point reward of 0
+
+time estimate function
+-   coordinates for start and end: used to give baseline time/ distance
+-   isUphill int: used to multiply time by 1.25 if uphill (1) or 0.833 if downhill (-1) or do nothing if neutral
+-   road coefficient: if it is one then road can be used as direct route to next node, 0 means no road
+-   obstacle coefficient: if 1 then lots of road/ river crossings and obstacle avoidance (e.g. lakes, houses)
+    if 0 then no extra time for crossings
+-   add 2 minutes on each edge for finding scanning point
+
+algorithm
+-   assign each node a 'desirability' attribute (could be put in checkpoint struct) (could be based on a bunch of factors like closeness to hash house, and quality of nodes around it)
+-   from hash house follow desirable nodes as long as a path exists back to the hash house in less time than is left 
+

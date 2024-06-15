@@ -16,6 +16,20 @@ template <typename T> struct node {
         this->id = id;
         traversed = false;
     }
+
+    node (int id, T* attributeIn) {
+        this->id = id;
+        this->attribute = attributeIn;
+        traversed = false;
+    }
+
+    node (int id, T attributeIn) {
+        this->id = id;
+        T* att = new T;
+        *att = attributeIn;
+        this->attribute = att;
+        traversed = false;
+    }
 };
 
 template <typename T> std::ostream& operator << (std::ostream& os, const node<T>& node)
@@ -136,6 +150,11 @@ template <typename T> class graph {
     void addNode(int id) {
         node* add = new node(id);
         addNode(add);
+    }
+
+    void addNode(int id, T attributeIn) {
+        node toAdd(id, attributeIn);
+        addNode(toAdd);
     }
     // add n nodes
     void addNodes(int n) {

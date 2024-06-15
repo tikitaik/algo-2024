@@ -7,7 +7,7 @@
 # include "sat/checkpoint.h"
 # include "sat/team.h"
 
-// given a bunch of inputs return the time estimate for a path between checkpoints
-linkedList<node<checkpoint> > getTimeOfEdge(const node<checkpoint>* startNode, const node<checkpoint>* endNode, const int distInPixels) {
+// main algorithm
+linkedList<node<checkpoint> > bestRoute(graph<checkpoint> g, const node<checkpoint>* startNode, const node<checkpoint>* endNode, int timeLimit, const float walkSpeed) {
 
 };

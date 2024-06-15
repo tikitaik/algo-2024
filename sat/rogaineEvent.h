@@ -8,7 +8,7 @@
 # include "sat/checkpoint.h"
 # include "sat/team.h"
 # include "sat/bestRoute.h"
-# include "sat/mapToGraph.h"
+# include "sat/graphConstructor.h"
 
 
 class rogaineEvent {
@@ -38,12 +38,12 @@ class rogaineEvent {
 
     }
 
-    void addTeamToBracket(team* t, int index);
+    void addTeamToBracket(team& t, int index);
     linkedList<node<checkpoint> > optimalRoute(int bracket);
     void addTeamToCheckpoint(checkpoint* g, team* t, timePlaceholder time);
 };
 
-void rogaineEvent::addTeamToBracket(team* t, int index) {
+void rogaineEvent::addTeamToBracket(team& t, int index) {
     bracketArr[index].insertTail(t);
 }
 
@@ -52,6 +52,7 @@ linkedList<node<checkpoint> > rogaineEvent::optimalRoute(int bracket) {
     // if 2.7% is linear: time will eventually reach 0
     //return bestRoute(eventMap, startNode, endNode, timeLimit * (1 + 0.27 * (5 - bracket), walkSpeed);
     // if 2.7% is 2.7% of the previous bracket: doesnt ever get to 0
+    return bestRoute(eventMap, startNode, endNode, timeLimit.time * pow(1.027, 5 - bracket), walkSpeed);
 }
 
 void rogaineEvent::addTeamToCheckpoint(checkpoint* g, team* t, timePlaceholder time) {
