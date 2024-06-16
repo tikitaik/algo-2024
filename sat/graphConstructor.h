@@ -65,6 +65,7 @@ float getPathTime(const node<checkpoint>* startNode, const node<checkpoint>* end
         return -1;
     }
     // ewwwwww
+    // gets 2d distance
     float distance = sqrt((*startNode->attribute->coords.one - *endNode->attribute->coords.one) *
         (*startNode->attribute->coords.one - *endNode->attribute->coords.one)
         + (*startNode->attribute->coords.two - *endNode->attribute->coords.two)
@@ -99,6 +100,7 @@ float getPathTime(const node<checkpoint>* startNode, const node<checkpoint>* end
 graph<checkpoint> constructGraph(const float walkSpeed) {
     graph<checkpoint>g=initGraphCheckpoints();
 
+    // id array that has ids of edges that will be implemented 
     int ids[96][2] = {
         { 0, 13 },
         { 0, 14 },
@@ -197,7 +199,7 @@ graph<checkpoint> constructGraph(const float walkSpeed) {
         { 37, 38 },
         { 38, 39 }
     };
-
+    // is/isnt uphill, roadCoefficient, obstacleDifficultyCoefficient
     float edgeData [96][3] = {
         {-1, 0.40, 0.35 }, 
         {-1, 0.50, 0.10 }, 
@@ -299,7 +301,7 @@ graph<checkpoint> constructGraph(const float walkSpeed) {
 
     for (int i = 0; i < 96; i++) {
         g.addEdge(ids[i][0], ids[i][1], getPathTime(g.searchNodeID(ids[i][0]), g.searchNodeID(ids[i][1]), walkSpeed, edgeData[i][0], edgeData[i][1], edgeData[i][2]));
-        g.addEdge(ids[i][1], ids[i][0], getPathTime(g.searchNodeID(ids[i][1]), g.searchNodeID(ids[i][0]), walkSpeed, edgeData[i][0] *-1, edgeData[i][1], edgeData[i][2]));
+        g.addEdge(ids[i][1], ids[i][0], getPathTime(g.searchNodeID(ids[i][1]), g.searchNodeID(ids[i][0]), walkSpeed, edgeData[i][0] * -1, edgeData[i][1], edgeData[i][2]));
     }
 
     return g;

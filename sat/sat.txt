@@ -123,6 +123,7 @@ time estimate function
 -   add 2 minutes on each edge for finding scanning point
 
 algorithm
--   assign each node a 'desirability' attribute (could be put in checkpoint struct) (could be based on a bunch of factors like closeness to hash house, and quality of nodes around it)
+-   assign each node a 'desirability' attribute (could be in an array) (could be based on a bunch of factors like closeness to hash house, and quality of nodes around it)
+-   multiple depth recursive desirability check?
 -   from hash house follow desirable nodes as long as a path exists back to the hash house in less time than is left 
 

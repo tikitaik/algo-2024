@@ -38,9 +38,9 @@ template <typename T> std::ostream& operator << (std::ostream& os, const node<T>
 {
     //os << "node id is " << node.id << " node attribute is " << node.attribute;
     os << node.id;
-    if (node.attribute) {
+    /*if (node.attribute) {
         os << ": " << *node.attribute;
-    }
+    }*/
     return os;
 }
 
