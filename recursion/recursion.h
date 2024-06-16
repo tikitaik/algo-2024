@@ -154,7 +154,7 @@ template <typename T> linkedList<node<T> >* recDFSStart(graph<T>& g, const int s
     }
     linkedList<node<T> > visited;
     stack<node<T> > unvisited;
-    g.setAllNodesToUntraversed();
+    g.getTraversedState();
     linkedList<node<T> >* returnList = new linkedList<node<T> >;
     *returnList = recursiveDFS(g, g.searchNodeID(sourceNodeID), visited, unvisited);
     return returnList; 
@@ -164,6 +164,7 @@ template <typename T> linkedList<node<T> > recursiveDFS(graph<T>& g, node<T>* cu
     // add one node to list each time?
     // delete nodes from g?
     if (visited.size() == g.nodeCount()) {
+        g.resetTraversed();
         return visited;
     }
     else {
@@ -198,7 +199,7 @@ template <typename T> linkedList<node<T> >* recTopSortStart(graph<T>& g) {
         return nullptr;
     }
 
-    g.setAllNodesToUntraversed();
+    g.getTraversedState();
     stack<node> visited;
     stack<node> unvisited;
     unvisited.push(g.allNodes().returnHead()->data);
@@ -217,6 +218,7 @@ template <typename T> linkedList<node<T> >* recTopSort(graph<T>& g, node<T>* cur
             delete add;
         }
 
+        g.resetTraversed();
         return orderedTopSort;
     }
     // do more topsorting otherwise
