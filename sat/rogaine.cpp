@@ -14,7 +14,7 @@ int main () {
     graph<checkpoint> eventMap = constructGraph(walkSpeed);
     std::cout << eventMap << '\n';
 
-    rogaineEvent rEvent(eventMap, eventMap.allNodes(), eventMap.searchNodeID(0), eventMap.searchNodeID(0), 60 * 60 * 6, walkSpeed);
+    rogaineEvent rEvent(eventMap, eventMap.allNodes(), eventMap.searchNodeID(0), eventMap.searchNodeID(0), 60 * 6, walkSpeed);
 
     // prints nodes and coords and point reward
     listNode<node<checkpoint> >* walk = eventMap.allNodes().returnHead();
@@ -43,4 +43,6 @@ int main () {
             desWalk = desWalk->next;
         }
     }
+
+    std::cout << rEvent.optimalRoute(0) << '\n';
 }

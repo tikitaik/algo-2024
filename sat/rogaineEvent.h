@@ -3,6 +3,7 @@
 # include <iostream>
 # include "adts/linkedlist.h"
 # include "adts/graph.h"
+# include "adts/shortPaths.h"
 # include "adts/pair.h"
 # include "time/time.h"
 # include "sat/checkpoint.h"
@@ -92,11 +93,63 @@ linkedList<node<checkpoint> > rogaineEvent::optimalRoute(int bracket) {
     // int timeLimit *= 1 + 0.27 * (5 - bracket)
     // if 2.7% is 2.7% of the previous bracket: doesnt ever get to 0
     int timeRemaining = timeLimit * pow(1.027, 5 - bracket);
+    node<checkpoint>* currentNode = eventMap.searchNodeID(0);
+    node<checkpoint>* endCheckpoint = eventMap.searchNodeID(0);
+
+    linkedList<node<checkpoint> > path;
+    int pointTotal;
+
+    int desirabilityArr[eventMap.nodeCount()];
+    for (int i = 0; i < eventMap.nodeCount(); i++) {
+        desirabilityArr[i] = desirability(eventMap.searchNodeID(i), 6);
+    }
+    for (int i = 0; i < eventMap.nodeCount(); i++) {
+        std::cout << desirabilityArr[i] << ", ";
+    }
 
     // go further if path back from that node that doesnt hit any traversed nodes is within time limit
-    while (djikstrasCost(eventMap, currentNode, eventMap.searchNodeID(0)) < timeRemaining) {
+    while (djikstrasCost(eventMap, currentNode->id, endCheckpoint->id) < timeRemaining) {
+        path.insertTail(*currentNode);
 
+        // pick most desirable node that has not been traversed
+        node<checkpoint>* bestNode = nullptr;
+        linkedList<node<checkpoint> >* n = eventMap.neighbours(currentNode, true);
+        listNode<node<checkpoint> >* bestWalk = n->returnHead();
+
+//        std::cout << *n << "\n" << *bestWalk->data << '\n';
+
+        for (int i = 0; i < n->size(); i++) {
+            if (!bestNode || desirabilityArr[bestNode->id] < desirabilityArr[bestWalk->data->id]) {
+                bestNode = bestWalk->data;
+            }
+            if (bestWalk->next) {
+                bestWalk = bestWalk->next;
+            }
+        }
+        // debug pray
+        std::cout << "most desirable node from " << *currentNode << " is " << *bestNode << " with a desirability of " << desirabilityArr[bestNode->id] << '\n';
+        // decrement time
+        timeRemaining -= eventMap.searchEdge(currentNode->id, bestNode->id)->weight;
+        currentNode->traversed = true;
+        desirabilityArr[currentNode->id] = 0;
+
+        currentNode = bestNode;
+        pointTotal += currentNode->attribute->points;
     } 
-
     // else start going back
+
+    linkedList<node<checkpoint> > pathBack = djikstrasPath(eventMap, currentNode->id, endCheckpoint->id);
+    listNode<node<checkpoint > >* pathBackWalk = pathBack.returnHead();
+
+    for (int i = 0; i < pathBack.size(); i++) {
+        path.insertTail(pathBackWalk->data);
+        pointTotal += pathBackWalk->data->attribute->points;
+
+        if (pathBackWalk->next) {
+            pathBackWalk = pathBackWalk->next;
+        }
+    }
+
+    std::cout << "total points is: " << pointTotal << '\n';
+    return path;
 };
