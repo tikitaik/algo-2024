@@ -140,8 +140,7 @@ linkedList<node<checkpoint> > rogaineEvent::optimalRoute(int bracket) {
     /*for (int i = 0; i < eventMap.nodeCount(); i++) {
         std::cout << desirabilityArr[i] << ", ";
     }
-    std::cout << '\n';
-*/
+    std::cout << '\n';*/
     path.insertTail(*currentNode);
     // go further if path back from that node that doesnt hit any traversed nodes is within time limit
     while (pathBackFromNeighbourExists(currentNode, endCheckpoint, timeRemaining) || (djikstrasCost(eventMap, currentNode->id, endCheckpoint->id) < timeRemaining && currentNode != endCheckpoint)) {

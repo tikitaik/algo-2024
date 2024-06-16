@@ -93,7 +93,7 @@ float getPathTime(const node<checkpoint>* startNode, const node<checkpoint>* end
     // convert to minutes
     edgeTime /= 60;
     edgeTime = std::round(edgeTime);
-    std::cout << "edgeTime: " << edgeTime << '\n';
+    //std::cout << "edgeTime: " << edgeTime << '\n';
     return edgeTime;
 }
 
