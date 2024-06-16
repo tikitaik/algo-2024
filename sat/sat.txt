@@ -129,6 +129,29 @@ algorithm
 
 algorithm pseudocode
 
+start GET_PATH_TIME (startNode, endNode, walkSpeed, uphill, roadCoefficient, obstacleCoefficient)
+    if roadCoefficient > 1 or roadCoefficient < 0
+        return -1
+    if obstacleCoefficient >= 1 or obstacleCoefficient < 0
+        return -1
+
+    meter <-- 1 / 0.190
+
+    distance <-- sqrt((startNode.x - endNode.x)^2 + (startNode.y - endNode.y)^2) * meter
+    distance <-- distance * (roadCoefficient + (1 - roadCoefficient) * 1 / 0.7)
+    distance <-- distance / obstacleCoefficient
+
+    if uphill > 0
+        distance <-- distance / 0.8
+    else if uphill < 0
+        distance <-- distance / 1.2
+
+    edgeTime <-- distance / walkSpeed
+    edgeTime <-- edgeTime / 60
+    round edgeTime to neartest integer
+    return edgeTime
+stop
+
 start float DESIRABILITY (node currentNode, depth)
     if depth = 1
         desirability <-- 0
@@ -182,7 +205,7 @@ start linkedList OPTIMAL_ROUTE (bracket)
 
     insert currentNode to path
 
-    while PATH_BACK_FROM_NEIGHBOUR_EXISTS(currentNode, hash house, timeRemaining or djikstrasCost(currentNode, hash house) < time remaining and currentNode != hash house)
+    while PATH_BACK_FROM_NEIGHBOUR_EXISTS(currentNode, hash house, timeRemaining) or (djikstrasCost(currentNode, hash house) < time remaining and currentNode != hash house)
         node bestNode
         for each neighbour of currentNode
             if bestNode is null and PATH_BACK_IN_TIME_EXISTS(currentNode, neighbourNode, hash house, timeRemaining) = true

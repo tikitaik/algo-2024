@@ -55,12 +55,12 @@ graph<checkpoint> initGraphCheckpoints() {
 }
 
 // time in minutes
-float getPathTime(const node<checkpoint>* startNode, const node<checkpoint>* endNode, const float walkSpeed, const float uphill, const float roadCoefficient, const float obstacleDifficultyCoefficient) {
+float getPathTime(const node<checkpoint>* startNode, const node<checkpoint>* endNode, const float walkSpeed, const float uphill, const float roadCoefficient, const float obstacleCoefficient) {
     if (roadCoefficient > 1 || roadCoefficient < 0) {
         std::cout << "incorrect road coefficient!\n";
         return -1;
     }
-    else if (obstacleDifficultyCoefficient >= 1 || obstacleDifficultyCoefficient < 0) {
+    else if (obstacleCoefficient >= 1 || obstacleCoefficient < 0) {
         std::cout << "incorrect obstacle difficulty coefficient!\n";
         return -1;
     }
@@ -74,7 +74,7 @@ float getPathTime(const node<checkpoint>* startNode, const node<checkpoint>* end
     //std::cout << "distance in meters: " <<  distance << '\n';
 
     distance = distance * (roadCoefficient + (1 - roadCoefficient) * 1.429); // slows down according to road coefficient
-    distance /= 1 - obstacleDifficultyCoefficient;
+    distance /= 1 - obstacleCoefficient;
 
     //std::cout << "distance after road and obstacle calcs: " << distance << '\n';
 
@@ -199,7 +199,7 @@ graph<checkpoint> constructGraph(const float walkSpeed) {
         { 37, 38 },
         { 38, 39 }
     };
-    // is/isnt uphill, roadCoefficient, obstacleDifficultyCoefficient
+    // is/isnt uphill, roadCoefficient, obstacleCoefficient
     float edgeData [96][3] = {
         {-1, 0.40, 0.35 }, 
         {-1, 0.50, 0.10 }, 
