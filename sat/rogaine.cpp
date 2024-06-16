@@ -19,7 +19,7 @@ int main () {
     // prints nodes and coords and point reward
     listNode<node<checkpoint> >* walk = eventMap.allNodes().returnHead();
     for (int i = 0; i < eventMap.allNodes().size(); i++) {
-        std::cout << *walk->data << '\n';
+        std::cout << *walk->data << ": " << *walk->data->attribute << '\n';
         if (walk->next) {
             walk = walk->next;
         }
@@ -33,9 +33,6 @@ int main () {
         }
     }
     
-    std::cout << "djiktras: " << djikstras(eventMap, 0, 39) << '\n';
-    std::cout << "DFS: " << DFS(eventMap, 0) << '\n';
-
     listNode<node<checkpoint> >* desWalk = eventMap.allNodes().returnHead();
     for (int i = 0; i < eventMap.allNodes().size(); i++) {
         std::cout << "desirability of " << *desWalk->data << " is " << rEvent.desirability(desWalk->data, 6) << '\n';
@@ -45,4 +42,10 @@ int main () {
     }
 
     std::cout << rEvent.optimalRoute(0) << '\n';
+    std::cout << rEvent.optimalRoute(1) << '\n';
+    std::cout << rEvent.optimalRoute(2) << '\n';
+    std::cout << rEvent.optimalRoute(3) << '\n';
+    std::cout << rEvent.optimalRoute(4) << '\n';
+    std::cout << rEvent.optimalRoute(5) << '\n';
+    std::cout << rEvent.optimalRoute(6) << '\n';
 }

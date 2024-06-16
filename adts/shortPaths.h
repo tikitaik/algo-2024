@@ -224,15 +224,13 @@ template <typename T> node<T>** djikstras(graph<T> g, int sourceNodeID, int sink
     // set init distance to 0 
     minimalDist[g.getIndexInAllNodes(sourceNodeID)] = 0;
     
-    // main loop
-    
+    // main loop 
     while (current != g.searchNodeID(sinkNodeID)) {
         updateAdjacents(g, current, minimalDist, prevNodes);
 
         // choose current
         current = findMinNode(g, minimalDist);
     }
-
     g.resetTraversed();
     return prevNodes;
 }
@@ -242,7 +240,6 @@ template<typename T> linkedList<node<T> > djikstrasPath(graph<T> g, int sourceNo
     node<T>** prev = new node<T>*[g.nodeCount()];
     prev = djikstras(g, sourceNodeID, sinkNodeID);
 
-    std::cout << "making path\n";
     linkedList<node<T> > shortestPath;
     node<T>* toAdd = g.searchNodeID(sinkNodeID);
 
@@ -262,7 +259,7 @@ template<typename T> int djikstrasCost(graph<T> g, int sourceNodeID, int sinkNod
     node<T>* toAdd = g.searchNodeID(sinkNodeID);
 
     while (prev[g.getIndexInAllNodes(toAdd->id)]) {
-        cost += g.searchEdge(toAdd->id, prev[g.getIndexInAllNodes(toAdd->id)]->id)->weight;
+        cost += g.searchEdge(prev[g.getIndexInAllNodes(toAdd->id)]->id, toAdd->id)->weight;
         toAdd = prev[g.getIndexInAllNodes(toAdd->id)];
     }
 

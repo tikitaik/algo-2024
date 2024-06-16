@@ -16,7 +16,7 @@ graph<checkpoint> initGraphCheckpoints() {
     g.addNode(3, checkpoint(336, 1035, 57));
     g.addNode(4, checkpoint(478, 878, 63));
     g.addNode(5, checkpoint(344, 859, 56));
-    g.addNode(6, checkpoint(518, 122, 58));
+    g.addNode(6, checkpoint(518, 1260, 58));
     g.addNode(7, checkpoint(648, 1112, 46));
     g.addNode(8, checkpoint(643, 815, 51));
     g.addNode(9, checkpoint(571, 738, 70));
@@ -71,12 +71,12 @@ float getPathTime(const node<checkpoint>* startNode, const node<checkpoint>* end
         + (*startNode->attribute->coords.two - *endNode->attribute->coords.two)
         * (*startNode->attribute->coords.two - *endNode->attribute->coords.two)) 
         * METER;
-    std::cout << "distance in meters: " <<  distance << '\n';
+    //std::cout << "distance in meters: " <<  distance << '\n';
 
     distance = distance * (roadCoefficient + (1 - roadCoefficient) * 1.429); // slows down according to road coefficient
     distance /= 1 - obstacleDifficultyCoefficient;
 
-    std::cout << "distance after road and obstacle calcs: " << distance << '\n';
+    //std::cout << "distance after road and obstacle calcs: " << distance << '\n';
 
     if (uphill > 0) {
         distance *= 1.25;
@@ -85,7 +85,7 @@ float getPathTime(const node<checkpoint>* startNode, const node<checkpoint>* end
         distance *= 0.8333;
     }
 
-    std::cout << "distance after uphill/downhill " << distance << '\n';
+    //std::cout << "distance after uphill/downhill " << distance << '\n';
 
     // year 7 physics finally applying to the real world
     // speed in m/s
@@ -98,7 +98,7 @@ float getPathTime(const node<checkpoint>* startNode, const node<checkpoint>* end
 }
 
 graph<checkpoint> constructGraph(const float walkSpeed) {
-    graph<checkpoint>g=initGraphCheckpoints();
+    graph<checkpoint>g = initGraphCheckpoints();
 
     // id array that has ids of edges that will be implemented 
     int ids[96][2] = {
