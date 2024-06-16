@@ -39,6 +39,8 @@ class rogaineEvent {
     void addTeamToBracket(team& t, int index);
     void addTeamToCheckpoint(checkpoint* g, team* t, timePlaceholder time);
     float desirability(node<checkpoint>* currentNode, int depth);
+    bool pathBackInTimeExists(node<checkpoint>* sourceNode, node<checkpoint>* possibleNode, node<checkpoint>* goalNode, int timeRemaining);
+    bool pathBackFromNeighbourExists(node<checkpoint>* currentNode, node<checkpoint>* goalNode, int timeRemaining);
     linkedList<node<checkpoint> > optimalRoute(int bracket);
 };
 
@@ -76,7 +78,7 @@ float rogaineEvent::desirability(node<checkpoint>* currentNode, int depth) {
         listNode<node<checkpoint> >* walk = nodeNeighbours->returnHead();
 
         for (int i = 0 ; i < nodeNeighbours->size(); i++) {
-            des += desirability( walk->data, depth - 1);
+            des += desirability(walk->data, depth - 1);
 
             if (walk->next) {
                 walk = walk->next;
@@ -85,6 +87,41 @@ float rogaineEvent::desirability(node<checkpoint>* currentNode, int depth) {
 
         return des * 1 / depth;
     }
+}
+
+bool rogaineEvent::pathBackInTimeExists(node<checkpoint>* sourceNode, node<checkpoint>* possibleNode, node<checkpoint>* goalNode, int timeLimit) {
+    std::cout << "possible node is " << *possibleNode << ": ";
+    /*possibleNode->traversed = true;
+    if (eventMap.untraversedNeighbours(goalNode, true)->size() <= 0) {
+        std::cout << "this would mean no unt neighbours next to goal node\n";
+        possibleNode-> traversed = false;
+        return false;
+    }
+    possibleNode-> traversed = false;*/
+    timeLimit -= eventMap.searchEdge(sourceNode->id, possibleNode->id)->weight;
+    if (djikstrasCost(eventMap, possibleNode->id, goalNode->id) > timeLimit) {
+        std::cout << "too much time to get back\n";
+        return false;
+    }
+    else {
+        std::cout << "hypothetical path back is " << djikstrasPath(eventMap, possibleNode->id, goalNode->id) << " with cost " << djikstrasCost(eventMap, possibleNode->id, goalNode->id)
+            << " and timeRemaining is " << timeLimit << '\n';
+        return true;
+    }
+}
+
+bool rogaineEvent::pathBackFromNeighbourExists(node<checkpoint>* currentNode, node<checkpoint>* goalNode, int timeLimit) {
+    linkedList<node<checkpoint> >* neighbours = eventMap.neighbours(currentNode, true);
+    listNode<node<checkpoint> >* neighbourWalk = neighbours->returnHead();
+    for (int i = 0; i < neighbours->size(); i++) {
+        if (pathBackInTimeExists(currentNode, neighbourWalk->data, goalNode, timeLimit)) {
+            return true;
+        }
+        if (neighbourWalk->next) {
+            neighbourWalk = neighbourWalk->next;
+        }
+    }
+    return false;
 }
 
 // algorithm
@@ -109,34 +146,63 @@ linkedList<node<checkpoint> > rogaineEvent::optimalRoute(int bracket) {
     std::cout << '\n';
 
     // go further if path back from that node that doesnt hit any traversed nodes is within time limit
-    while (djikstrasCost(eventMap, currentNode->id, endCheckpoint->id) < timeRemaining) {
+    while (pathBackFromNeighbourExists(currentNode, endCheckpoint, timeRemaining)) {
+        std::cout << "current node " << *currentNode << '\n';
         path.insertTail(*currentNode);
+
+        // so that the end checkpoint is still untraversed for djikstras and stuff
+        if (currentNode != endCheckpoint) {
+            //currentNode->traversed = true;
+        }
 
         // pick most desirable node that has not been traversed
         node<checkpoint>* bestNode = nullptr;
-        linkedList<node<checkpoint> >* n = eventMap.neighbours(currentNode, true);
+        linkedList<node<checkpoint> >* n = eventMap.untraversedNeighbours(currentNode, true);
         listNode<node<checkpoint> >* bestWalk = n->returnHead();
 
-//        std::cout << *n << "\n" << *bestWalk->data << '\n';
+        std::cout << *n << "\n" << *bestWalk->data << '\n';
 
         for (int i = 0; i < n->size(); i++) {
-            if (!bestNode || desirabilityArr[bestNode->id] < desirabilityArr[bestWalk->data->id]) {
+            if (!bestNode && pathBackInTimeExists(currentNode, bestWalk->data, endCheckpoint, timeRemaining)) {
                 bestNode = bestWalk->data;
             }
+            else if (!bestNode && !pathBackInTimeExists(currentNode, bestWalk->data, endCheckpoint, timeRemaining)) {
+                if (bestWalk->next) {
+                    bestWalk = bestWalk->next;
+                }
+                continue;
+            }
+            else if (desirabilityArr[bestNode->id] < desirabilityArr[bestWalk->data->id] && pathBackInTimeExists(currentNode, bestWalk->data, endCheckpoint, timeRemaining)) {
+                bestNode = bestWalk->data;
+            }
+
             if (bestWalk->next) {
                 bestWalk = bestWalk->next;
             }
+        }
+        if (!pathBackFromNeighbourExists(currentNode, endCheckpoint, timeRemaining)) {
+            std::cout << "this is breaking earlly\n";
+            break;
         }
         // debug pray
         std::cout << "most desirable node from " << *currentNode << " is " << *bestNode << " with a desirability of " << desirabilityArr[bestNode->id] << '\n';
         // decrement time
         timeRemaining -= eventMap.searchEdge(currentNode->id, bestNode->id)->weight;
-        currentNode->traversed = true;
         desirabilityArr[currentNode->id] = 0;
 
         currentNode = bestNode;
-        pointTotal += currentNode->attribute->points;
+        if (desirabilityArr[currentNode->id] != 0) {
+            pointTotal += currentNode->attribute->points;
+        }
+
+
+        if (!pathBackFromNeighbourExists(currentNode, endCheckpoint, timeRemaining)) {
+            std::cout << "this is breaking\n";
+            break;
+        }
     } 
+
+    std::cout << "test: " << djikstrasCost(eventMap, 6, 0) << '\n';
     // else start going back
     std::cout << "time to get back is " << djikstrasCost(eventMap, currentNode->id, endCheckpoint->id) << ". Time remaining is " << timeRemaining << '\n';
 

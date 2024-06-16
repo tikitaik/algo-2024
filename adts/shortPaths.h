@@ -211,7 +211,7 @@ template <typename T> node<T>** djikstras(graph<T> g, int sourceNodeID, int sink
     g.getTraversedState();
     node* current = g.searchNodeID(sourceNodeID);
     current->traversed = true;
-    std::cout << "starting from node " << *current << " and searching for path to node " << *g.searchNodeID(sinkNodeID) << '\n';
+    //std::cout << "starting from node " << *current << " and searching for path to node " << *g.searchNodeID(sinkNodeID) << '\n';
 
     // array to store current minimal path costs, init all to -1 to represent infinite
     // can be used since djikstras is not for negative weight values
