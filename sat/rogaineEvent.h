@@ -33,9 +33,7 @@ class rogaineEvent {
 
     public:
     // epic constructor
-    rogaineEvent(graph<checkpoint> mapIn, linkedList<node<checkpoint> > checkpointList, node<checkpoint>* start, node<checkpoint>* end, int timeIn, float speed) : eventMap(mapIn), checkpoints(checkpointList), startNode(start), endNode(end), timeLimit(timeIn), walkSpeed(speed) {
-
-    }
+    rogaineEvent(graph<checkpoint> mapIn, linkedList<node<checkpoint> > checkpointList, node<checkpoint>* start, node<checkpoint>* end, int timeIn, float speed) : eventMap(mapIn), checkpoints(checkpointList), startNode(start), endNode(end), timeLimit(timeIn), walkSpeed(speed) {}
 
     void addTeamToBracket(team& t, int index);
     void addTeamToCheckpoint(checkpoint* g, team* t, timePlaceholder time);
@@ -91,12 +89,14 @@ float rogaineEvent::desirability(node<checkpoint>* currentNode, int depth) {
 // algorithm
 linkedList<node<checkpoint> > rogaineEvent::optimalRoute(int bracket) {
     // if 2.7% is linear: time will eventually reach 0
-    //return bestRoute(eventMap, startNode, endNode, timeLimit * (1 + 0.27 * (5 - bracket), walkSpeed);
+    // int timeLimit *= 1 + 0.27 * (5 - bracket)
     // if 2.7% is 2.7% of the previous bracket: doesnt ever get to 0
-    int timeLimit = timeLimit * pow(1.027, 5 - bracket);
+    int timeRemaining = timeLimit * pow(1.027, 5 - bracket);
 
     // go further if path back from that node that doesnt hit any traversed nodes is within time limit
-    // while.. 
+    while (djikstrasCost(eventMap, currentNode, eventMap.searchNodeID(0)) < timeRemaining) {
+
+    } 
 
     // else start going back
 };
