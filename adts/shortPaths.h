@@ -262,7 +262,7 @@ template<typename T> int djikstrasCost(graph<T> g, int sourceNodeID, int sinkNod
     node<T>* toAdd = g.searchNodeID(sinkNodeID);
 
     while (prev[g.getIndexInAllNodes(toAdd->id)]) {
-        cost += g.searchEdge(toAdd->id, prev[g.getIndexInAllNodes(toAdd->id)]->id)->weight;
+        cost += g.searchEdge(prev[g.getIndexInAllNodes(toAdd->id)]->id, toAdd->id)->weight;
         toAdd = prev[g.getIndexInAllNodes(toAdd->id)];
     }
 
