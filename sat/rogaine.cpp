@@ -11,9 +11,10 @@ int main () {
     timePlaceholder timeLimit;
     timeLimit.time = 10 * 60 * 60;
 
-    graph<checkpoint> eventMap = constructGraph();
+    graph<checkpoint> eventMap = constructGraph(walkSpeed);
     std::cout << eventMap << '\n';
 
     rogaineEvent rEvent(eventMap, eventMap.allNodes(), eventMap.allNodes().returnHead()->data, eventMap.allNodes().returnHead()->data, timeLimit, walkSpeed);
-    std::cout << getPathTime(eventMap.searchNodeID(0), eventMap.searchNodeID(39), walkSpeed, -1, 1, 0) << '\n';
+    std::cout << eventMap.allNodes().size() << '\n';
+    std::cout << eventMap.allEdges().size() << '\n';
 }
