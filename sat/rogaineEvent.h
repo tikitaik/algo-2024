@@ -106,6 +106,7 @@ linkedList<node<checkpoint> > rogaineEvent::optimalRoute(int bracket) {
     for (int i = 0; i < eventMap.nodeCount(); i++) {
         std::cout << desirabilityArr[i] << ", ";
     }
+    std::cout << '\n';
 
     // go further if path back from that node that doesnt hit any traversed nodes is within time limit
     while (djikstrasCost(eventMap, currentNode->id, endCheckpoint->id) < timeRemaining) {
@@ -137,6 +138,7 @@ linkedList<node<checkpoint> > rogaineEvent::optimalRoute(int bracket) {
         pointTotal += currentNode->attribute->points;
     } 
     // else start going back
+    std::cout << "time to get back is " << djikstrasCost(eventMap, currentNode->id, endCheckpoint->id) << ". Time remaining is " << timeRemaining << '\n';
 
     linkedList<node<checkpoint> > pathBack = djikstrasPath(eventMap, currentNode->id, endCheckpoint->id);
     listNode<node<checkpoint > >* pathBackWalk = pathBack.returnHead();
@@ -146,10 +148,13 @@ linkedList<node<checkpoint> > rogaineEvent::optimalRoute(int bracket) {
         pointTotal += pathBackWalk->data->attribute->points;
 
         if (pathBackWalk->next) {
+            timeRemaining -= eventMap.searchEdge(pathBackWalk->data->id, pathBackWalk->next->data->id)->weight;
             pathBackWalk = pathBackWalk->next;
         }
+
     }
 
+    std::cout << "time remaining is " << timeRemaining << '\n';
     std::cout << "total points is: " << pointTotal << '\n';
     return path;
 };
