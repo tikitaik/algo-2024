@@ -127,3 +127,82 @@ algorithm
 -   multiple depth recursive desirability check?
 -   from hash house follow desirable nodes as long as a path exists back to the hash house in less time than is left 
 
+algorithm pseudocode
+
+start float DESIRABILITY (node currentNode, depth)
+    if depth = 1
+        desirability <-- 0
+        for each neighbour in rogaine map of currentNode
+            desirability <-- desirability + neighbourNode.pointReward / edgeWeight(CurrentNode, neighbourNode)
+        end for
+        
+        return desirability
+    else
+        desirability <-- 0
+        for each neighbour node of currentNode
+            desirability <-- desirability + DESIRABILITY(neighbourNode, depth - 1)
+        end for
+
+        return desirability / depth
+    end if
+stop
+
+start bool PATH_BACK_IN_TIME_EXISTS (sourceNode, possibleNode, goalNode, timeLimit)
+    timeLimit <-- timeLimit - edgeWeight(sourceNode, possibleNode)
+
+    if (djikstrasCost(possibleNode, goalNode) > timeLimit)
+        return false
+    else
+        return true
+    end if
+stop
+
+start bool PATH_BACK_FROM_NEIGHBOUR_EXISTS (currentNode, goalNode, timeLimit)
+    for each neighbour of currentNode
+        if PATH_BACK_IN_TIME_EXISTS(neighbourNode)
+            return true
+        end if
+    end for
+
+    return false
+stop
+
+start linkedList OPTIMAL_ROUTE (bracket)
+    timeRemaining <-- timeLimit * pow(1.027, 5 - bracket)
+    currentNode <-- hash house
+    endCheckpoint <-- hash house
+
+    linkedList path
+    int pointTotal
+
+    desirability array
+    for i <-- 0 to checkpoint count
+        desirability[i] <-- DESIRABILITY(node with id i, depth 6)
+    end for
+
+    insert currentNode to path
+
+    while PATH_BACK_FROM_NEIGHBOUR_EXISTS(currentNode, hash house, timeRemaining or djikstrasCost(currentNode, hash house) < time remaining and currentNode != hash house)
+        node bestNode
+        for each neighbour of currentNode
+            if bestNode is null and PATH_BACK_IN_TIME_EXISTS(currentNode, neighbourNode, hash house, timeRemaining) = true
+                bestNode <-- neighbourNode
+            else if best node is null and PATH_BACK_IN_TIME_EXISTS(currentNode, neighbourNode, hash house, timeRemaining) = false
+                continue
+            else if desirability array[bestNode] < desirability array[neighbourNode] and PATH_BACK_IN_TIME_EXISTS(currentNode, neighbourNode, hash house, timeRemaining) = true
+                bestNode <-- neighbourNode
+            end if
+        end for
+
+        timeRemaining <-- timeRemaining - edgeWeight(currentNode, bestNode)
+        desirability[currentNode] <-- 0
+
+        currentNode <-- bestNode
+        insert currentNode to path
+        if desirability[currentNode] != 0
+            pointTotal <-- pointTotal + currentNode.points
+        end if
+    end while
+
+    return path
+stop
