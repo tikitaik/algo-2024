@@ -31,8 +31,9 @@ int main() {
     g.addEdge(7, 9, 15);
     g.addEdge(8, 9, 5);
 
+    g.searchNodeID(3)->traversed = true;
     std::cout << "DFS: " << DFS(g, 0) << '\n';
-    std::cout << "recDFS: " << *recDFSStart(g, 0) << '\n';
+    //std::cout << "recDFS: " << *recDFSStart(g, 0) << '\n';
     std::cout << "BFS: " << BFS(g, 0) << '\n';
     //std::cout << "topSort: " << *topologicalSort(g) << '\n';
     //std::cout << "recTopSort: " << *recTopSortStart(g) << '\n';
@@ -40,8 +41,8 @@ int main() {
     std::cout << "prims: " << prims(g) << '\n';
     std::cout << "recPrims: " << recPrimsStart(g) << '\n';
     std::cout << "kruskals: " << kruskals(g) << '\n';
-    int startId = 8;
-    int endId = 2;
+    int startId = 0;
+    int endId = 9;
     std::cout << djikstrasPath(g, startId, endId) << '\n';
     std::cout << djikstrasCost(g, startId, endId) << '\n';
 

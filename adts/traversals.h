@@ -162,8 +162,7 @@ template <typename T> linkedList<node<T> > DFS (graph<T>& g, const int source) {
 
     node* current = g.searchNodeID(source);
 
-    // guess what this does
-    g.setAllNodesToUntraversed();
+    g.getTraversedState();
 
     // preliminary node stuff
     current->traversed = true;
@@ -193,6 +192,7 @@ template <typename T> linkedList<node<T> > DFS (graph<T>& g, const int source) {
             unvisited.removeKey(*current);
         }
     }
+    g.resetTraversed();
     return visited;
 }
 
@@ -204,7 +204,7 @@ template <typename T> linkedList<node<T> > BFS (graph<T>& g, const int source) {
 
     node* current = g.searchNodeID(source);
 
-    g.setAllNodesToUntraversed();
+    g.getTraversedState();
 
     // preliminary node stuff
     current->traversed = true;
@@ -235,6 +235,7 @@ template <typename T> linkedList<node<T> > BFS (graph<T>& g, const int source) {
             unvisited.removeKey(*current);
         }
     }
+    g.resetTraversed();
     return visited;
 }
 
@@ -332,8 +333,8 @@ template <typename T> linkedList<node<T> >* topologicalSort(graph<T>& g) {
     stack<node> visited;
     stack<node> unvisited;
     node* current;
-    // the one and only functionnnnnn
-    g.setAllNodesToUntraversed();
+
+    g.getTraversedState();
 
     // do a dfs from each node, and add node to visited stack if it has no untraversed descendants and it is not in topSort
     for (int i = 0; i < g.nodeCount(); i++) {
@@ -386,5 +387,6 @@ template <typename T> linkedList<node<T> >* topologicalSort(graph<T>& g) {
         visited.removeKey(*sortOrdered->returnTail()->data);
     }
     
+    g.resetTraversed();
     return sortOrdered;
 }

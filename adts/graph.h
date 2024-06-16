@@ -77,6 +77,8 @@ template <typename T> class graph {
     linkedList<node> nodes;
     linkedList<edge> edges;
 
+    bool* traversedStates;
+
     int indexOfId (int idToCheck) {
         // returns head of the list
         listNode<node>* curNode = nodes.returnHead();
@@ -417,6 +419,32 @@ template <typename T> class graph {
         }
     }
 
+    void getTraversedState() {
+        bool* state = new bool[nodes.size()];
+        listNode<node>* walk = allNodes().returnHead();
+
+        for (int i = 0; i < nodeCount(); i++) {
+            state[i] = walk->data->traversed;
+            if (walk->next) {
+                walk = walk->next;
+            }
+        }
+
+        traversedStates = state;
+    }
+
+    void resetTraversed() {
+        listNode<node>* walk = allNodes().returnHead();
+
+        for (int i = 0; i < nodeCount(); i++) {
+            walk->data->traversed = traversedStates[i];
+
+            if (walk->next) {
+                walk = walk->next;
+            }
+        }
+    }
+
     // check if every node in graph's traversed attribute == true
     bool allNodesAreTraversed() {
         listNode<node>* curListNode = allNodes().returnHead();
@@ -476,7 +504,7 @@ template <typename T> class graph {
 
     // does a DFS and returns if each node was traversed
     bool connected() {
-        setAllNodesToUntraversed();
+        getTraversedState();
         // DFS aay
         linkedList<node> visited;
         stack<node> unvisited;
@@ -508,7 +536,7 @@ template <typename T> class graph {
 
         // nicer than what was here before
         bool allTrav = allNodesAreTraversed();
-        setAllNodesToUntraversed();
+        resetTraversed();
         return allTrav;
     }
 
