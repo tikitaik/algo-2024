@@ -40,8 +40,14 @@ int main() {
     std::cout << "prims: " << prims(g) << '\n';
     std::cout << "recPrims: " << recPrimsStart(g) << '\n';
     std::cout << "kruskals: " << kruskals(g) << '\n';
-    std::cout << djikstras(g, 9, 1) << '\n';
+    int startId = 8;
+    int endId = 2;
+    std::cout << djikstrasPath(g, startId, endId) << '\n';
+    std::cout << djikstrasCost(g, startId, endId) << '\n';
 
+    displayMatrix2D(FWSP(g), g.nodeCount());
+
+    /*
     // pair testing
     pair<int, int> p(4, 6);
     std::cout << p << '\n';
@@ -76,5 +82,5 @@ int main() {
 
     displayMatrix2D(f, 5);
     displayMatrix2D(s, 5);
-    std::cout << djikstras(h, 0, 4) << '\n';
+    std::cout << djikstrasPath(h, 0, 4) << '\n';*/
 }
