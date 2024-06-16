@@ -72,7 +72,7 @@ float getPathTime(const node<checkpoint>* startNode, const node<checkpoint>* end
         * METER;
     std::cout << "distance in meters: " <<  distance << '\n';
 
-    distance = distance * roadCoefficient + (1 - roadCoefficient) * distance * 1.429; // slows down according to road coefficient
+    distance = distance * (roadCoefficient + (1 - roadCoefficient) * 1.429); // slows down according to road coefficient
     distance /= 1 - obstacleDifficultyCoefficient;
 
     std::cout << "distance after road and obstacle calcs: " << distance << '\n';
@@ -90,7 +90,10 @@ float getPathTime(const node<checkpoint>* startNode, const node<checkpoint>* end
     // speed in m/s
     float edgeTime = distance / walkSpeed;
     // convert to minutes
-    return edgeTime / 60;
+    edgeTime /= 60;
+    edgeTime = std::round(edgeTime);
+    std::cout << "edgeTime: " << edgeTime << '\n';
+    return edgeTime;
 }
 
 graph<checkpoint> constructGraph(const float walkSpeed) {

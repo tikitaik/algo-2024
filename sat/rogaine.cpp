@@ -15,6 +15,19 @@ int main () {
     std::cout << eventMap << '\n';
 
     rogaineEvent rEvent(eventMap, eventMap.allNodes(), eventMap.allNodes().returnHead()->data, eventMap.allNodes().returnHead()->data, timeLimit, walkSpeed);
-    std::cout << eventMap.allNodes().size() << '\n';
-    std::cout << eventMap.allEdges().size() << '\n';
+
+    listNode<node<checkpoint> >* walk = eventMap.allNodes().returnHead();
+    for (int i = 0; i < eventMap.allNodes().size(); i++) {
+        std::cout << *walk->data << '\n';
+        if (walk->next) {
+            walk = walk->next;
+        }
+    }
+    listNode<edge>* edgeWalk = eventMap.allEdges().returnHead();
+    for (int i = 0; i < eventMap.allEdges().size(); i++) {
+        std::cout << *edgeWalk->data << ": "<< edgeWalk->data->weight << '\n';
+        if (edgeWalk->next) {
+            edgeWalk = edgeWalk->next;
+        }
+    }
 }
