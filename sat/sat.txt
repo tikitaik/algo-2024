@@ -9,25 +9,32 @@ event
 |   
 |   node<checkpoint> <- start checkpoint
 |   node<checkpoint> <- end checkpoint 
+|   integer timeLimit <- time limit in minutes
+|   graph <- event map with only nodes, no edges
+|   linked list <- checkpoints
 |   linked list <- teams
 |   array<linkedList<teams> > size 6 <- brackets
-|   dictionary <checkpoint, linked list<pair <team, time> > > <-- checkpoint register
+|   dictionary <checkpoint, linked list<pair <team, time> > > <- checkpoint register
 |
 |   name event
-|   import graph, linked list, index, team, checkpoint
+|   import graph, linked list, index, team, checkpoint, time
 |   
 |   operations
 |   newEvent: graph, start coordiantes, end coordinates, checkpoint linked list -> event
-|   addTeamToBracket: event x team x index -> event register
-|   optimalRouteForBracket: event x index -> linkedlist of nodes
+|   addTeamToBracket: event x team x index -> event
 |   addTeamToCheckpoint: event x checkpoint x team x time -> event
+|   pathBackInTimeExists: event x graph x node x node x node x time -> boolean
+|   pathBackFromNeighbourExists: event x graph x node x node x time -> boolean
+|   optimalRouteForBracket: event x team -> linkedlist of nodes
  
 team ADT
 |   int <- team member count
 |   linkedList<pairs<string, age> > <- team member names and ages
 |   time <- time of arrival 
-|   time <- finishing
+|   time <- finishing time
 |   armband register (linkedList of pairs <checkpoint, time visited>)
+|   float <- average speed
+|   integer <- bracket index
 |
 |   name team
 |   import linked list, time, checkpoint
@@ -42,29 +49,29 @@ team ADT
 |   addCheckpointToArmband: team x checkpoint -> team
 
 checkpoint ADT
-|   pair<int, int> <- x and y coordinates
+|   pair<int, int> <- x and y coordinates in pixels
 |   int <- point reward
 |
 |   name checkpoint
-|   import float
+|   import integer, pair
 |   
 |   operations
-|   newCheckpoint: float x float x int -> checkpoint
-|   getLocation: checkpoint -> pair of floats
+|   newCheckpoint: integer x integer x int -> checkpoint
+|   getLocation: checkpoint -> pair of integers
 |   getPoints: checkpoint -> int
 
 other signatures
 
 linked list ADT
 |   name linked list
-|   import element
+|   import element, integer
 |   
 |   operations
 |   newLinkedList: -> linked list
 |   insertTail: element x linked list -> linked list
 |   insertHead: element x linked list -> linked list
 |   removeKey: element x linked list -> linked list
-|   size: linked list -> int
+|   size: linked list -> integer
 |   head: linked list -> element
 
 graph ADT
@@ -84,10 +91,11 @@ graph ADT
 |   deleteEdge: graph x edge -> graph
 |   neighbours: graph x node -> linked list of nodes
 |   untraversedNeighbours: graph x node -> linked list of nodes
-|   incident: graph x node -> linked list of nodes
 |   degree: graph x node -> int
 |   edgeExists: graph x edge: bool
 |   setAllNodesToUntraversed: graph -> graph
+|   getTraversedState: graph -> graph
+|   resetTraversed: graph -> graph
 |   allNodesAreTraversed: graph -> bool
 |   connected: graph -> bool
 |   cyclic: graph -> bool
@@ -96,17 +104,18 @@ pair
 |   name pair
 |   import element type 1, element type 2
 |   operations 
-|   newPair: element type 1 x element type 2-> pair
+|   newPair: element type 1 x element type 2 -> pair
 
 dictionary
 |   name dictionary
 |   import key, value
+|
 |   operations
 |   newDictionary: -> dictionary
 |   insert: key x value -> dictionary
 |   remove: key -> dictionary
-|   getValue: key -> value
-|   changeValue: key x value -> dictionary
+|   getValue: dictionary x key -> value
+|   changeValue: dictionary x key x value -> dictionary
 
 SYSTEM FOR IDS OF CHECKPOINTS: ID INCREASES FROM BOTTOM (real south) OF THE LEFT MOST NORTH LINES COLUMN
 -   SO BOTTOM (actual south) CHECKPOINT IN LEFT MOST COLUMN HAS ID 1
@@ -128,18 +137,18 @@ algorithm
 
 algorithm pseudocode
 
-start float DESIRABILITY (node currentNode, depth)
+start float DESIRABILITY (map, currentNode, depth)
     if depth = 1
-        desirability <-- 0
+        desirability <- 0
         for each neighbour in rogaine map of currentNode
-            desirability <-- desirability + neighbourNode.pointReward / edgeWeight(CurrentNode, neighbourNode)
+            desirability <- desirability + neighbourNode.pointReward / edgeWeight(CurrentNode, neighbourNode)
         end for
         
         return desirability
     else
-        desirability <-- 0
+        desirability <- 0
         for each neighbour node of currentNode
-            desirability <-- desirability + DESIRABILITY(neighbourNode, depth - 1)
+            desirability <- desirability + DESIRABILITY(neighbourNode, depth - 1)
         end for
 
         return desirability / depth
@@ -148,40 +157,54 @@ stop
 
 start integer GET_PATH_TIME (startNode, endNode, walkSpeed, uphill, roadCoefficient, obstacleCoefficient)
     if roadCoefficient > 1 or roadCoefficient < 0
-        return -1
+        return null
     if obstacleCoefficient >= 1 or obstacleCoefficient < 0
-        return -1
+        return null
 
-    meter <-- 1 / 0.190
+    meter <- 1 / 0.190
 
-    distance <-- sqrt((startNode.x - endNode.x)^2 + (startNode.y - endNode.y)^2) * meter
-    distance <-- distance * (roadCoefficient + (1 - roadCoefficient) * 1 / 0.7)
-    distance <-- distance / obstacleCoefficient
+    distance <- sqrt((startNode.x - endNode.x)^2 + (startNode.y - endNode.y)^2) * meter
+    distance <- distance * (roadCoefficient + (1 - roadCoefficient) * 1 / 0.7)
+    distance <- distance / obstacleCoefficient
 
     if uphill > 0
-        distance <-- distance / 0.8
+        distance <- distance / 0.8
     else if uphill < 0
-        distance <-- distance / 1.2
+        distance <- distance / 1.2
 
-    edgeTime <-- distance / walkSpeed
-    edgeTime <-- edgeTime / 60
+    edgeTime <- distance / walkSpeed
+    edgeTime <- edgeTime / 60
     round edgeTime to neartest integer
     return edgeTime
 stop
 
-start bool PATH_BACK_IN_TIME_EXISTS (sourceNode, possibleNode, goalNode, timeLimit)
-    timeLimit <-- timeLimit - edgeWeight(sourceNode, possibleNode)
+start bool PATH_BACK_IN_TIME_EXISTS (teamMap, currentNode, possibleNode, goalNode, timeLimit)
+    timeLimit <- timeLimit - edgeWeight(sourceNode, currentNode)
+    if possible node is untraversed
+        timeLimit <- timeLimit - 2
+    end if
 
-    if (djikstrasCost(possibleNode, goalNode) > timeLimit)
+    teamMap.getTraversedState()
+    teamMap.setAllNodesToUntraversed()
+    path cost <- 0
+
+    for each untraversed node in the shortest path back to goalNode
+        path cost <- path cost + 2
+    end for
+
+    path cost <- djikstrasCost(currentNode, goalNode)
+
+    g.resetTraversed()
+    if (pathCost > timeLimit)
         return false
     else
         return true
     end if
 stop
 
-start bool PATH_BACK_FROM_NEIGHBOUR_EXISTS (currentNode, goalNode, timeLimit)
+start bool PATH_BACK_FROM_NEIGHBOUR_EXISTS (teamMap, currentNode, goalNode, timeLimit)
     for each neighbour of currentNode
-        if PATH_BACK_IN_TIME_EXISTS(neighbourNode)
+        if PATH_BACK_IN_TIME_EXISTS(teamMap, currentNode, neighbourNode, goalNode, timeLimit)
             return true
         end if
     end for
@@ -189,42 +212,54 @@ start bool PATH_BACK_FROM_NEIGHBOUR_EXISTS (currentNode, goalNode, timeLimit)
     return false
 stop
 
-start linkedList OPTIMAL_ROUTE (bracket)
-    timeRemaining <-- timeLimit * pow(1.027, 5 - bracket)
-    currentNode <-- hash house
-    endCheckpoint <-- hash house
+start linkedList OPTIMAL_ROUTE (team)
+    walkSpeed <- team.speed
+    for i <- team.bracket to 5
+        walkSpeed <- walkSpeed / 0.973
+    end for
 
-    linkedList path
-    int pointTotal
+    graph teamMap <- constructGraph(walkSpeed)
+    currentNode <- hash house
+    endCheckpoint <- hash house
+    linkedList path <- empty list
+    pointTotal <- 0
 
-    desirability array
-    for i <-- 0 to checkpoint count
-        desirability[i] <-- DESIRABILITY(node with id i, depth 6)
+    desirability array <- empty array size teamMap.nodeCount()
+    for i <- 0 to checkpoint count - 1
+        desirability[i] <- DESIRABILITY(teamMap, node with id i, 6)
     end for
 
     insert currentNode to path
 
-    while PATH_BACK_FROM_NEIGHBOUR_EXISTS(currentNode, hash house, timeRemaining) or (djikstrasCost(currentNode, hash house) < time remaining and currentNode != hash house)
+    while PATH_BACK_FROM_NEIGHBOUR_EXISTS(teamMap, currentNode, hash house, timeRemaining)
+        currentNode.traversed <- true
         node bestNode
         for each neighbour of currentNode
-            if bestNode is null and PATH_BACK_IN_TIME_EXISTS(currentNode, neighbourNode, hash house, timeRemaining) = true
-                bestNode <-- neighbourNode
-            else if best node is null and PATH_BACK_IN_TIME_EXISTS(currentNode, neighbourNode, hash house, timeRemaining) = false
+            if bestNode is null and PATH_BACK_IN_TIME_EXISTS(teamMap, currentNode, neighbourNode, hash house, timeRemaining) = true
+                bestNode <- neighbourNode
+            else if best node is null and PATH_BACK_IN_TIME_EXISTS(teamMap, currentNode, neighbourNode, hash house, timeRemaining) = false
                 continue
-            else if desirability array[bestNode] < desirability array[neighbourNode] and PATH_BACK_IN_TIME_EXISTS(currentNode, neighbourNode, hash house, timeRemaining) = true
-                bestNode <-- neighbourNode
+            else if desirability array[bestNode] < desirability array[neighbourNode] and PATH_BACK_IN_TIME_EXISTS(teamMap, currentNode, neighbourNode, hash house, timeRemaining) = true
+                bestNode <- neighbourNode
             end if
         end for
 
-        timeRemaining <-- timeRemaining - edgeWeight(currentNode, bestNode)
-        desirability[currentNode] <-- 0
+        timeRemaining <- timeRemaining - edgeWeight(currentNode, bestNode)
+        if bestNode.traversed = true
+            timeRemaining <- timeRemaining - 2
+        end if
+        desirability[currentNode] <- 0
 
-        currentNode <-- bestNode
+        currentNode <- bestNode
         insert currentNode to path
         if desirability[currentNode] != 0
-            pointTotal <-- pointTotal + currentNode.points
+            pointTotal <- pointTotal + currentNode.points
         end if
     end while
+
+    if timeRemaining < 0
+        pointTotal <- pointTotal + timeRemaining * 10
+    end if
 
     return path
 stop

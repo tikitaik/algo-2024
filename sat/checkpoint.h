@@ -10,10 +10,7 @@ class checkpoint {
         int points;
 
         checkpoint () {};
-        checkpoint (int xCoord, int yCoord, int pointsReward)  : coords(pair<int, int>(xCoord, yCoord)), points(pointsReward)  {
-
-            //std::cout << coords << ", " << points << '\n';
-        }
+        checkpoint (int xCoord, int yCoord, int pointsReward)  : coords(pair<int, int>(xCoord, yCoord)), points(pointsReward)  {}
 
         pair<int, int> getCoordinates();
         int getPoints();
