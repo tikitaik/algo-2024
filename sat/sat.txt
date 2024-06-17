@@ -7,11 +7,11 @@ task :
 
 event
 |   
-|   array<float> size 2 <- start coordinates
-|   array<float> size 2 <- end coordinate 
+|   node<checkpoint> <- start checkpoint
+|   node<checkpoint> <- end checkpoint 
 |   linked list <- teams
 |   array<linkedList<teams> > size 6 <- brackets
-|   dictionary <checkpoint, linked list<pair <team, time> > >
+|   dictionary <checkpoint, linked list<pair <team, time> > > <-- checkpoint register
 |
 |   name event
 |   import graph, linked list, index, team, checkpoint
@@ -42,8 +42,7 @@ team ADT
 |   addCheckpointToArmband: team x checkpoint -> team
 
 checkpoint ADT
-|   float <- x coordinate
-|   float <- y coordinate
+|   pair<int, int> <- x and y coordinates
 |   int <- point reward
 |
 |   name checkpoint
@@ -129,7 +128,25 @@ algorithm
 
 algorithm pseudocode
 
-start GET_PATH_TIME (startNode, endNode, walkSpeed, uphill, roadCoefficient, obstacleCoefficient)
+start float DESIRABILITY (node currentNode, depth)
+    if depth = 1
+        desirability <-- 0
+        for each neighbour in rogaine map of currentNode
+            desirability <-- desirability + neighbourNode.pointReward / edgeWeight(CurrentNode, neighbourNode)
+        end for
+        
+        return desirability
+    else
+        desirability <-- 0
+        for each neighbour node of currentNode
+            desirability <-- desirability + DESIRABILITY(neighbourNode, depth - 1)
+        end for
+
+        return desirability / depth
+    end if
+stop
+
+start integer GET_PATH_TIME (startNode, endNode, walkSpeed, uphill, roadCoefficient, obstacleCoefficient)
     if roadCoefficient > 1 or roadCoefficient < 0
         return -1
     if obstacleCoefficient >= 1 or obstacleCoefficient < 0
@@ -150,24 +167,6 @@ start GET_PATH_TIME (startNode, endNode, walkSpeed, uphill, roadCoefficient, obs
     edgeTime <-- edgeTime / 60
     round edgeTime to neartest integer
     return edgeTime
-stop
-
-start float DESIRABILITY (node currentNode, depth)
-    if depth = 1
-        desirability <-- 0
-        for each neighbour in rogaine map of currentNode
-            desirability <-- desirability + neighbourNode.pointReward / edgeWeight(CurrentNode, neighbourNode)
-        end for
-        
-        return desirability
-    else
-        desirability <-- 0
-        for each neighbour node of currentNode
-            desirability <-- desirability + DESIRABILITY(neighbourNode, depth - 1)
-        end for
-
-        return desirability / depth
-    end if
 stop
 
 start bool PATH_BACK_IN_TIME_EXISTS (sourceNode, possibleNode, goalNode, timeLimit)

@@ -122,7 +122,7 @@ bool rogaineEvent::pathBackFromNeighbourExists(node<checkpoint>* currentNode, no
 }
 
 // algorithm
-linkedList<node<checkpoint> > rogaineEvent::optimalRoute(int bracket) {
+linkedList<node<checkpoint> > rogaineEvent::optimalRoute(float walkSpeed, int bracket) {
     // if 2.7% is linear: time will eventually reach 0
     // int timeLimit *= 1 + 0.27 * (5 - bracket)
     // if 2.7% is 2.7% of the previous bracket: doesnt ever get to 0
