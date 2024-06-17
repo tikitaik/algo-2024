@@ -9,12 +9,15 @@
 # include "adts/shortPaths.h"
 
 int main () {
-    const float walkSpeed = 1.5f;
+    team t[10];
+    for (int i = 0; i < 10; i++) {
+        t[i] = team(1 + i * 0.1, 0);
+    }
     
-    graph<checkpoint> eventMap = constructGraph(walkSpeed);
+    graph<checkpoint> eventMap = initGraphCheckpoints();
     std::cout << eventMap << '\n';
 
-    rogaineEvent rEvent(eventMap, eventMap.allNodes(), eventMap.searchNodeID(0), eventMap.searchNodeID(0), 60 * 6, walkSpeed);
+    rogaineEvent rEvent(eventMap, eventMap.allNodes(), eventMap.searchNodeID(0), eventMap.searchNodeID(0), 60 * 6);
 
     // prints nodes and coords and point reward
     listNode<node<checkpoint> >* walk = eventMap.allNodes().returnHead();
@@ -35,17 +38,13 @@ int main () {
     
     listNode<node<checkpoint> >* desWalk = eventMap.allNodes().returnHead();
     for (int i = 0; i < eventMap.allNodes().size(); i++) {
-        std::cout << "desirability of " << *desWalk->data << " is " << rEvent.desirability(desWalk->data, 6) << '\n';
+        std::cout << "desirability of " << *desWalk->data << " is " << rEvent.desirability(constructGraph(1.5), desWalk->data, 6) << '\n';
         if (desWalk->next) {
             desWalk = desWalk->next;
         }
     }
 
-    std::cout << rEvent.optimalRoute(0) << '\n';
-    std::cout << rEvent.optimalRoute(1) << '\n';
-    std::cout << rEvent.optimalRoute(2) << '\n';
-    std::cout << rEvent.optimalRoute(3) << '\n';
-    std::cout << rEvent.optimalRoute(4) << '\n';
-    std::cout << rEvent.optimalRoute(5) << '\n';
-    std::cout << rEvent.optimalRoute(6) << '\n';
+    for (int i = 0; i < 10; i++) {
+        std::cout << rEvent.optimalRoute(t[i]) << '\n';
+    }
 }

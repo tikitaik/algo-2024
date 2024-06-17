@@ -14,10 +14,14 @@ class team {
         timePlaceholder endTime;
         // linkedList of checkpoints recorded : armbandRegister
         linkedList<pair<checkpoint, timePlaceholder> > checkpointHistory;
+        float speed;
+        int bracket;
 
-        team() {}
+        team () {}
 
-        team(linkedList<pair<std::string, int> > mems) {
+        team(float speedIn, int bracketIndex) : speed(speedIn), bracket(bracketIndex) {}
+
+        team(linkedList<pair<std::string, int> > mems, float speedIn, int bracketIndex) : speed(speedIn), bracket(bracketIndex) {
             members = mems;
         }
 
