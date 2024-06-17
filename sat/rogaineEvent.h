@@ -100,8 +100,8 @@ bool rogaineEvent::pathBackInTimeExists(graph<checkpoint>& g, node<checkpoint>* 
     g.setAllNodesToUntraversed();
 
     // extra 2 minutes to find scanning point check
-    int pathCost = djikstrasCost(g, possibleNode->id, goalNode->id);
-    linkedList<node<checkpoint> > path = djikstrasPath(g, possibleNode->id, goalNode->id);
+    int pathCost = dijkstrasCost(g, possibleNode->id, goalNode->id);
+    linkedList<node<checkpoint> > path = dijkstrasPath(g, possibleNode->id, goalNode->id);
     listNode<node<checkpoint> >* walk = path.returnHead();
     for (int i = 0; i < path.size(); i++) {
         if (!walk->data->traversed) {
@@ -118,8 +118,8 @@ bool rogaineEvent::pathBackInTimeExists(graph<checkpoint>& g, node<checkpoint>* 
         return false;
     }
     else { 
-        //std::cout << "hypothetical path back is " << djikstrasPath(g, possibleNode->id, goalNode->id) << " with cost " 
-        //<< djikstrasCost(g, possibleNode->id, goalNode->id) << " and timeRemaining is " << timeLimit << '\n';
+        //std::cout << "hypothetical path back is " << dijkstrasPath(g, possibleNode->id, goalNode->id) << " with cost " 
+        //<< dijkstrasCost(g, possibleNode->id, goalNode->id) << " and timeRemaining is " << timeLimit << '\n';
         return true;
     }
 }
@@ -205,8 +205,8 @@ linkedList<node<checkpoint> > rogaineEvent::optimalRoute(team t) {
         /*teamMap.getTraversedState();
         teamMap.setAllNodesToUntraversed();
         std::cout << "most desirable node from " << *currentNode << " is " << *bestNode << " with a desirability of " << desirabilityArr[bestNode->id] 
-        << " and hypothetical path back of " << djikstrasPath(teamMap, bestNode->id, endCheckpoint->id)<< " with cost " 
-        << djikstrasCost(teamMap, bestNode->id, endCheckpoint->id) << " and time remaining is " << timeRemaining << '\n';
+        << " and hypothetical path back of " << dijkstrasPath(teamMap, bestNode->id, endCheckpoint->id)<< " with cost " 
+        << dijkstrasCost(teamMap, bestNode->id, endCheckpoint->id) << " and time remaining is " << timeRemaining << '\n';
         teamMap.resetTraversed();*/
         // decrement time
         timeRemaining -= teamMap.searchEdge(currentNode->id, bestNode->id)->weight;

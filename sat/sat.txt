@@ -192,7 +192,7 @@ start bool PATH_BACK_IN_TIME_EXISTS (teamMap, currentNode, possibleNode, goalNod
         path cost <- path cost + 2
     end for
 
-    path cost <- djikstrasCost(currentNode, goalNode)
+    path cost <- dijkstrasCost(currentNode, goalNode)
 
     g.resetTraversed()
     if (pathCost > timeLimit)
