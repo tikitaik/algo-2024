@@ -131,14 +131,13 @@ linkedList<node<checkpoint> > rogaineEvent::optimalRoute(team t) {
         // same as walkSpeed /= 0.973
         walkSpeed *= 1.02775;
     }
-    std::cout << "inital team speed was " << t.speed << " but because they are in bracket " << t.bracket << " and so "; 
-    std::cout << "team walkSpeed is now " << walkSpeed << '\n';
+    //std::cout << "inital team speed was " << t.speed << " but because they are in bracket " << t.bracket << " and so team walkSpeed is now " << walkSpeed << '\n';
 
     graph<checkpoint> teamMap = constructGraph(walkSpeed);
     node<checkpoint>* currentNode = teamMap.searchNodeID(0);
     node<checkpoint>* endCheckpoint = teamMap.searchNodeID(0);
     linkedList<node<checkpoint> > path;
-    int pointTotal;
+    int pointTotal = 0;
     int timeRemaining = timeLimit;
     int desirabilityArr[teamMap.nodeCount()];
 

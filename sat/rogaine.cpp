@@ -15,9 +15,6 @@ int main () {
     }
     
     graph<checkpoint> eventMap = initGraphCheckpoints();
-    std::cout << eventMap << '\n';
-
-    rogaineEvent rEvent(eventMap, eventMap.allNodes(), eventMap.searchNodeID(0), eventMap.searchNodeID(0), 60 * 6);
 
     // prints nodes and coords and point reward
     listNode<node<checkpoint> >* walk = eventMap.allNodes().returnHead();
@@ -27,22 +24,8 @@ int main () {
             walk = walk->next;
         }
     }
-    // prints the edges and their weights
-    listNode<edge>* edgeWalk = eventMap.allEdges().returnHead();
-    for (int i = 0; i < eventMap.allEdges().size(); i++) {
-        std::cout << *edgeWalk->data << ": "<< edgeWalk->data->weight << '\n';
-        if (edgeWalk->next) {
-            edgeWalk = edgeWalk->next;
-        }
-    }
-    
-    listNode<node<checkpoint> >* desWalk = eventMap.allNodes().returnHead();
-    for (int i = 0; i < eventMap.allNodes().size(); i++) {
-        std::cout << "desirability of " << *desWalk->data << " is " << rEvent.desirability(constructGraph(1.5), desWalk->data, 6) << '\n';
-        if (desWalk->next) {
-            desWalk = desWalk->next;
-        }
-    }
+
+    rogaineEvent rEvent(eventMap, eventMap.allNodes(), eventMap.searchNodeID(0), eventMap.searchNodeID(0), 60 * 6);
 
     for (int i = 0; i < 10; i++) {
         std::cout << rEvent.optimalRoute(t[i]) << '\n';
