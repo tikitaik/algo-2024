@@ -76,22 +76,22 @@ linked list ADT
 
 graph ADT
 |   name graph
-|   import node, edge, attribute
+|   import node, edge, attribute, integer, bool
 |   
 |   operations
 |   newGraph: -> graph
 |   allNodes: graph -> linked list of nodes
 |   allEdges: graph -> linked list of edges
-|   nodeCount: graph -> int
-|   edgeCount: graph -> int
+|   nodeCount: graph -> integer
+|   edgeCount: graph -> integer
 |   addNode: graph x node x attribute -> graph
-|   addNodes: graph x int -> graph
+|   addNodes: graph x integer -> graph
 |   addEdge: graph x edge -> graph
 |   deleteNode: graph x node -> graph
 |   deleteEdge: graph x edge -> graph
 |   neighbours: graph x node -> linked list of nodes
 |   untraversedNeighbours: graph x node -> linked list of nodes
-|   degree: graph x node -> int
+|   degree: graph x node -> integer
 |   edgeExists: graph x edge: bool
 |   setAllNodesToUntraversed: graph -> graph
 |   getTraversedState: graph -> graph
