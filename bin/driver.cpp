@@ -43,8 +43,8 @@ int main() {
     std::cout << "kruskals: " << kruskals(g) << '\n';
     int startId = 0;
     int endId = 9;
-    std::cout << djikstrasPath(g, startId, endId) << '\n';
-    std::cout << djikstrasCost(g, startId, endId) << '\n';
+    std::cout << dijkstrasPath(g, startId, endId) << '\n';
+    std::cout << dijkstrasCost(g, startId, endId) << '\n';
 
     displayMatrix2D(FWSP(g), g.nodeCount());
 
@@ -83,5 +83,5 @@ int main() {
 
     displayMatrix2D(f, 5);
     displayMatrix2D(s, 5);
-    std::cout << djikstrasPath(h, 0, 4) << '\n';*/
+    std::cout << dijkstrasPath(h, 0, 4) << '\n';*/
 }
