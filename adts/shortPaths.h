@@ -199,7 +199,7 @@ template <typename T> node<T>* findMinNode(graph<T> g, const double minimalDist[
     return minNode;
 }
 
-template <typename T> node<T>** djikstras(graph<T> g, int sourceNodeID, int sinkNodeID) {
+template <typename T> node<T>** dijkstras(graph<T> g, int sourceNodeID, int sinkNodeID) {
     typedef node<T> node;
 
     // DFS check to see if there is a path at all to sink node, if not return linkedlist with one thing
@@ -214,7 +214,7 @@ template <typename T> node<T>** djikstras(graph<T> g, int sourceNodeID, int sink
     std::cout << "starting from node " << *current << " and searching for path to node " << *g.searchNodeID(sinkNodeID) << '\n';
 
     // array to store current minimal path costs, init all to -1 to represent infinite
-    // can be used since djikstras is not for negative weight values
+    // can be used since dijkstras is not for negative weight values
     double minimalDist[g.nodeCount()];
     node** prevNodes = new node*[g.nodeCount()];
     for (int i = 0; i < g.nodeCount(); i++) {
@@ -238,9 +238,9 @@ template <typename T> node<T>** djikstras(graph<T> g, int sourceNodeID, int sink
 }
 
 // linked list of path back to node
-template<typename T> linkedList<node<T> > djikstrasPath(graph<T> g, int sourceNodeID, int sinkNodeID) {
+template<typename T> linkedList<node<T> > dijkstrasPath(graph<T> g, int sourceNodeID, int sinkNodeID) {
     node<T>** prev = new node<T>*[g.nodeCount()];
-    prev = djikstras(g, sourceNodeID, sinkNodeID);
+    prev = dijkstras(g, sourceNodeID, sinkNodeID);
 
     std::cout << "making path\n";
     linkedList<node<T> > shortestPath;
@@ -254,9 +254,9 @@ template<typename T> linkedList<node<T> > djikstrasPath(graph<T> g, int sourceNo
     return shortestPath;
 }
 
-template<typename T> int djikstrasCost(graph<T> g, int sourceNodeID, int sinkNodeID) {
+template<typename T> int dijkstrasCost(graph<T> g, int sourceNodeID, int sinkNodeID) {
     node<T>** prev = new node<T>*[g.nodeCount()];
-    prev = djikstras(g, sourceNodeID, sinkNodeID);
+    prev = dijkstras(g, sourceNodeID, sinkNodeID);
 
     int cost = 0;
     node<T>* toAdd = g.searchNodeID(sinkNodeID);

@@ -6,4 +6,4 @@ binary trees
 trees (b trees?)
 A* (not urgent)
 
-make djikstras use priority queue
+make dijkstras use priority queue
