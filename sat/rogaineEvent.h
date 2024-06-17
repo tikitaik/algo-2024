@@ -100,6 +100,7 @@ bool rogaineEvent::pathBackInTimeExists(graph<checkpoint>& g, node<checkpoint>* 
     g.getTraversedState();
     g.setAllNodesToUntraversed();
 
+    // extra 2 minutes to find scanning point check
     int pathCost = djikstrasCost(g, possibleNode->id, goalNode->id);
     linkedList<node<checkpoint> > path = djikstrasPath(g, possibleNode->id, goalNode->id);
     listNode<node<checkpoint> >* walk = path.returnHead();
@@ -225,7 +226,7 @@ linkedList<node<checkpoint> > rogaineEvent::optimalRoute(team t) {
         pointTotal += timeRemaining * 10;
     }
 
-    //std::cout << "total points is: " << pointTotal << " and time remaining is " << timeRemaining << '\n';
-    std::cout << pointTotal;
+    std::cout << "total points is: " << pointTotal << " and time remaining is " << timeRemaining << '\n';
+    //std::cout << pointTotal;
     return path;
 };
