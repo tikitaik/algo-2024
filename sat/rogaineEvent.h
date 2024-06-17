@@ -21,7 +21,7 @@ class rogaineEvent {
     const int timeLimit;
 
     // map
-    graph<checkpoint> eventMap;
+    const graph<checkpoint> eventMap;
     const linkedList<node<checkpoint> > checkpoints;
 
     // register for teams
@@ -90,11 +90,9 @@ float rogaineEvent::desirability(graph<checkpoint> g, node<checkpoint>* currentN
 
 // determines if a path back from possible node to goal node will be within the time limit
 bool rogaineEvent::pathBackInTimeExists(graph<checkpoint>& g, node<checkpoint>* sourceNode, node<checkpoint>* possibleNode, node<checkpoint>* goalNode, int timeLimit) {
-    //std::cout << *sourceNode << " " << *possibleNode << '\n';
+
     timeLimit -= g.searchEdge(sourceNode->id, possibleNode->id)->weight;
 
-    //std::cout << djikstrasCost(g, possibleNode->id, goalNode->id) << '\n';
-    //std::cout << djikstrasPath(g, possibleNode->id, goalNode->id) << '\n';
     if (djikstrasCost(g, possibleNode->id, goalNode->id) > timeLimit) {
         return false;
     }
@@ -122,9 +120,7 @@ bool rogaineEvent::pathBackFromNeighbourExists(graph<checkpoint>& g, node<checkp
 
 // algorithm
 linkedList<node<checkpoint> > rogaineEvent::optimalRoute(team t) {
-    // if 2.7% is linear: time will eventually reach 0
-    // int timeLimit *= 1 + 0.27 * (5 - bracket)
-    // if 2.7% is 2.7% of the previous bracket: doesnt ever get to 0
+    // s = d / t therefore if t /= 0.973 then s = d / (t / 0.973) = s / 0.973
     float walkSpeed = t.speed;
     int bracket = t.bracket;
     for (int i = t.bracket; i < 6; i++) {
@@ -133,6 +129,7 @@ linkedList<node<checkpoint> > rogaineEvent::optimalRoute(team t) {
     }
     //std::cout << "inital team speed was " << t.speed << " but because they are in bracket " << t.bracket << " and so team walkSpeed is now " << walkSpeed << '\n';
 
+    // initalise everything
     graph<checkpoint> teamMap = constructGraph(walkSpeed);
     node<checkpoint>* currentNode = teamMap.searchNodeID(0);
     node<checkpoint>* endCheckpoint = teamMap.searchNodeID(0);
@@ -186,10 +183,11 @@ linkedList<node<checkpoint> > rogaineEvent::optimalRoute(team t) {
         /*std::cout << "most desirable node from " << *currentNode << " is " << *bestNode << " with a desirability of " << desirabilityArr[bestNode->id] 
         << " and hypothetical path back of " << djikstrasPath(teamMap, bestNode->id, endCheckpoint->id)<< " with cost " 
         << djikstrasCost(teamMap, bestNode->id, endCheckpoint->id) << " and time remaining is " << timeRemaining << '\n';*/
+
         // decrement time
         timeRemaining -= teamMap.searchEdge(currentNode->id, bestNode->id)->weight;
         desirabilityArr[currentNode->id] = 0;
-
+        // new current node things
         currentNode = bestNode;
         path.insertTail(*currentNode);
         if (desirabilityArr[currentNode->id] != 0) {
