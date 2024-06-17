@@ -12,7 +12,7 @@ int main () {
     team t[10][6];
     for (int i = 0; i < 10; i++) {
         for (int j = 0; j < 6; j++) {
-            t[i][j] = team(1 + i * 0.1, j);
+            t[i][j] = team(1 + i * 0.2, j);
         }
     }
     
@@ -37,4 +37,6 @@ int main () {
         }
         std::cout << '\n';
     }*/
+    std::cout << rEvent.optimalRoute(t[9][0]) << '\n';
+    std::cout << rEvent.optimalRoute(t[0][0]) << '\n';
 }
