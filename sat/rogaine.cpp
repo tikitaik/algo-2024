@@ -33,10 +33,9 @@ int main () {
     for (int i = 0; i < 6; i++) {
         for (int j = 0; j < 10; j++) {
             rEvent.optimalRoute(t[j][i]);
-            std::cout << ", ";
         }
-        std::cout << '\n';
     }*/
-    std::cout << rEvent.optimalRoute(t[9][0]) << '\n';
-    std::cout << rEvent.optimalRoute(t[0][0]) << '\n';
+    //std::cout << rEvent.optimalRoute(t[9][0]) << '\n';
+    //std::cout << rEvent.optimalRoute(t[0][0]) << '\n';
+    std::cout << rEvent.optimalRoute(team(1.8, 0)) << '\n';
 }
