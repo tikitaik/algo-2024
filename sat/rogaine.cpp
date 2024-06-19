@@ -38,4 +38,5 @@ int main () {
     //std::cout << rEvent.optimalRoute(t[9][0]) << '\n';
     //std::cout << rEvent.optimalRoute(t[0][0]) << '\n';
     std::cout << rEvent.optimalRoute(team(1.8, 0)) << '\n';
+    std::cout << rEvent.optimalRoute(team(1.8, 1)) << '\n';
 }
