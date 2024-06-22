@@ -32,8 +32,12 @@ class rogaineEvent {
     dictionary<checkpoint, linkedList<pair<team, timePlaceholder> > > checkpointRegister;
 
     public:
+
+    int desirabilityCount;
     // epic constructor
-    rogaineEvent(graph<checkpoint> mapIn, linkedList<node<checkpoint> > checkpointList, node<checkpoint>* start, node<checkpoint>* end, int timeIn) : eventMap(mapIn), checkpoints(checkpointList), startNode(start), endNode(end), timeLimit(timeIn) {}
+    rogaineEvent(graph<checkpoint> mapIn, linkedList<node<checkpoint> > checkpointList, node<checkpoint>* start, node<checkpoint>* end, int timeIn) : eventMap(mapIn), checkpoints(checkpointList), startNode(start), endNode(end), timeLimit(timeIn) {
+        desirabilityCount = 0;
+    }
 
     void addTeamToBracket(team& t, int index);
     void addTeamToCheckpoint(checkpoint& c, team* t, timePlaceholder time);
@@ -55,6 +59,7 @@ void rogaineEvent::addTeamToCheckpoint(checkpoint& check, team* t, timePlacehold
 }
 
 float rogaineEvent::desirability(graph<checkpoint> g, node<checkpoint>* currentNode, int depth) {
+    desirabilityCount++;
     // base case
     if (depth == 1) {
         float des = 0;

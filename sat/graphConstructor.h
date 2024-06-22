@@ -66,8 +66,8 @@ float getPathTime(const node<checkpoint>* startNode, const node<checkpoint>* end
     }
     // ewwwwww
     // gets 2d distance
-    float distance = sqrt((*startNode->attribute->coords.one - *endNode->attribute->coords.one) *
-        (*startNode->attribute->coords.one - *endNode->attribute->coords.one)
+    float distance = sqrt((*startNode->attribute->coords.one - *endNode->attribute->coords.one)
+        * (*startNode->attribute->coords.one - *endNode->attribute->coords.one)
         + (*startNode->attribute->coords.two - *endNode->attribute->coords.two)
         * (*startNode->attribute->coords.two - *endNode->attribute->coords.two)) 
         * METER;

@@ -12,7 +12,7 @@ int main () {
     team t[10][6];
     for (int i = 0; i < 10; i++) {
         for (int j = 0; j < 6; j++) {
-            t[i][j] = team(1 + i * 0.2, j);
+            t[i][j] = team(1 + i * 0.1, j);
         }
     }
     
@@ -29,14 +29,15 @@ int main () {
 
     rogaineEvent rEvent(eventMap, eventMap.allNodes(), eventMap.searchNodeID(0), eventMap.searchNodeID(0), 60 * 6);
 
-    /*int scores[10][6];
+    int scores[10][6];
     for (int i = 0; i < 6; i++) {
         for (int j = 0; j < 10; j++) {
-            rEvent.optimalRoute(t[j][i]);
+            std::cout << rEvent.optimalRoute(t[j][i]) << '\n';
         }
-    }*/
+    }
     //std::cout << rEvent.optimalRoute(t[9][0]) << '\n';
     //std::cout << rEvent.optimalRoute(t[0][0]) << '\n';
-    std::cout << rEvent.optimalRoute(team(1.8, 0)) << '\n';
-    std::cout << rEvent.optimalRoute(team(1.8, 1)) << '\n';
+    //std::cout << rEvent.optimalRoute(team(1.8, 0)) << '\n';
+    //std::cout << rEvent.optimalRoute(team(1.8, 1)) << '\n';
+    std::cout << rEvent.desirabilityCount << '\n';
 }
