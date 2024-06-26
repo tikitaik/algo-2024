@@ -71,7 +71,7 @@ void render(const Vector2 windowSize, const Vector2 C, const float scale) {
             const float px = float(x - windowSize.x / 2) * scale;
             const float py = float(y - windowSize.y / 2) * scale;
             const int iters = iterations({px, py}, C);
-            DrawPixel(x, y, ColorFromHSV((100 + float(iters) /  float(maxIterations) * 90.0), 1.0, (float(iters) / float (maxIterations)) * 0.5 + 0.1));
+            DrawPixel(x, y, ColorFromHSV((0 + float(iters) /  float(maxIterations) * 20.0), 1.0, (float(iters) / float (maxIterations)) * 0.5 + 0.1));
         }
     }
 }

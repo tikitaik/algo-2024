@@ -1,3 +1,4 @@
+# pragma once
 # include <iostream>
 
 template <typename T> T* insertionSort (T arr[], int size) {
@@ -14,4 +15,18 @@ template <typename T> T* insertionSort (T arr[], int size) {
    } 
 
    return arr;
+}
+
+template<typename T> T* bubbleSort(T arr[], int size) {
+    for (int i = 0; i < size; i++) {
+        for (int j = 0; j < size; j++) {
+            if (arr[j + 1] < arr[j] && j + 1 < size) {
+               int temp = arr[j];
+               arr[j] = arr[j + 1]; 
+               arr[j + 1] = temp;
+            }
+        }
+    }
+
+    return arr;
 }

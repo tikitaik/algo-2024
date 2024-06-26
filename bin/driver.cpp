@@ -5,6 +5,8 @@
 # include "adts/shortPaths.h"
 # include "time/time.h"
 # include "recursion/recursion.h"
+# include "searchAndSortAlgorithms/search.h"
+# include "searchAndSortAlgorithms/sort.h"
 
 int main() {
 
@@ -84,4 +86,9 @@ int main() {
     displayMatrix2D(f, 5);
     displayMatrix2D(s, 5);
     std::cout << dijkstrasPath(h, 0, 4) << '\n';*/
+    int testArr[] = { 5, 2, 6, 7, 1491, 11, 1, 2, 0 };
+    int* sort = bubbleSort(testArr, sizeof(testArr) / sizeof(testArr[0]));
+    for (int i = 0; i < 9; i++) {
+        std::cout << sort[i] << ", ";
+    }
 }
