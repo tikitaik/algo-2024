@@ -13,6 +13,11 @@ public:
         one = oneIn;
         two = twoIn;
     }
+    pair (T* oneIn, U twoIn) {
+        one = oneIn;
+        two = new U;
+        *two = twoIn;
+    }
 
     pair (T oneIn, U twoIn) {
         one = new T;
