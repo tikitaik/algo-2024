@@ -1,9 +1,9 @@
 # pragma once
 
 # include <iostream>
-# include "adts/linkedlist.h"
-# include "adts/graph.h"
-# include "adts/traversals.h"
+# include "../adts/linkedlist.h"
+# include "../adts/graph.h"
+# include "../adts/traversals.h"
 
 int factorial(unsigned long long int n)
 {

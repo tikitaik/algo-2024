@@ -1,10 +1,10 @@
-# include "adts/linkedlist.h"
-# include "adts/pair.h"
-# include "adts/graph.h"
-# include "adts/traversals.h"
-# include "adts/shortPaths.h"
-# include "time/time.h"
-# include "recursion/recursion.h"
+# include "../adts/linkedlist.h"
+# include "../adts/pair.h"
+# include "../adts/graph.h"
+# include "../adts/traversals.h"
+# include "../adts/shortPaths.h"
+# include "../time/time.h"
+# include "../recursion/recursion.h"
 
 int main() {
 

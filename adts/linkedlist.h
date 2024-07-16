@@ -1,7 +1,7 @@
 # pragma once
 
 # include <iostream>
-# include "adts/pair.h"
+# include "pair.h"
 
 // listNode with data that constitutes the linked list
 template<typename T> struct listNode {
@@ -598,7 +598,7 @@ template <typename K, typename V> std::ostream& operator << (std::ostream& os, c
     return os;
 }
 
-# include "adts/graph.h"
+# include "graph.h"
 
 template<typename T> bool operator == (const node<T> n1, const node<T> n2) {
     return n1.id == n2.id;
