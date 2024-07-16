@@ -446,44 +446,31 @@ template <typename T> class queue : public linkedList<T> {
     }
 };
 
-template <typename T> class priorityQueue : public queue<T> {
-    linkedList<int> priorities;
+template <typename T> class priorityQueue : public queue<pair<T, int> > {
 
     int lowerPIndex (int priority) {
-        if (priorities.size() == 0) {
+        //std::cout << "pqsize func " << this->size() << '\n';
+
+        if (this->size() == 0) {
             return 0;
         }
-        listNode<int>* curP = priorities.returnHead();
-        //std::cout << "priorities: ";
-        //std::cout << priorities << '\n';
+
+        listNode<pair<T, int> >* curP = this->returnHead();
         int index = 0;
         
-        if (highPriorityFirst) {
-            while (priority <= *curP->data) {
+        //std::cout << "priority: " << priority << " and curP->data->two: " << *curP->data->two << '\n';
+        while ((priority <= *curP->data->two && highPriorityFirst) || (priority >= *curP->data->two && !highPriorityFirst)) {
 
-                //std::cout << "curP.data = " << *curP->data << '\n';
-                index++;
-                if (curP->next) {
-                    curP = curP->next;
-                }
-                else {
-                    return index;
-                }   
+            //std::cout << "curP.data = " << *curP->data << '\n';
+            index++;
+            if (curP->next) {
+                curP = curP->next;
             }
+            else {
+                return index;
+            }   
         }
-        else {
-            while (priority >= *curP->data) {
 
-                //std::cout << "curP.data = " << *curP->data << '\n';
-                index++;
-                if (curP->next) {
-                    curP = curP->next;
-                }
-                else {
-                    return index;
-                }   
-            }
-        }
         return index;
     }
 
@@ -495,12 +482,11 @@ template <typename T> class priorityQueue : public queue<T> {
 
     void enqueue (T* add, int priority) {
         int index = lowerPIndex(priority);
-        int* priorityPointer = new int;
-        *priorityPointer = priority;
 
-        //std::cout << "index to place at is " << index << " and size of list is " << this->size() << '\n';
-        this->insertAtIndex(index, add);
-        priorities.insertAtIndex(index, *priorityPointer);
+        //std::cout << "inserting " << *add << " at index " << index << '\n';
+        pair<T, int>* addPair = new pair<T, int>(add, priority);
+        //std::cout << *addPair << '\n';
+        this->insertAtIndex(index, addPair);
     }
 
     void enqueue (T add, int priority) {
@@ -512,7 +498,6 @@ template <typename T> class priorityQueue : public queue<T> {
     // removes from head
     void dequeue() {
         this->removeAtIndex(0);
-        priorities.removeAtIndex(0);
     }
 
     T* extractFront() { 
@@ -521,60 +506,13 @@ template <typename T> class priorityQueue : public queue<T> {
             return nullptr;
         }
         else {
-            listNode<T>* toReturn = new listNode<T>;
+            listNode<pair<T, int> >* toReturn = new listNode<pair<T, int> >;
             *toReturn = *this->head;
             this->remove(this->head);
-            priorities.removeAtIndex(0);
-            return toReturn->data;
+            return toReturn->data->one;
         }
     }
 };
-/*
-template <typename T> class priorityQueue : public queue<T> {
-    queue<pair<T, int> > pq;
-
-    int lowerPIndex (int priority) {
-        if (pq.size() == 0) {
-            return 0;
-        }
-        listNode<pair<T, int> >* curP = pq.returnHead();
-        //std::cout << "priorities: ";
-        //std::cout << priorities << '\n';
-        int index = 0;
-        
-        while (priority <= *curP->data->two) {
-            //std::cout << "curP.data = " << curP->data << '\n';
-            index++;
-            if (curP->next) {
-                curP = curP->next;
-            }
-            else {
-                return index;
-            }   
-        }
-        return index;
-    }
-
-    public:
-
-    void enqueue (T* add, int priority) {
-        int index = lowerPIndex(priority);
-
-        //std::cout << "index to place at is " << index << '\n';
-        pq.insertAtIndex(index, pair<T, int>(add, priority));
-    }
-
-    void enqueue (T add, int priority) {
-        T* ptr = new T;
-        *ptr = add;
-        enqueue(ptr, priority);
-    }
-
-    // removes from head
-    void dequeue() {
-        pq.removeAtIndex(0);
-    }
-};*/
 
 template <typename K, typename V> class dictionary : private linkedList<pair<K, V> > {
 

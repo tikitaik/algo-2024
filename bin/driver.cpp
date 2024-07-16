@@ -11,7 +11,7 @@
 
 int main() {
 
-    graph<int> g(false);
+    graph<int> g(true);
     
     g.addNodes(10);
 
@@ -48,7 +48,7 @@ int main() {
     // unit test
     for (int i = 0; i < 10; i++) {
         for (int j = 0; j < 10; j++) {
-            if (!DFS(g, i).contains(*g.searchNodeID(j))) {
+            if (!DFS(g, i).contains(*g.searchNodeID(j)) || dijkstrasCost(g, i, j) == dijkstrasCostPQ(g, i, j)) {
                 continue;
             }
             std::cout << dijkstrasPath(g, i, j) << ": " << dijkstrasCost(g, i, j) << '\n';
@@ -58,4 +58,5 @@ int main() {
 
     //std::cout << dijkstrasPath(g, 0, 9) << ": " << dijkstrasCost(g, 0, 9) << '\n';
     //std::cout << dijkstrasPathPQ(g, 0, 9, true) << ": " << dijkstrasCostPQ(g, 0, 9) << '\n';
+    //std::cout << dijkstrasPathPQ(g, 0, 9, true) << '\n';
 }
