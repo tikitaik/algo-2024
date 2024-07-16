@@ -1,14 +1,14 @@
 # pragma once
 
 # include <iostream>
-# include "adts/linkedlist.h"
-# include "adts/graph.h"
-# include "adts/shortPaths.h"
-# include "adts/pair.h"
-# include "time/time.h"
-# include "sat/checkpoint.h"
-# include "sat/team.h"
-# include "sat/graphConstructor.h"
+# include "../adts/linkedlist.h"
+# include "../adts/graph.h"
+# include "../adts/shortPaths.h"
+# include "../adts/pair.h"
+# include "../time/time.h"
+# include "checkpoint.h"
+# include "team.h"
+# include "graphConstructor.h"
 
 
 class rogaineEvent {

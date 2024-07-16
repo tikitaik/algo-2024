@@ -1,10 +1,10 @@
 # pragma once
 
 # include <iostream>
-# include "adts/linkedlist.h"
-# include "adts/pair.h"
-# include "time/time.h"
-# include "sat/checkpoint.h"
+# include "../adts/linkedlist.h"
+# include "../adts/pair.h"
+# include "../time/time.h"
+# include "checkpoint.h"
 
 class team {
     public :

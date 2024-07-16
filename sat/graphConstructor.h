@@ -1,8 +1,8 @@
 # pragma once
 
 # include <iostream>
-# include "adts/graph.h"
-# include "adts/pair.h"
+# include "../adts/graph.h"
+# include "../adts/pair.h"
 
 # define METER 1 / 0.190 // one m is 0.190 pixels
 

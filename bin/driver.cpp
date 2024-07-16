@@ -1,13 +1,13 @@
 # include <iostream>
-# include "adts/linkedlist.h"
-# include "adts/pair.h"
-# include "adts/graph.h"
-# include "adts/traversals.h"
-# include "adts/shortPaths.h"
-# include "time/time.h"
-# include "recursion/recursion.h"
-# include "searchAndSortAlgorithms/search.h"
-# include "searchAndSortAlgorithms/sort.h"
+# include "../adts/linkedlist.h"
+# include "../adts/pair.h"
+# include "../adts/graph.h"
+# include "../adts/traversals.h"
+# include "../adts/shortPaths.h"
+# include "../time/time.h"
+# include "../recursion/recursion.h"
+# include "../searchAndSortAlgorithms/search.h"
+# include "../searchAndSortAlgorithms/sort.h"
 
 int main() {
 
@@ -92,4 +92,5 @@ int main() {
     for (int i = 0; i < 9; i++) {
         std::cout << sort[i] << ", ";
     }
+    std::cout << '\n';
 }

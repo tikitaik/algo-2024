@@ -1,12 +1,11 @@
 # include <iostream>
-# include "time/time.h"
-# include "sat/checkpoint.h"
-# include "sat/team.h"
-# include "sat/rogaineEvent.h"
-# include "sat/graphConstructor.h"
-
-# include "adts/traversals.h"
-# include "adts/shortPaths.h"
+# include "checkpoint.h"
+# include "team.h"
+# include "rogaineEvent.h"
+# include "graphConstructor.h"
+# include "../adts/traversals.h"
+# include "../adts/shortPaths.h"
+# include "../time/time.h"
 
 int main () {
     team t[10][6];

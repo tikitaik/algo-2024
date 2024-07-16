@@ -1,8 +1,8 @@
 # pragma once
 
 # include <iostream>
-# include "adts/linkedlist.h"
-# include "adts/pair.h"
+# include "../adts/linkedlist.h"
+# include "../adts/pair.h"
 
 class checkpoint {
     public:
