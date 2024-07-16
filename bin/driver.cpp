@@ -11,7 +11,7 @@
 
 int main() {
 
-    graph<int> g(true);
+    graph<int> g(false);
     
     g.addNodes(10);
 
@@ -51,8 +51,11 @@ int main() {
             if (!DFS(g, i).contains(*g.searchNodeID(j))) {
                 continue;
             }
-            std::cout << dijkstrasPathPQ(g, i, j, true) << ": " << dijkstrasCostPQ(g, i, j) << '\n';
             std::cout << dijkstrasPath(g, i, j) << ": " << dijkstrasCost(g, i, j) << '\n';
+            std::cout << dijkstrasPathPQ(g, i, j, true) << ": " << dijkstrasCostPQ(g, i, j) << '\n';
         }
     }
+
+    //std::cout << dijkstrasPath(g, 0, 9) << ": " << dijkstrasCost(g, 0, 9) << '\n';
+    //std::cout << dijkstrasPathPQ(g, 0, 9, true) << ": " << dijkstrasCostPQ(g, 0, 9) << '\n';
 }

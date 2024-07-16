@@ -247,7 +247,7 @@ template <typename T> node<T>** dijkstrasPQ(graph<T> g, int sourceNodeID, int si
     g.getTraversedState();
     node* current = g.searchNodeID(sourceNodeID);
     current->traversed = true;
-    priorityQueue<node> pq;
+    priorityQueue<node> pq(false);
     pq.enqueue(current, 0);
     //std::cout << "starting from node " << *current << " and searching for path to node " << *g.searchNodeID(sinkNodeID) << '\n';
 
@@ -264,13 +264,18 @@ template <typename T> node<T>** dijkstrasPQ(graph<T> g, int sourceNodeID, int si
     
     // main loop 
     while (pq.size() > 0) {
+        //std::cout << *current << " is current node\n";
 
         linkedList<node> untNeighbours = *g.untraversedNeighbours(current, g.directed); 
         listNode<node>* curNeighbour = untNeighbours.returnHead();
 
         for (int i = 0; i < untNeighbours.size(); i++) {
+
             const int indexOfNeighbour = g.getIndexInAllNodes(curNeighbour->data->id);
-            const double costToNeighbour = minimalDist[g.getIndexInAllNodes(current->id)] + (double)g.searchEdge(current->id, curNeighbour->data->id)->weight;
+            double costToNeighbour = minimalDist[g.getIndexInAllNodes(current->id)] + (double)g.searchEdge(current->id, curNeighbour->data->id)->weight;
+            if(minimalDist[g.getIndexInAllNodes(current->id)] == -1) {
+                costToNeighbour += 1;
+            }
             pq.enqueue(curNeighbour->data, costToNeighbour);
 
             // if this new path is minimal or the minimal distance is "infinity" update it

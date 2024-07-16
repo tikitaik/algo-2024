@@ -458,21 +458,40 @@ template <typename T> class priorityQueue : public queue<T> {
         //std::cout << priorities << '\n';
         int index = 0;
         
-        while (priority <= *curP->data) {
+        if (highPriorityFirst) {
+            while (priority <= *curP->data) {
 
-            //std::cout << "curP.data = " << *curP->data << '\n';
-            index++;
-            if (curP->next) {
-                curP = curP->next;
+                //std::cout << "curP.data = " << *curP->data << '\n';
+                index++;
+                if (curP->next) {
+                    curP = curP->next;
+                }
+                else {
+                    return index;
+                }   
             }
-            else {
-                return index;
-            }   
+        }
+        else {
+            while (priority >= *curP->data) {
+
+                //std::cout << "curP.data = " << *curP->data << '\n';
+                index++;
+                if (curP->next) {
+                    curP = curP->next;
+                }
+                else {
+                    return index;
+                }   
+            }
         }
         return index;
     }
 
     public:
+
+    const bool highPriorityFirst;
+
+    priorityQueue (bool highFirst) : highPriorityFirst(highFirst) {}
 
     void enqueue (T* add, int priority) {
         int index = lowerPIndex(priority);
