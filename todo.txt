@@ -1,7 +1,6 @@
 make indexable (or walkable) tuple data type that i can use in linkedLists (for dev branch)
 use array to add things to linkedlist
 bellman ford
-floyd-warshall shortest path
 binary trees
 trees (b trees?)
 A* (not urgent)

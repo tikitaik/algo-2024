@@ -1,7 +1,7 @@
 # pragma once
 
 # include <iostream>
-# include "adts/linkedlist.h"
+# include "linkedlist.h"
 
 template <typename T> struct node {
     int id;
