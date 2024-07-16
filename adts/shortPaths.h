@@ -285,69 +285,12 @@ template <typename T> node<T>** dijkstrasPQ(graph<T> g, int sourceNodeID, int si
         }
 
         current = pq.extractFront();
+        current->traversed = true;
     }
     g.resetTraversed();
     return prevNodes;
 }
 
-template <typename T> node<T>** dijkstrasPQDebug(graph<T> g, int sourceNodeID, int sinkNodeID) {
-    typedef node<T> node;
-
-    // DFS check to see if there is a path at all to sink node, if not return linkedlist with one thing
-    if (!DFS(g, sourceNodeID).contains(sinkNodeID)) {
-        std::cout << "no path exists from node " << sourceNodeID << " to " << sinkNodeID << '\n';
-        return nullptr;
-    }
-    
-    g.getTraversedState();
-
-    node* current = g.searchNodeID(sourceNodeID);
-    current->traversed = true;
-    priorityQueue<node> pq;
-    pq.enqueue(current, 0);
-
-    double minimalDist[g.nodeCount()];
-    node** prevNodes = new node*[g.nodeCount()];
-    for (int i = 0; i < g.nodeCount(); i++) {
-        minimalDist[i] = -1;
-        prevNodes[i] = nullptr;
-    }
-    // set init distance to 0 
-    minimalDist[g.getIndexInAllNodes(sourceNodeID)] = 0;
-    
-    // main loop 
-    while (pq.size() > 0) {
-        //std::cout << "current: " << *current << ": ";
-
-        linkedList<node> untNeighbours = *g.untraversedNeighbours(current, g.directed); 
-        //std::cout << "untraversed neighbours: " << untNeighbours << '\n';
-        listNode<node>* curNeighbour = untNeighbours.returnHead();
-
-        for (int i = 0; i < untNeighbours.size(); i++) {
-            const int indexOfNeighbour = g.getIndexInAllNodes(curNeighbour->data->id);
-            const double costToNeighbour = minimalDist[g.getIndexInAllNodes(current->id)] + (double)g.searchEdge(current->id, curNeighbour->data->id)->weight;
-            //std::cout << "pq: " << pq << '\n';
-            //std::cout << "enqueuing " << *curNeighbour->data << '\n';
-            pq.enqueue(curNeighbour->data, costToNeighbour);
-            //std::cout << "pq: " << pq << '\n';
-            // if this new path is minimal or the minimal distance is "infinity" update it
-            if (costToNeighbour < minimalDist[indexOfNeighbour] || minimalDist[indexOfNeighbour] == -1) {
-                // set minimal distance of neighbour to new cost to neighbour
-                minimalDist[indexOfNeighbour] = costToNeighbour;
-                prevNodes[indexOfNeighbour] = current;
-            }
-            if (curNeighbour->next) {
-                curNeighbour = curNeighbour->next;
-            }
-        }
-
-        //std::cout << pq << '\n';
-        current = pq.extractFront();
-        //std::cout << "current " << *current << '\n';
-    }
-    g.resetTraversed();
-    return prevNodes;
-}
 // linked list of path back to node
 template<typename T> linkedList<node<T> > dijkstrasPath(graph<T> g, int sourceNodeID, int sinkNodeID) {
     node<T>** prev = new node<T>*[g.nodeCount()];
@@ -366,12 +309,7 @@ template<typename T> linkedList<node<T> > dijkstrasPath(graph<T> g, int sourceNo
 
 template<typename T> linkedList<node<T> > dijkstrasPathPQ(graph<T> g, int sourceNodeID, int sinkNodeID, bool isDebug) {
     node<T>** prev = new node<T>*[g.nodeCount()];
-    if (!isDebug) {
-        prev = dijkstrasPQ(g, sourceNodeID, sinkNodeID);
-    }
-    else {
-        prev = dijkstrasPQDebug(g, sourceNodeID, sinkNodeID);
-    }
+    prev = dijkstrasPQ(g, sourceNodeID, sinkNodeID);
 
     linkedList<node<T> > shortestPath;
     node<T>* toAdd = g.searchNodeID(sinkNodeID);
@@ -382,10 +320,6 @@ template<typename T> linkedList<node<T> > dijkstrasPathPQ(graph<T> g, int source
     }
 
     return shortestPath;
-}
-
-template<typename T> int dijkstrasPathPQ(graph<T> g, int sourceNodeID, int sinkNodeID) {
-    return dijkstrasPathPQ(g, sourceNodeID, sinkNodeID, false);
 }
 
 template<typename T> int dijkstrasCost(graph<T> g, int sourceNodeID, int sinkNodeID) {
@@ -403,14 +337,9 @@ template<typename T> int dijkstrasCost(graph<T> g, int sourceNodeID, int sinkNod
     return cost;
 }
 
-template<typename T> int dijkstrasCostPQ(graph<T> g, int sourceNodeID, int sinkNodeID, bool isDebug) {
+template<typename T> int dijkstrasCostPQ(graph<T> g, int sourceNodeID, int sinkNodeID) {
     node<T>** prev = new node<T>*[g.nodeCount()];
-    if (!isDebug) {
-        prev = dijkstrasPQ(g, sourceNodeID, sinkNodeID);
-    }
-    else {
-        prev= dijkstrasPQDebug(g, sourceNodeID, sinkNodeID);
-    }
+    prev = dijkstrasPQ(g, sourceNodeID, sinkNodeID);
 
     int cost = 0;
     node<T>* toAdd = g.searchNodeID(sinkNodeID);
@@ -421,8 +350,4 @@ template<typename T> int dijkstrasCostPQ(graph<T> g, int sourceNodeID, int sinkN
     }
 
     return cost;
-}
-
-template<typename T> int dijkstrasCostPQ(graph<T> g, int sourceNodeID, int sinkNodeID) {
-    return dijkstrasCostPQ(g, sourceNodeID, sinkNodeID, false);
 }

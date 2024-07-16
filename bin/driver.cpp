@@ -48,22 +48,10 @@ int main() {
     // unit test
     for (int i = 0; i < 10; i++) {
         for (int j = 0; j < 10; j++) {
-            if (!DFS(g, i).contains(*g.searchNodeID(j)) /*|| dijkstrasCost(g, i, j) == dijkstrasCostPQ(g, i, j)*/) {
+            if (!DFS(g, i).contains(*g.searchNodeID(j))) {
                 continue;
             }
-            /*node<int>** norm = dijkstras(g, i, j);
-            node<int>** pq = dijkstrasPQ(g, i, j);
-
-            for (int i = 0; i < 10; i++) {
-                std::cout << *norm[i] << ", ";
-            }
-            std::cout << '\n';
-            for (int i = 0; i < 10; i++) {
-                std::cout << *pq[i] << ", ";
-            }*/
-            std::cout << '\n';
-            //std::cout << "path from " << i << " to " << j << ", goal is " << dijkstrasCost(g, i, j) << '\n';
-            std::cout << dijkstrasPathPQ(g, i, j, true) << ": " << dijkstrasCostPQ(g, i, j, true) << '\n';
+            std::cout << dijkstrasPathPQ(g, i, j, true) << ": " << dijkstrasCostPQ(g, i, j) << '\n';
             std::cout << dijkstrasPath(g, i, j) << ": " << dijkstrasCost(g, i, j) << '\n';
         }
     }
