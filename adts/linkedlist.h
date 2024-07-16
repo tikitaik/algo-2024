@@ -159,7 +159,7 @@ template <typename T> class linkedList {
     void insertAtIndex(int index, T* add) {
         // good on me for making such a robust program
         if ((curSize != 0 && index > curSize) || index < 0) {
-            std::cout << "index is beyond bounds of list + 1 (index starts at 0) \n";
+            //std::cout << "index is beyond bounds of list + 1 (index starts at 0) \n";
             return;
         }
 
@@ -211,7 +211,7 @@ template <typename T> class linkedList {
     // deletes listNode at given index
     void removeAtIndex(int n) {
         if (n > curSize - 1 || n < 0) {
-            std::cout << "index is beyond bounds of list (index starts at 0) \n";
+            //std::cout << "index is beyond bounds of list (index starts at 0) \n";
             return;
         }
 
@@ -423,6 +423,19 @@ template <typename T> class queue : public linkedList<T> {
         this->removeAtIndex(0);
     }
 
+    T* extractFront() { 
+        if (this->size() == 0) {
+            std::cout << "nothing to extract\n";
+            return nullptr;
+        }
+        else {
+            listNode* toReturn = new listNode;
+            *toReturn = *this->head;
+            this->remove(this->head);
+            return toReturn->data;
+        }
+    }
+
     // returns address to front listNode
     listNode* peek() {
         return this->head;
@@ -441,12 +454,12 @@ template <typename T> class priorityQueue : public queue<T> {
             return 0;
         }
         listNode<int>* curP = priorities.returnHead();
-        std::cout << "priorities: ";
-        std::cout << priorities << '\n';
+        //std::cout << "priorities: ";
+        //std::cout << priorities << '\n';
         int index = 0;
         
         while (priority <= *curP->data) {
-            std::cout << "curP.data = " << curP->data << '\n';
+            //std::cout << "curP.data = " << curP->data << '\n';
             index++;
             if (curP->next) {
                 curP = curP->next;
@@ -465,7 +478,7 @@ template <typename T> class priorityQueue : public queue<T> {
         int* priorityPointer = new int;
         *priorityPointer = priority;
 
-        std::cout << "index to place at is " << index << '\n';
+        //std::cout << "index to place at is " << index << '\n';
         this->insertAtIndex(index, add);
         priorities.insertAtIndex(index, *priorityPointer);
     }

@@ -34,7 +34,6 @@ int main() {
     g.addEdge(7, 9, 15);
     g.addEdge(8, 9, 5);
 
-    g.searchNodeID(3)->traversed = true;
     std::cout << "DFS: " << DFS(g, 0) << '\n';
     //std::cout << "recDFS: " << *recDFSStart(g, 0) << '\n';
     std::cout << "BFS: " << BFS(g, 0) << '\n';
@@ -44,53 +43,16 @@ int main() {
     std::cout << "prims: " << prims(g) << '\n';
     std::cout << "recPrims: " << recPrimsStart(g) << '\n';
     std::cout << "kruskals: " << kruskals(g) << '\n';
-    int startId = 0;
-    int endId = 9;
-    std::cout << dijkstrasPath(g, startId, endId) << '\n';
-    std::cout << dijkstrasCost(g, startId, endId) << '\n';
 
-    displayMatrix2D(FWSP(g), g.nodeCount());
-
-    /*
-    // pair testing
-    pair<int, int> p(4, 6);
-    std::cout << p << '\n';
-    linkedList<pair<int, std::string> > l;
-    l.insertTail(pair<int, std::string>(5, "hi"));
-    std::cout << l << '\n';
-
-    // time testing
-    timePlaceholder t;
-    t.time = 864000;
-    std::cout << t << '\n';
-
-    // dictionary testing
-    dictionary<int, char> d;
-    d.insert(4, 'g');
-    d.insert(6, 'w');
-    std::cout << d << '\n';
-    std::cout << d.getValue(6) << '\n';
-
-    graph<int> h(false);
-    h.addNodes(5);
-    h.addEdge(0, 1, 2);
-    h.addEdge(0, 3, 8);
-    h.addEdge(1, 2, 3);
-    h.addEdge(1, 4, 7);
-    h.addEdge(2, 3, 1);
-    h.addEdge(2, 4, 5);
-    h.addEdge(3, 4, 4);
-
-    int** f = FWTC(h);
-    int** s = FWSP(h);
-
-    displayMatrix2D(f, 5);
-    displayMatrix2D(s, 5);
-    std::cout << dijkstrasPath(h, 0, 4) << '\n';*/
-    int testArr[] = { 5, 2, 6, 7, 1491, 11, 1, 2, 0 };
-    int* sort = bubbleSort(testArr, sizeof(testArr) / sizeof(testArr[0]));
-    for (int i = 0; i < 9; i++) {
-        std::cout << sort[i] << ", ";
+    g.setAllNodesToUntraversed();
+    // unit test
+    for (int i = 0; i < 10; i++) {
+        for (int j = 0; j < 10; j++) {
+            if (!DFS(g, i).contains(*g.searchNodeID(j))) {
+                continue;
+            }
+            std::cout << dijkstrasPath(g, i, j) << ": " << dijkstrasCost(g, i, j) << '\n';
+            std::cout << dijkstrasPathPQ(g, i, j) << ": " << dijkstrasCostPQ(g, i, j) << '\n';
+        }
     }
-    std::cout << '\n';
 }
