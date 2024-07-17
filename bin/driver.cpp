@@ -1,3 +1,4 @@
+# include <iostream>
 # include "../adts/linkedlist.h"
 # include "../adts/pair.h"
 # include "../adts/graph.h"
@@ -5,10 +6,12 @@
 # include "../adts/shortPaths.h"
 # include "../time/time.h"
 # include "../recursion/recursion.h"
+# include "../searchAndSortAlgorithms/search.h"
+# include "../searchAndSortAlgorithms/sort.h"
 
 int main() {
 
-    graph<int> g(false);
+    graph<int> g(true);
     
     g.addNodes(10);
 
@@ -31,7 +34,6 @@ int main() {
     g.addEdge(7, 9, 15);
     g.addEdge(8, 9, 5);
 
-    g.searchNodeID(3)->traversed = true;
     std::cout << "DFS: " << DFS(g, 0) << '\n';
     //std::cout << "recDFS: " << *recDFSStart(g, 0) << '\n';
     std::cout << "BFS: " << BFS(g, 0) << '\n';
@@ -41,47 +43,20 @@ int main() {
     std::cout << "prims: " << prims(g) << '\n';
     std::cout << "recPrims: " << recPrimsStart(g) << '\n';
     std::cout << "kruskals: " << kruskals(g) << '\n';
-    int startId = 0;
-    int endId = 9;
-    std::cout << dijkstrasPath(g, startId, endId) << '\n';
-    std::cout << dijkstrasCost(g, startId, endId) << '\n';
 
-    displayMatrix2D(FWSP(g), g.nodeCount());
+    g.setAllNodesToUntraversed();
+    // unit test
+    for (int i = 0; i < 5; i++) {
+        for (int j = 0; j < 5; j++) {
+            if (!DFS(g, i).contains(*g.searchNodeID(j)) || dijkstrasCost(g, i, j) == dijkstrasCostPQ(g, i, j, true)) {
+                continue;
+            }
+            std::cout << dijkstrasPathPQ(g, i, j, false) << ": " << dijkstrasCostPQ(g, i, j, false) << '\n';
+            std::cout << dijkstrasPathPQ(g, i, j, true) << ": " << dijkstrasCostPQ(g, i, j, true) << '\n';
+        }
+    }
 
-    /*
-    // pair testing
-    pair<int, int> p(4, 6);
-    std::cout << p << '\n';
-    linkedList<pair<int, std::string> > l;
-    l.insertTail(pair<int, std::string>(5, "hi"));
-    std::cout << l << '\n';
-
-    // time testing
-    timePlaceholder t;
-    t.time = 864000;
-    std::cout << t << '\n';
-
-    // dictionary testing
-    dictionary<int, char> d;
-    d.insert(4, 'g');
-    d.insert(6, 'w');
-    std::cout << d << '\n';
-    std::cout << d.getValue(6) << '\n';
-
-    graph<int> h(false);
-    h.addNodes(5);
-    h.addEdge(0, 1, 2);
-    h.addEdge(0, 3, 8);
-    h.addEdge(1, 2, 3);
-    h.addEdge(1, 4, 7);
-    h.addEdge(2, 3, 1);
-    h.addEdge(2, 4, 5);
-    h.addEdge(3, 4, 4);
-
-    int** f = FWTC(h);
-    int** s = FWSP(h);
-
-    displayMatrix2D(f, 5);
-    displayMatrix2D(s, 5);
-    std::cout << dijkstrasPath(h, 0, 4) << '\n';*/
+    //std::cout << dijkstrasPath(g, 0, 9) << ": " << dijkstrasCost(g, 0, 9) << '\n';
+    //std::cout << dijkstrasPathPQ(g, 0, 9, true) << ": " << dijkstrasCostPQ(g, 0, 9) << '\n';
+    //std::cout << dijkstrasPathPQ(g, 0, 9, true) << '\n';
 }
