@@ -159,7 +159,7 @@ template <typename T> class linkedList {
     void insertAtIndex(int index, T* add) {
         // good on me for making such a robust program
         if ((curSize != 0 && index > curSize) || index < 0) {
-            std::cout << "index is beyond bounds of list + 1 (index starts at 0) \n";
+            //std::cout << "index is beyond bounds of list + 1 (index starts at 0) \n";
             return;
         }
 
@@ -211,7 +211,7 @@ template <typename T> class linkedList {
     // deletes listNode at given index
     void removeAtIndex(int n) {
         if (n > curSize - 1 || n < 0) {
-            std::cout << "index is beyond bounds of list (index starts at 0) \n";
+            //std::cout << "index is beyond bounds of list (index starts at 0) \n";
             return;
         }
 
@@ -423,6 +423,19 @@ template <typename T> class queue : public linkedList<T> {
         this->removeAtIndex(0);
     }
 
+    T* extractFront() { 
+        if (this->size() == 0) {
+            std::cout << "nothing to extract\n";
+            return nullptr;
+        }
+        else {
+            listNode* toReturn = new listNode;
+            *toReturn = *this->head;
+            this->remove(this->head);
+            return toReturn->data;
+        }
+    }
+
     // returns address to front listNode
     listNode* peek() {
         return this->head;
@@ -433,20 +446,22 @@ template <typename T> class queue : public linkedList<T> {
     }
 };
 
-template <typename T> class priorityQueue : public queue<T> {
-    linkedList<int> priorities;
+template <typename T> class priorityQueue : public queue<pair<T, int> > {
 
     int lowerPIndex (int priority) {
-        if (priorities.size() == 0) {
+        //std::cout << "pqsize func " << this->size() << '\n';
+
+        if (this->size() == 0) {
             return 0;
         }
-        listNode<int>* curP = priorities.returnHead();
-        std::cout << "priorities: ";
-        std::cout << priorities << '\n';
+
+        listNode<pair<T, int> >* curP = this->returnHead();
         int index = 0;
         
-        while (priority <= *curP->data) {
-            std::cout << "curP.data = " << curP->data << '\n';
+        //std::cout << "priority: " << priority << " and curP->data->two: " << *curP->data->two << '\n';
+        while ((priority <= *curP->data->two && highPriorityFirst) || (priority >= *curP->data->two && !highPriorityFirst)) {
+
+            //std::cout << "curP.data = " << *curP->data << '\n';
             index++;
             if (curP->next) {
                 curP = curP->next;
@@ -455,19 +470,23 @@ template <typename T> class priorityQueue : public queue<T> {
                 return index;
             }   
         }
+
         return index;
     }
 
     public:
 
+    const bool highPriorityFirst;
+
+    priorityQueue (bool highFirst) : highPriorityFirst(highFirst) {}
+
     void enqueue (T* add, int priority) {
         int index = lowerPIndex(priority);
-        int* priorityPointer = new int;
-        *priorityPointer = priority;
 
-        std::cout << "index to place at is " << index << '\n';
-        this->insertAtIndex(index, add);
-        priorities.insertAtIndex(index, *priorityPointer);
+        //std::cout << "inserting " << *add << " at index " << index << '\n';
+        pair<T, int>* addPair = new pair<T, int>(add, priority);
+        //std::cout << *addPair << '\n';
+        this->insertAtIndex(index, addPair);
     }
 
     void enqueue (T add, int priority) {
@@ -479,7 +498,19 @@ template <typename T> class priorityQueue : public queue<T> {
     // removes from head
     void dequeue() {
         this->removeAtIndex(0);
-        priorities.removeAtIndex(0);
+    }
+
+    T* extractFront() { 
+        if (this->size() == 0) {
+            std::cout << "nothing to extract\n";
+            return nullptr;
+        }
+        else {
+            listNode<pair<T, int> >* toReturn = new listNode<pair<T, int> >;
+            *toReturn = *this->head;
+            this->remove(this->head);
+            return toReturn->data->one;
+        }
     }
 };
 
