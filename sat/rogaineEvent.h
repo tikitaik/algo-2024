@@ -56,37 +56,26 @@ void rogaineEvent::addTeamToCheckpoint(checkpoint& check, team* t, timePlacehold
 }
 
 float rogaineEvent::desirability(graph<checkpoint> g, node<checkpoint>* currentNode, int depth) {
-    // base case
-    if (depth == 1) {
-        float des = 0;
-        linkedList<node<checkpoint> >* nodeNeighbours = g.neighbours(currentNode, true);
-        listNode<node<checkpoint> >* walk = nodeNeighbours->returnHead();
+    float des = 0;
+    linkedList<node<checkpoint> >* nodeNeighbours = g.neighbours(currentNode, true);
+    listNode<node<checkpoint> >* walk = nodeNeighbours->returnHead();
 
-        for (int i = 0 ; i < nodeNeighbours->size(); i++) {
+    for (int i = 0 ; i < nodeNeighbours->size(); i++) {
+        // base case
+        if (depth == 1) { 
             des += walk->data->attribute->points / g.searchEdge(currentNode->id, walk->data->id)->weight;
-            
-            if (walk->next) {
-                walk = walk->next;
-            }
+        }
+        // recursive case
+        else {
+            des += desirability(g, walk->data, depth - 1) / depth;
         }
 
-        return des;
-    }
-    else {
-        float des = 0;
-        linkedList<node<checkpoint> >* nodeNeighbours = g.neighbours(currentNode, true);
-        listNode<node<checkpoint> >* walk = nodeNeighbours->returnHead();
-
-        for (int i = 0 ; i < nodeNeighbours->size(); i++) {
-            des += desirability(g, walk->data, depth - 1);
-
-            if (walk->next) {
-                walk = walk->next;
-            }
+        if (walk->next) {
+            walk = walk->next;
         }
-
-        return des / depth;
     }
+
+    return des;
 }
 
 // determines if a path back from possible node to goal node will be within the time limit
