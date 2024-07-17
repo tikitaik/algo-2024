@@ -33,11 +33,8 @@ class rogaineEvent {
 
     public:
 
-    int desirabilityCount;
     // epic constructor
-    rogaineEvent(graph<checkpoint> mapIn, linkedList<node<checkpoint> > checkpointList, node<checkpoint>* start, node<checkpoint>* end, int timeIn) : eventMap(mapIn), checkpoints(checkpointList), startNode(start), endNode(end), timeLimit(timeIn) {
-        desirabilityCount = 0;
-    }
+    rogaineEvent(graph<checkpoint> mapIn, linkedList<node<checkpoint> > checkpointList, node<checkpoint>* start, node<checkpoint>* end, int timeIn) : eventMap(mapIn), checkpoints(checkpointList), startNode(start), endNode(end), timeLimit(timeIn) {}
 
     void addTeamToBracket(team& t, int index);
     void addTeamToCheckpoint(checkpoint& c, team* t, timePlaceholder time);
@@ -59,7 +56,6 @@ void rogaineEvent::addTeamToCheckpoint(checkpoint& check, team* t, timePlacehold
 }
 
 float rogaineEvent::desirability(graph<checkpoint> g, node<checkpoint>* currentNode, int depth) {
-    desirabilityCount++;
     // base case
     if (depth == 1) {
         float des = 0;
@@ -153,7 +149,6 @@ linkedList<node<checkpoint> > rogaineEvent::optimalRoute(team t) {
         // same as walkSpeed /= 0.973
         walkSpeed *= 1.02775;
     }
-    //std::cout << "inital team speed was " << t.speed << " but because they are in bracket " << t.bracket << " and so team walkSpeed is now " << walkSpeed << '\n';
 
     // initalise everything
     graph<checkpoint> teamMap = constructGraph(walkSpeed);
@@ -169,23 +164,17 @@ linkedList<node<checkpoint> > rogaineEvent::optimalRoute(team t) {
         desirabilityArr[i] = desirability(teamMap, teamMap.searchNodeID(i), 6);
     }
 
-    /*for (int i = 0; i < teamMap.nodeCount(); i++) {
-        std::cout << desirabilityArr[i] << ", ";
-    }
-    std::cout << '\n';*/
-
     path.insertTail(*currentNode);
 
     // go further if path back from that node that doesnt hit any traversed nodes is within time limit
     while (pathBackFromNeighbourExists(teamMap, currentNode, endCheckpoint, timeRemaining)) {
-        //std::cout << "current node " << *currentNode << '\n';
+
         currentNode->traversed = true;
+
         // pick most desirable node that has not been traversed
         node<checkpoint>* bestNode = nullptr;
         linkedList<node<checkpoint> >* n = teamMap.neighbours(currentNode, true);
         listNode<node<checkpoint> >* bestWalk = n->returnHead();
-
-        //std::cout << "neighbours: " << *n << '\n';
 
         for (int i = 0; i < n->size(); i++) {
             if (!bestNode && pathBackInTimeExists(teamMap, currentNode, bestWalk->data, endCheckpoint, timeRemaining)) {
@@ -206,13 +195,6 @@ linkedList<node<checkpoint> > rogaineEvent::optimalRoute(team t) {
                 bestWalk = bestWalk->next;
             }
         }
-        // debug pray
-        /*teamMap.getTraversedState();
-        teamMap.setAllNodesToUntraversed();
-        std::cout << "most desirable node from " << *currentNode << " is " << *bestNode << " with a desirability of " << desirabilityArr[bestNode->id] 
-        << " and hypothetical path back of " << dijkstrasPath(teamMap, bestNode->id, endCheckpoint->id)<< " with cost " 
-        << dijkstrasCost(teamMap, bestNode->id, endCheckpoint->id) << " and time remaining is " << timeRemaining << '\n';
-        teamMap.resetTraversed();*/
         // decrement time
         timeRemaining -= teamMap.searchEdge(currentNode->id, bestNode->id)->weight;
         if (!bestNode->traversed) {
@@ -226,13 +208,12 @@ linkedList<node<checkpoint> > rogaineEvent::optimalRoute(team t) {
             pointTotal += currentNode->attribute->points;
         }
     } 
-    // check just to be sure
+    // print just in case algorithm doesnt work
     if (timeRemaining < 0) {
         std::cout << "time is less than 0, taking off " << -1 * timeRemaining * 10 << " points\n";
         pointTotal += timeRemaining * 10;
     }
 
     std::cout << "total points is: " << pointTotal << " and time remaining is " << timeRemaining << '\n';
-    //std::cout << pointTotal;
     return path;
 };
