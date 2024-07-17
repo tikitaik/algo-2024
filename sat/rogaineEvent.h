@@ -93,6 +93,7 @@ bool rogaineEvent::pathBackInTimeExists(graph<checkpoint>& g, node<checkpoint>* 
     int pathCost = dijkstrasCost(g, possibleNode->id, goalNode->id);
     linkedList<node<checkpoint> > path = dijkstrasPath(g, possibleNode->id, goalNode->id);
     listNode<node<checkpoint> >* walk = path.returnHead();
+
     for (int i = 0; i < path.size(); i++) {
         if (!walk->data->traversed) {
             pathCost += 2;
@@ -103,21 +104,15 @@ bool rogaineEvent::pathBackInTimeExists(graph<checkpoint>& g, node<checkpoint>* 
     }
 
     g.resetTraversed();
-
-    if (pathCost > timeLimit) {
-        return false;
-    }
-    else { 
-        //std::cout << "hypothetical path back is " << dijkstrasPath(g, possibleNode->id, goalNode->id) << " with cost " 
-        //<< dijkstrasCost(g, possibleNode->id, goalNode->id) << " and timeRemaining is " << timeLimit << '\n';
-        return true;
-    }
+    return timeLimit > pathCost;
 }
 
 // determines if any neighbours of a node will have a path back
 bool rogaineEvent::pathBackFromNeighbourExists(graph<checkpoint>& g, node<checkpoint>* currentNode, node<checkpoint>* goalNode, int timeLimit) {
+
     linkedList<node<checkpoint> >* neighbours = g.neighbours(currentNode, true);
     listNode<node<checkpoint> >* neighbourWalk = neighbours->returnHead();
+
     for (int i = 0; i < neighbours->size(); i++) {
         if (pathBackInTimeExists(g, currentNode, neighbourWalk->data, goalNode, timeLimit)) {
             return true;
@@ -197,7 +192,7 @@ linkedList<node<checkpoint> > rogaineEvent::optimalRoute(team t) {
             pointTotal += currentNode->attribute->points;
         }
     } 
-    // print just in case algorithm doesnt work
+    // print just in case algorithm doesnt work, hasn't yet
     if (timeRemaining < 0) {
         std::cout << "time is less than 0, taking off " << -1 * timeRemaining * 10 << " points\n";
         pointTotal += timeRemaining * 10;
