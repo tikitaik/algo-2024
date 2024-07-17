@@ -220,11 +220,11 @@ template<typename T> linkedList<node<T> > dijkstrasPath(graph<T> g, int sourceNo
     prev = dijkstras(g, sourceNodeID, sinkNodeID);
 
     linkedList<node<T> > shortestPath;
-    node<T>* toAdd = g.searchNodeID(sinkNodeID);
+    node<T>* walk = g.searchNodeID(sinkNodeID);
 
-    while (toAdd) {
-        shortestPath.insertHead(*toAdd);
-        toAdd = prev[g.getIndexInAllNodes(toAdd->id)];
+    while (walk) {
+        shortestPath.insertHead(*walk);
+        walk = prev[g.getIndexInAllNodes(walk->id)];
     }
 
     return shortestPath;
@@ -235,11 +235,11 @@ template<typename T> int dijkstrasCost(graph<T> g, int sourceNodeID, int sinkNod
     prev = dijkstras(g, sourceNodeID, sinkNodeID);
 
     int cost = 0;
-    node<T>* toAdd = g.searchNodeID(sinkNodeID);
+    node<T>* walk = g.searchNodeID(sinkNodeID);
 
-    while (prev[g.getIndexInAllNodes(toAdd->id)]) {
-        cost += g.searchEdge(prev[g.getIndexInAllNodes(toAdd->id)]->id, toAdd->id)->weight;
-        toAdd = prev[g.getIndexInAllNodes(toAdd->id)];
+    while (prev[g.getIndexInAllNodes(walk->id)]) {
+        cost += g.searchEdge(prev[g.getIndexInAllNodes(walk->id)]->id, walk->id)->weight;
+        walk = prev[g.getIndexInAllNodes(walk->id)];
     }
 
     return cost;

@@ -1,8 +1,10 @@
-make indexable (or walkable) tuple data type that i can use in linkedLists (for dev branch)
+-- DEV TODO LIST --
+
+make indexable (or walkable) tuple data type that i can use in linkedLists
 use array to add things to linkedlist
 bellman ford
 binary trees
 trees (b trees?)
 A* (not urgent)
 
-make dijkstras use priority queue yuyh
+declare header functions outside of the brackets in all adts and recursion header files

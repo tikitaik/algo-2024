@@ -36,39 +36,16 @@ template <typename T> std::ostream& operator << (std::ostream& os, const listNod
 
 // single type doubly linked list
 template <typename T> class linkedList {
-    protected:
-    
-    // typedef to write easier
     typedef listNode<T> listNode;
 
+    protected:
+    
     // yuh yuh vars
     listNode* head;
     listNode* tail;
+
     // current size
     int curSize;
-
-    // thing that reassigns pointers to whats before & after them, if they are not head and/ or tail
-    // doesnt actually delete the listnode though
-    void remove(listNode* del) {
-        if (del == head && del == tail) {
-            head = nullptr;
-            tail = nullptr;
-        }
-        else if (del == head) {
-            del->next->prev = nullptr;
-            head = del->next;
-        }
-        else if (del == tail) {
-            del->prev->next = nullptr;
-            tail = del->prev;
-        }
-        else {
-            del->prev->next = del->next;
-            del->next->prev = del->prev;
-        }
-        delete del;
-        curSize--;
-    }
 
     public:
 
@@ -78,275 +55,327 @@ template <typename T> class linkedList {
         this->head = nullptr;
         this->tail = nullptr;
     }
-
-    // add listNode as new head but its pointer so its dynamic
-    void insertHead(T* add) {
-        curSize++;
-        listNode* newNode = new listNode(add);
-
-        if (head) {
-            head->prev = newNode;
-        }
-
-        if (!tail) {
-            tail = newNode;
-        }
-
-        newNode->next = head;
-        newNode->prev = nullptr;
-
-        this->head = newNode;
-    }
-
-    // add static var as head
-    void insertHead(T add) {
-        T* ptr = new T;
-        *ptr = add;
-        insertHead(ptr);
-    }
-
-    // add listNode as new tail
-    void insertTail(T* add) {
-        curSize++;
-        listNode* newNode = new listNode(add);
-
-        if (tail) {
-            tail->next = newNode;
-        }
-        if (head == nullptr) {
-            head = newNode;
-        }
-
-        newNode->next = nullptr;
-        newNode->prev = tail;
-
-        this->tail = newNode;
-    }
-
-    // add listNode as new tail
-    void insertTail(T* add, int id) {
-        curSize++;
-        listNode* newNode = new listNode(add, id);
-
-        if (tail) {
-            tail->next = newNode;
-        }
-        if (head == nullptr) {
-            head = newNode;
-        }
-
-        newNode->next = nullptr;
-        newNode->prev = tail;
-
-        this->tail = newNode;
-    }
-
-    // add listNode as new tail static
-    void insertTail(T add) {
-        T* ptr = new T;
-        *ptr = add;
-        insertTail(ptr);
-    }
-
-    // add listNode as new tail static
-    void insertTail(T add, int id) {
-        T* ptr = new T;
-        *ptr = add;
-        insertTail(ptr, id);
-    }
-
-    // inserts value at index specified
-    void insertAtIndex(int index, T* add) {
-        // good on me for making such a robust program
-        if ((curSize != 0 && index > curSize) || index < 0) {
-            //std::cout << "index is beyond bounds of list + 1 (index starts at 0) \n";
-            return;
-        }
-
-        if (curSize == 0) {
-            insertHead(add);
-            return;
-        }
-
-        listNode* newNode = new listNode(add);
-        listNode* indexNode = this->head;
-        // traverse list to index
-        for (int i = 0; i < index; i++) {
-            indexNode = indexNode->next;
-        }
-
-        // cant insert element at tail as that is outside the bounds of the array
-        if (index == 0) { 
-            insertHead(add); 
-        }
-        else if (index == curSize) {
-            insertTail(add);
-        }
-        else {
-            newNode->next = indexNode;
-            newNode->prev = indexNode->prev;
-            indexNode->prev->next = newNode;
-            indexNode->prev = newNode;
-            curSize++;
-        }
-    }
-
-    // inserts value at index specified when value is static
-    void insertAtIndex(int index, T add) {
-        T* ptr = new T;
-        *ptr = add;
-        insertAtIndex(index, ptr);
-    }
     
-    // same as remove key but dont need to put key in
-    void removeNode(listNode* node) {
-        if (contains(*node->data)) {
-            remove(node);
-        }
-        else {
-            std::cout << "listNode does not exits in this list, cannot remove\n";
-        }
-    }
-    
-    // deletes listNode at given index
-    void removeAtIndex(int n) {
-        if (n > curSize - 1 || n < 0) {
-            //std::cout << "index is beyond bounds of list (index starts at 0) \n";
-            return;
-        }
-
-        remove(goToIndex(n));
-        //std::cout << "removed listNode at index " << n << " with value of " << del->data <<"\n";
-    }
-
-    // deletes the first node found in the list with this key, probably why switching the neighbours funcs add order made it better
-    void removeKey(T key) {
-        if (searchKey(key)) {
-            listNode* del = searchKey(key);
-            remove(del);
-        }
-    }
-
-    void removeKey(T* key) {
-        if (searchKey(*key)) {
-            listNode* del = searchKey(*key);
-            remove(del);
-        }
-    }
-
-    // same thing but every node
-    void removeAllKeys(T key) {
-        while (searchKey(key)) {
-            listNode* del = searchKey(key);
-            remove(del);
-        }
-    }
-    // outputs address and value of the head listNode
-    void displayHead() {
-        std::cout << "head is at " << this->head << " and value of head is " << head->data << "\n";
-    }
-    // outputs address and value of the tail listNode
-    void displayTail() {
-        std::cout << "tail is at " << this->tail << " and value of tail is " << tail->data << "\n";
-    }
-
-    // returns mem address of the first listNode found from head with equal key
-    listNode* searchKey(const T key) {
-        listNode* searchKey = this->head;
-
-        for (int i = 0; i < curSize; i++) {
-            if (*searchKey->data == key) {
-                return searchKey;
-            }
-            else {
-                searchKey = searchKey->next;
-            }
-        }
-        return nullptr;
-    }
-
-    listNode* searchID(int key) {
-        listNode* searchKey = this->head;
-
-        for (int i = 0; i < curSize; i++) {
-            if (searchKey->id == key) {
-                return searchKey;
-            }
-            else {
-                searchKey = searchKey->next;
-            }
-        }
-        return nullptr;
-    }
-    // returns index of first listnode found with equivalent key
-    int getIndex(const T* key) {
-        listNode* searchKey = this->head;
-
-        for (int i = 0; i < curSize; i++) {
-            if (*searchKey->data == *key) {
-                return i;
-            }
-            else {
-                searchKey = searchKey->next;
-            }
-        }
-        return -1;
-    }
-    // does this list contain a node w this key
-    bool contains(const T key) {
-        listNode* searchKey = this->head;
-
-        for (int i = 0; i < curSize; i++) {
-            if (*searchKey->data == key) {
-                //std::cout << "contains return true\n";
-                return true;
-            }
-            else if (searchKey->next) {
-                searchKey = searchKey->next;
-            }
-        }
-        //std::cout << "contains return false\n";
-        return false;
-    }
-
-    // returns pointer to listNode at passed index
-    listNode* goToIndex(int index) {
-
-        listNode* atIndex = this->head;
-
-        for (int i = 0; i < index; i++) {
-            atIndex = atIndex->next;
-        }
-        return atIndex;
-    }
-
-    listNode* returnHead() {
-        return this->head;
-    }
-
-    listNode* returnTail() {
-        return this->tail;
-    }
-
-    int size() const {
-        return curSize;
-    }
-
-    bool isEmpty() {
-        if (curSize == 0) {
-            return true;
-        }
-        else if (curSize < 0) {
-            std::cout << "size is < 0 \n";
-            return true;
-        }
-        else {
-            return false;
-        }
-    }
-
+    void remove(listNode* del);
+    void insertHead(T* add);
+    void insertHead(T add);
+    void insertTail(T* add);
+    void insertTail(T* add, int id);
+    void insertTail(T add);
+    void insertTail(T add, int id);
+    void insertAtIndex(int index, T* add);
+    void insertAtIndex(int index, T add);
+    void removeNode(listNode* node);
+    void removeAtIndex(int n);
+    void removeKey(T key);
+    void removeKey(T* key);
+    void removeAllKeys(T key);
+    void displayHead();
+    void displayTail();
+    listNode* searchKey(const T key);
+    listNode* searchID(int key);
+    int getIndex(const T* key);
+    bool contains(const T key);
+    listNode* goToIndex(int index);
+    listNode* returnHead();
+    listNode* returnTail();
+    int size() const;
+    bool isEmpty();
     template <typename U> friend std::ostream& operator << (std::ostream& os, const linkedList<U> list);
 };
+
+// thing that reassigns pointers to whats before & after them, if they are not head and/ or tail
+// doesnt actually delete the listnode though
+template<typename T> void linkedList<T>::remove(listNode* del) {
+    if (del == head && del == tail) {
+        head = nullptr;
+        tail = nullptr;
+    }
+    else if (del == head) {
+        del->next->prev = nullptr;
+        head = del->next;
+    }
+    else if (del == tail) {
+        del->prev->next = nullptr;
+        tail = del->prev;
+    }
+    else {
+        del->prev->next = del->next;
+        del->next->prev = del->prev;
+    }
+    delete del;
+    curSize--;
+}
+
+// add listNode as new head but its pointer so its dynamic
+template<typename T> void linkedList<T>::insertHead(T* add) {
+    curSize++;
+    listNode* newNode = new listNode(add);
+
+    if (head) {
+        head->prev = newNode;
+    }
+
+    if (!tail) {
+        tail = newNode;
+    }
+
+    newNode->next = head;
+    newNode->prev = nullptr;
+
+    this->head = newNode;
+}
+
+// add static var as head
+template<typename T> void linkedList<T>::insertHead(T add) {
+    T* ptr = new T;
+    *ptr = add;
+    insertHead(ptr);
+}
+
+// add listNode as new tail
+template<typename T> void linkedList<T>::insertTail(T* add) {
+    curSize++;
+    listNode* newNode = new listNode(add);
+
+    if (tail) {
+        tail->next = newNode;
+    }
+    if (head == nullptr) {
+        head = newNode;
+    }
+
+    newNode->next = nullptr;
+    newNode->prev = tail;
+
+    this->tail = newNode;
+}
+
+// add listNode as new tail
+template<typename T> void linkedList<T>::insertTail(T* add, int id) {
+    curSize++;
+    listNode* newNode = new listNode(add, id);
+
+    if (tail) {
+        tail->next = newNode;
+    }
+    if (head == nullptr) {
+        head = newNode;
+    }
+
+    newNode->next = nullptr;
+    newNode->prev = tail;
+
+    this->tail = newNode;
+}
+
+// add listNode as new tail static
+template<typename T> void linkedList<T>::insertTail(T add) {
+    T* ptr = new T;
+    *ptr = add;
+    insertTail(ptr);
+}
+
+// add listNode as new tail static
+template<typename T> void linkedList<T>::insertTail(T add, int id) {
+    T* ptr = new T;
+    *ptr = add;
+    insertTail(ptr, id);
+}
+
+// inserts value at index specified
+template<typename T> void linkedList<T>::insertAtIndex(int index, T* add) {
+    // good on me for making such a robust program
+    if ((curSize != 0 && index > curSize) || index < 0) {
+        //std::cout << "index is beyond bounds of list + 1 (index starts at 0) \n";
+        return;
+    }
+
+    if (curSize == 0) {
+        insertHead(add);
+        return;
+    }
+
+    listNode* newNode = new listNode(add);
+    listNode* indexNode = this->head;
+    // traverse list to index
+    for (int i = 0; i < index; i++) {
+        indexNode = indexNode->next;
+    }
+
+    // cant insert element at tail as that is outside the bounds of the array
+    if (index == 0) { 
+        insertHead(add); 
+    }
+    else if (index == curSize) {
+        insertTail(add);
+    }
+    else {
+        newNode->next = indexNode;
+        newNode->prev = indexNode->prev;
+        indexNode->prev->next = newNode;
+        indexNode->prev = newNode;
+        curSize++;
+    }
+}
+
+// inserts value at index specified when value is static
+template<typename T> void linkedList<T>::insertAtIndex(int index, T add) {
+    T* ptr = new T;
+    *ptr = add;
+    insertAtIndex(index, ptr);
+}
+
+// same as remove key but dont need to put key in
+template<typename T> void linkedList<T>::removeNode(listNode* node) {
+    if (contains(*node->data)) {
+        remove(node);
+    }
+    else {
+        std::cout << "listNode does not exits in this list, cannot remove\n";
+    }
+}
+
+// deletes listNode at given index
+template<typename T> void linkedList<T>::removeAtIndex(int n) {
+    if (n > curSize - 1 || n < 0) {
+        //std::cout << "index is beyond bounds of list (index starts at 0) \n";
+        return;
+    }
+
+    remove(goToIndex(n));
+    //std::cout << "removed listNode at index " << n << " with value of " << del->data <<"\n";
+}
+
+// deletes the first node found in the list with this key, probably why switching the neighbours funcs add order made it better
+template<typename T> void linkedList<T>::removeKey(T key) {
+    if (searchKey(key)) {
+        listNode* del = searchKey(key);
+        remove(del);
+    }
+}
+
+template<typename T> void linkedList<T>::removeKey(T* key) {
+    if (searchKey(*key)) {
+        listNode* del = searchKey(*key);
+        remove(del);
+    }
+}
+
+// same thing but every node
+template<typename T> void linkedList<T>::removeAllKeys(T key) {
+    while (searchKey(key)) {
+        listNode* del = searchKey(key);
+        remove(del);
+    }
+}
+
+// outputs address and value of the head listNode
+template<typename T> void linkedList<T>::displayHead() {
+    std::cout << "head is at " << this->head << " and value of head is " << head->data << "\n";
+}
+
+// outputs address and value of the tail listNode
+template<typename T> void linkedList<T>::displayTail() {
+    std::cout << "tail is at " << this->tail << " and value of tail is " << tail->data << "\n";
+}
+
+// returns mem address of the first listNode found from head with equal key
+template<typename T> listNode<T>* linkedList<T>::searchKey(const T key) {
+    listNode* searchKey = this->head;
+
+    for (int i = 0; i < curSize; i++) {
+        if (*searchKey->data == key) {
+            return searchKey;
+        }
+        else {
+            searchKey = searchKey->next;
+        }
+    }
+    return nullptr;
+}
+
+template<typename T> listNode<T>* linkedList<T>::searchID(int key) {
+    listNode* searchKey = this->head;
+
+    for (int i = 0; i < curSize; i++) {
+        if (searchKey->id == key) {
+            return searchKey;
+        }
+        else {
+            searchKey = searchKey->next;
+        }
+    }
+    return nullptr;
+}
+
+// returns index of first listnode found with equivalent key
+template<typename T> int linkedList<T>::getIndex(const T* key) {
+    listNode* searchKey = this->head;
+
+    for (int i = 0; i < curSize; i++) {
+        if (*searchKey->data == *key) {
+            return i;
+        }
+        else {
+            searchKey = searchKey->next;
+        }
+    }
+    return -1;
+}
+
+// does this list contain a node w this key
+template<typename T> bool linkedList<T>::contains(const T key) {
+    listNode* searchKey = this->head;
+
+    for (int i = 0; i < curSize; i++) {
+        if (*searchKey->data == key) {
+            //std::cout << "contains return true\n";
+            return true;
+        }
+        else if (searchKey->next) {
+            searchKey = searchKey->next;
+        }
+    }
+    //std::cout << "contains return false\n";
+    return false;
+}
+
+// returns pointer to listNode at passed index
+template<typename T> listNode<T>* linkedList<T>::goToIndex(int index) {
+
+    listNode* atIndex = this->head;
+
+    for (int i = 0; i < index; i++) {
+        atIndex = atIndex->next;
+    }
+    return atIndex;
+}
+
+template<typename T> listNode<T>* linkedList<T>::returnHead() {
+    return this->head;
+}
+
+template<typename T> listNode<T>* linkedList<T>::returnTail() {
+    return this->tail;
+}
+
+template<typename T> int linkedList<T>::size() const {
+    return curSize;
+}
+
+template<typename T> bool linkedList<T>::isEmpty() {
+    if (curSize == 0) {
+        return true;
+    }
+    else if (curSize < 0) {
+        std::cout << "size is < 0 \n";
+        return true;
+    }
+    else {
+        return false;
+    }
+}
 
 // how to print linkedlists
 template <typename T> std::ostream& operator << (std::ostream& os, const linkedList<T> list) {
