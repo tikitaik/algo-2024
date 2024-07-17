@@ -9,8 +9,8 @@ template <typename T> struct node {
     bool traversed;
     
     node () {
-        traversed = false;
         attribute = nullptr;
+        traversed = false;
     }
 
     node (int id) {
