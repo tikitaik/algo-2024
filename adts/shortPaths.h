@@ -4,7 +4,7 @@
 # include "graph.h"
 # include "traversals.h"
 
-template<typename U> linkedList<edge> findCrossingEdges (graph<U> g, graph<U> T) {
+template<typename T> linkedList<edge> findCrossingEdges (graph<T> g, graph<node<T> > tree) {
     
     listNode<edge>* curEdge = g.allEdges().returnHead();
     linkedList<edge> crossingEdges;
@@ -13,7 +13,7 @@ template<typename U> linkedList<edge> findCrossingEdges (graph<U> g, graph<U> T)
     for (int i = 0; i < g.edgeCount(); i++) {
         // i wish it looked better than this
         // seg faults on this if statement
-        if ((T.allNodes().contains(*g.searchNodeID(curEdge->data->start)) && !T.allNodes().contains(*g.searchNodeID(curEdge->data->end))) || (T.allNodes().contains(*g.searchNodeID(curEdge->data->end)) && !T.allNodes().contains(*g.searchNodeID(curEdge->data->start)))) {
+        if ((tree.hasAttribute(*g.searchNodeID(curEdge->data->start)) && !tree.hasAttribute(*g.searchNodeID(curEdge->data->end))) || (tree.hasAttribute(*g.searchNodeID(curEdge->data->end)) && !tree.hasAttribute(*g.searchNodeID(curEdge->data->start)))) {
             crossingEdges.insertTail(curEdge->data);
             //std::cout << "adding edge " << *curEdge->data << " to crossingEdges\n";
         } // enumerate yuhh
@@ -50,64 +50,64 @@ edge* findMinimalCrossingEdge(linkedList<edge>& crossingEdges) {
 }
 
 // given a connected g returns an MST using prims algorithm
-template<typename U> graph<U> prims(graph<U>& g, const int sourceNode) {
-    typedef node<U> node;
+template<typename T> graph<node<T> > prims(graph<T>& g, const int sourceNode) {
+    typedef node<T> node;
     // works on undirected graphs best
     if (g.directed) {
         std::cout << "this may not work as prim's doesnt always work on directed graphs\n";
     }
 
     // prelim setup
-    graph<U> T(g.directed);
-    T.addNode(*g.searchNodeID(sourceNode));
+    graph<node> tree(g.directed);
+    tree.addNode(*g.searchNodeID(sourceNode));
     const int sourceNodeCount = g.allNodes().size();
     const int sourceEdgeCount = g.allEdges().size();
     
     // main loop
-    while (T.nodeCount() != sourceNodeCount)
+    while (tree.nodeCount() != sourceNodeCount)
     {
-        linkedList<edge> crossingEdges = findCrossingEdges(g, T);
+        linkedList<edge> crossingEdges = findCrossingEdges(g, tree);
 
         // find minimal edge from crossingEdges
         edge* minimalEdge = findMinimalCrossingEdge(crossingEdges);
         //std::cout << "minimal crossing edge is " << *minimalEdge << " with weight of " << minimalEdge->weight << '\n';
 
         // add node before edge otherwise g class wont let me add the edge
-        if (T.allNodes().contains(*g.searchNodeID(minimalEdge->start)) && !T.allNodes().contains(*g.searchNodeID(minimalEdge->end))) {
-            T.addNode(g.searchNodeID(minimalEdge->end));
+        if (tree.hasAttribute(*g.searchNodeID(minimalEdge->start)) && !tree.hasAttribute(*g.searchNodeID(minimalEdge->end))) {
+            tree.addNode(g.searchNodeID(minimalEdge->end));
         }
         else {
-            T.addNode(g.searchNodeID(minimalEdge->start));
+            tree.addNode(g.searchNodeID(minimalEdge->start));
         }
-        T.addEdge(*minimalEdge);
+        tree.addEdge(*minimalEdge);
     }
 
-    return T;
+    return tree;
 }
 
 // for when you dont want to define source node
-template<typename T> graph<T> prims(graph<T> g) {
+template<typename T> graph<node<T> > prims(graph<T> g) {
     return prims(g, g.allNodes().returnHead()->data->id);
 }
 
 // kruskals util
-template<typename U> edge* findMinEdgeThatIsntCyclic (graph<U> g, graph<U> T) {
+template<typename T> edge* findMinEdgeThatIsntCyclic (graph<T> g, graph<node<T> > tree) {
     listNode<edge>* curEdge = g.allEdges().returnHead();
     edge* minEdge;
     int minWeight = 0;
 
     for (int i = 0; i < g.edgeCount(); i++) {
         // test each edge
-        if ((curEdge->data->weight < minWeight || minWeight == 0) && !T.allEdges().contains(*curEdge->data)) {
+        if ((curEdge->data->weight < minWeight || minWeight == 0) && !tree.allEdges().contains(*curEdge->data)) {
 
-            T.addEdge(*curEdge->data);
+            tree.addEdge(*curEdge->data);
             // this was a fucking pain to implement
-            if (!T.cyclic()) {
+            if (!tree.cyclic()) {
                 minEdge = curEdge->data;
                 minWeight = minEdge->weight;
             }
             // im so glad that this works like no way
-            T.deleteEdge(curEdge->data);
+            tree.deleteEdge(curEdge->data);
         } // enumerate
         if (curEdge->next) {
             curEdge = curEdge->next;
@@ -118,39 +118,39 @@ template<typename U> edge* findMinEdgeThatIsntCyclic (graph<U> g, graph<U> T) {
 }
 
 // add the minimal node that doesnt make the graph cyclic until it is connected
-template<typename U> graph<U> kruskals(graph<U> g) {
-    typedef node<U> node;
+template<typename T> graph<node<T> > kruskals(graph<T> g) {
+    typedef node<T> node;
     // warning
     if (g.directed) {
         std::cout << "this may not work as kruskals doesnt always work on directed graphs\n";
     }
 
     // prelim setup
-    graph<U> T(g.directed);
+    graph<node> tree(g.directed);
     const int sourceNodeCount = g.allNodes().size();
     const int sourceEdgeCount = g.allEdges().size();
 
-    // add all nodes from g to T
+    // add all nodes from g to tree
     listNode<node>* curNode = g.allNodes().returnHead();
     for (int i = 0; i < sourceNodeCount; i++) {
         // need to add instances so that when they are removed they dont change the pointers in the og graph
-        T.addNode(*curNode->data);
+        tree.addNode(*curNode->data);
         if (curNode->next) {
             curNode = curNode->next;
         }
     }
 
     // main loop
-    while (!T.connected()) {
+    while (!tree.connected()) {
         // find minimal edge that doesn't make the graph cyclic
-        edge* minEdge = findMinEdgeThatIsntCyclic(g, T);
+        edge* minEdge = findMinEdgeThatIsntCyclic(g, tree);
 
-        // add edge and nodes that it connects to T
-        T.addEdge(*minEdge);
+        // add edge and nodes that it connects to tree
+        tree.addEdge(*minEdge);
         //std::cout << "minimal edge is " << *minEdge << " with weight " << minEdge->weight << '\n';
     }
 
-    return T;
+    return tree;
 }
 
 template <typename T> node<T>** dijkstras(graph<T> g, int sourceNodeID, int sinkNodeID) {
@@ -210,6 +210,7 @@ template <typename T> node<T>** dijkstras(graph<T> g, int sourceNodeID, int sink
         current = pq.extractFront();
         current->traversed = true;
     }
+
     g.resetTraversed();
     return prevNodes;
 }

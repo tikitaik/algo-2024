@@ -261,17 +261,17 @@ template <typename T> linkedList<node<T> >* recTopSort(graph<T>& g, node<T>* cur
     }
 }
 // prims but recursive
-template <typename T> graph<T> recPrimsStart(graph<T>& g) {
+template <typename T> graph<node<T> > recPrimsStart(graph<T>& g) {
     if (g.directed) {
         std::cout << "theres a good chance this wont be right g\n";
     }
-    graph<T> MST(false);
+    graph<node<T> > MST(false);
     MST.addNode(g.allNodes().returnHead()->data);
     return recPrims(g, MST);
 }
 
 // add one edge and node and return MST if the node count is the same 
-template <typename T> graph<T> recPrims(graph<T>& g, graph<T>& MST) {
+template <typename T> graph<node<T> > recPrims(graph<T>& g, graph<node<T> >& MST) {
     // must be an MST if it has all of the nodes
     if (MST.nodeCount() == g.nodeCount()) {
         return MST;
@@ -283,7 +283,7 @@ template <typename T> graph<T> recPrims(graph<T>& g, graph<T>& MST) {
         listNode<edge>* curEdge = g.allEdges().returnHead();
         for(int i = 0; i < g.allEdges().size(); i++) {
             // i wish it looked better than this
-            if ((MST.allNodes().contains(*g.searchNodeID(curEdge->data->start)) && !MST.allNodes().contains(*g.searchNodeID(curEdge->data->end))) || (MST.allNodes().contains(*g.searchNodeID(curEdge->data->end)) && !MST.allNodes().contains(*g.searchNodeID(curEdge->data->start)))) {
+            if ((MST.hasAttribute(*g.searchNodeID(curEdge->data->start)) && !MST.hasAttribute(*g.searchNodeID(curEdge->data->end))) || (MST.hasAttribute(*g.searchNodeID(curEdge->data->end)) && !MST.hasAttribute(*g.searchNodeID(curEdge->data->start)))) {
                 crossingEdges.insertTail(curEdge->data);
                 //std::cout << "adding edge " << *curEdge->data << " to crossingEdges\n";
             }
@@ -316,7 +316,7 @@ template <typename T> graph<T> recPrims(graph<T>& g, graph<T>& MST) {
 
         //std::cout << "smallest crossing edge is " << *toAdd << " with weight of " << toAdd->weight << '\n';
         // add edge and node it leads to to graph
-        if (MST.allNodes().contains(*g.searchNodeID(toAdd->start)) && !MST.allNodes().contains(*g.searchNodeID(toAdd->end))) {
+        if (MST.hasAttribute(*g.searchNodeID(toAdd->start)) && !MST.hasAttribute(*g.searchNodeID(toAdd->end))) {
             MST.addNode(g.searchNodeID(toAdd->end));
         }
         else {
