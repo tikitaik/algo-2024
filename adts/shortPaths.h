@@ -181,7 +181,7 @@ template <typename T> node<T>** dijkstras(graph<T> g, int sourceNodeID, int sink
         prevNodes[i] = nullptr;
     }
     // set init distance to 0 
-    minimalDist[g.getIndexInAllNodes(sourceNodeID)] = 0;
+    minimalDist[sourceNodeID] = 0;
     
     // main loop 
     while (pq.size() > 0) {
@@ -192,17 +192,16 @@ template <typename T> node<T>** dijkstras(graph<T> g, int sourceNodeID, int sink
 
         for (int i = 0; i < untNeighbours.size(); i++) {
 
-            const int indexOfNeighbour = g.getIndexInAllNodes(curNeighbour->data->id);
-            double costToNeighbour = minimalDist[g.getIndexInAllNodes(current->id)] + (double)g.searchEdge(current->id, curNeighbour->data->id)->weight;
-            if(minimalDist[g.getIndexInAllNodes(current->id)] == -1) {
+            double costToNeighbour = minimalDist[current->id] + (double)g.searchEdge(current->id, curNeighbour->data->id)->weight;
+            if(minimalDist[current->id] == -1) {
                 costToNeighbour += 1;
             }
 
             // if this new path is minimal or the minimal distance is "infinity" update it
-            if (costToNeighbour < minimalDist[indexOfNeighbour] || minimalDist[indexOfNeighbour] == -1) {
+            if (costToNeighbour < minimalDist[curNeighbour->data->id] || minimalDist[curNeighbour->data->id] == -1) {
                 // set minimal distance of neighbour to new cost to neighbour
-                minimalDist[indexOfNeighbour] = costToNeighbour;
-                prevNodes[indexOfNeighbour] = current;
+                minimalDist[curNeighbour->data->id] = costToNeighbour;
+                prevNodes[curNeighbour->data->id] = current;
                 pq.enqueue(curNeighbour->data, costToNeighbour);
             }
             if (curNeighbour->next) {

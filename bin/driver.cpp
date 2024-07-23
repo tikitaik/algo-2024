@@ -11,7 +11,7 @@
 
 int main() {
 
-    graph<int> g(true);
+    graph<int> g(false);
     
     g.addNodes(10);
 
@@ -37,10 +37,26 @@ int main() {
     std::cout << "DFS: " << DFS(g, 0) << '\n';
     //std::cout << "recDFS: " << *recDFSStart(g, 0) << '\n';
     std::cout << "BFS: " << BFS(g, 0) << '\n';
-    std::cout << "topSort: " << *topologicalSort(g) << '\n';
-    std::cout << "recTopSort: " << *recTopSortStart(g) << '\n';
+    //std::cout << "topSort: " << *topologicalSort(g) << '\n';
+    //std::cout << "recTopSort: " << *recTopSortStart(g) << '\n';
 
-    //prims(g).printGraphAndAttributes();
-    //recPrimsStart(g).printGraphAndAttributes();
-    //std::cout << "kruskals: " << kruskals(g) << '\n';
+    prims(g).printGraphAndAttributes();
+    recPrimsStart(g).printGraphAndAttributes();
+    std::cout << "kruskals: " << kruskals(g) << '\n';
+
+    g.setAllNodesToUntraversed();
+
+    // unit test
+    for (int i = 0; i < 10; i++) {
+        for (int j = 0; j < 10; j++) {
+            if (!DFS(g, i).contains(*g.searchNodeID(j))) {
+                continue;
+            }
+            std::cout << dijkstrasPath(g, i, j) << ": " << dijkstrasCost(g, i, j) << '\n';
+        }
+    }
+
+    //std::cout << dijkstrasPath(g, 0, 9) << ": " << dijkstrasCost(g, 0, 9) << '\n';
+    //std::cout << dijkstrasPathPQ(g, 0, 9, true) << ": " << dijkstrasCostPQ(g, 0, 9) << '\n';
+    //std::cout << dijkstrasPathPQ(g, 0, 9, true) << '\n';
 }
