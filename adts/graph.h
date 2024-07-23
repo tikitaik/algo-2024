@@ -140,7 +140,9 @@ template <typename T> class graph {
 
     void displayAttribute(listNode<node>* listNode);
     void displayNodeAndAttributes(listNode<node>* nodeSelect);
+    void printGraphAndAttributes();
     bool hasAttribute(T att);
+    node* searchAttribute(T att);
 
     template<typename U> friend std::ostream& operator << (std::ostream& os, const graph<U>& graph);
 };
@@ -248,7 +250,7 @@ template<typename T> void graph<T>::addNodes(int n) {
 
     for (int i = 0; i < n; i++) {
         // need a way to delete nodes now
-        addNode(i + highestID);
+        addNode(node(i + highestID));
     }
 }
 
@@ -282,7 +284,7 @@ template<typename T> void graph<T>::addEdge (edge* add) {
         return;
     }
     else if (!idExistsInList(add->start) || !idExistsInList(add->end)) {
-        std::cout << "you are trying to add edges to nodes that do not exsist in this graph. maybe try to add the node first \n";
+        std::cout << "you are trying to add edges to nodes that do not exist in this graph. maybe try to add the node first \n";
         return;
     }
     //std::cout << "adding edge [" << add->start << ", " << add->end << "] to the edges list \n";
@@ -706,6 +708,29 @@ template<typename T> void graph<T>::displayNodeAndAttributes(listNode<node>* nod
     }
 }
 
+template<typename T> void graph<T>::printGraphAndAttributes() {
+    listNode<node>* walk = allNodes().returnHead();
+    std::cout << "graph attributes are: ";
+    for (int i = 0; i < nodeCount() - 1; i++) {
+        if (walk->data->attribute) {
+            std::cout << *walk->data->attribute << ", ";
+        }
+        else {
+            std::cout << "null, ";
+        }
+        if (walk->next) {
+            walk = walk->next;
+        }
+    }
+    if (walk->data->attribute) {
+        std::cout << *walk->data->attribute << '\n';
+    }
+    else {
+        std::cout << "null\n";
+    }
+    std::cout << *this << '\n';
+}
+
 template<typename T> bool graph<T>::hasAttribute(T att) {
 
     listNode<node>* walk = allNodes().returnHead();
@@ -721,6 +746,23 @@ template<typename T> bool graph<T>::hasAttribute(T att) {
     }
 
     return false;
+}
+
+template<typename T> node<T>* graph<T>::searchAttribute(T att) {
+
+    listNode<node>* walk = allNodes().returnHead();
+
+    for (int i = 0; i < nodeCount(); i++) {
+        if (*walk->data->attribute == att) {
+            return walk->data;
+        }
+
+        if (walk->next) {
+            walk = walk->next;
+        }
+    }
+
+    return nullptr;
 }
 
 template<typename T> std::ostream& operator << (std::ostream& os, const graph<T>& graph) {

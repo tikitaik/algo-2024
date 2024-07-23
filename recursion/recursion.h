@@ -296,12 +296,12 @@ template <typename T> graph<node<T> > recPrims(graph<T>& g, graph<node<T> >& MST
         // find minimal edge from crossingEdges
         int smallestWeight = 0;
         listNode<edge>* curCrossingEdge = crossingEdges.returnHead();
-        edge* toAdd = crossingEdges.returnHead()->data;
+        edge* minimalEdge = crossingEdges.returnHead()->data;
 
         for (int i = 0; i < crossingEdges.size(); i++) {
             if (smallestWeight == 0 || curCrossingEdge->data->weight < smallestWeight) {
                 smallestWeight = curCrossingEdge->data->weight;
-                toAdd = curCrossingEdge->data;
+                minimalEdge = curCrossingEdge->data;
             }
 
             if (curCrossingEdge->next) {
@@ -314,15 +314,16 @@ template <typename T> graph<node<T> > recPrims(graph<T>& g, graph<node<T> >& MST
             crossingEdges.removeAtIndex(i - 1);
         }
 
-        //std::cout << "smallest crossing edge is " << *toAdd << " with weight of " << toAdd->weight << '\n';
+        //std::cout << "smallest crossing edge is " << *minimalEdge << " with weight of " << minimalEdge->weight << '\n';
         // add edge and node it leads to to graph
-        if (MST.hasAttribute(*g.searchNodeID(toAdd->start)) && !MST.hasAttribute(*g.searchNodeID(toAdd->end))) {
-            MST.addNode(g.searchNodeID(toAdd->end));
+        if (MST.hasAttribute(*g.searchNodeID(minimalEdge->start)) && !MST.hasAttribute(*g.searchNodeID(minimalEdge->end))) {
+            MST.addNode(g.searchNodeID(minimalEdge->end));
         }
         else {
-            MST.addNode(g.searchNodeID(toAdd->start));
+            MST.addNode(g.searchNodeID(minimalEdge->start));
         }
-        MST.addEdge(toAdd);
+        
+        MST.addEdge(edge(MST.searchAttribute(*g.searchNodeID(minimalEdge->start))->id, MST.searchAttribute(*g.searchNodeID(minimalEdge->end))->id));
 
         // call thing again
         return recPrims(g, MST);

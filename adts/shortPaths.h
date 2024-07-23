@@ -6,19 +6,18 @@
 
 template<typename T> linkedList<edge> findCrossingEdges (graph<T> g, graph<node<T> > tree) {
     
-    listNode<edge>* curEdge = g.allEdges().returnHead();
+    listNode<edge>* edgeWalk = g.allEdges().returnHead();
     linkedList<edge> crossingEdges;
 
     // find crossing edges for T and G - T
     for (int i = 0; i < g.edgeCount(); i++) {
         // i wish it looked better than this
-        // seg faults on this if statement
-        if ((tree.hasAttribute(*g.searchNodeID(curEdge->data->start)) && !tree.hasAttribute(*g.searchNodeID(curEdge->data->end))) || (tree.hasAttribute(*g.searchNodeID(curEdge->data->end)) && !tree.hasAttribute(*g.searchNodeID(curEdge->data->start)))) {
-            crossingEdges.insertTail(curEdge->data);
-            //std::cout << "adding edge " << *curEdge->data << " to crossingEdges\n";
+        if ((tree.hasAttribute(*g.searchNodeID(edgeWalk->data->start)) && !tree.hasAttribute(*g.searchNodeID(edgeWalk->data->end))) || (tree.hasAttribute(*g.searchNodeID(edgeWalk->data->end)) && !tree.hasAttribute(*g.searchNodeID(edgeWalk->data->start)))) {
+            crossingEdges.insertTail(edgeWalk->data);
+            //std::cout << "adding edge " << *edgeWalk->data << " to crossingEdges\n";
         } // enumerate yuhh
-        if (curEdge->next) {
-            curEdge = curEdge->next;
+        if (edgeWalk->next) {
+            edgeWalk = edgeWalk->next;
         }
     }
 
@@ -28,17 +27,17 @@ template<typename T> linkedList<edge> findCrossingEdges (graph<T> g, graph<node<
 edge* findMinimalCrossingEdge(linkedList<edge>& crossingEdges) {
    // only works for positive integer weight 
     int smallestWeight = 0;
-    listNode<edge>* curCrossingEdge = crossingEdges.returnHead();
+    listNode<edge>* edgeWalk = crossingEdges.returnHead();
     edge* minimalEdge = crossingEdges.returnHead()->data;
 
     for (int i = 0; i < crossingEdges.size(); i++) {
-        if (smallestWeight == 0 || curCrossingEdge->data->weight < smallestWeight) {
-            smallestWeight = curCrossingEdge->data->weight;
-            minimalEdge = curCrossingEdge->data;
+        if (smallestWeight == 0 || edgeWalk->data->weight < smallestWeight) {
+            smallestWeight = edgeWalk->data->weight;
+            minimalEdge = edgeWalk->data;
         }
 
-        if (curCrossingEdge->next) {
-            curCrossingEdge = curCrossingEdge->next;
+        if (edgeWalk->next) {
+            edgeWalk = edgeWalk->next;
         }
     }
     // deletes everything in crossingEdges for clean up
@@ -70,16 +69,20 @@ template<typename T> graph<node<T> > prims(graph<T>& g, const int sourceNode) {
 
         // find minimal edge from crossingEdges
         edge* minimalEdge = findMinimalCrossingEdge(crossingEdges);
-        //std::cout << "minimal crossing edge is " << *minimalEdge << " with weight of " << minimalEdge->weight << '\n';
+        std::cout << "minimal crossing edge is " << *minimalEdge << " with weight of " << minimalEdge->weight << '\n';
 
         // add node before edge otherwise g class wont let me add the edge
         if (tree.hasAttribute(*g.searchNodeID(minimalEdge->start)) && !tree.hasAttribute(*g.searchNodeID(minimalEdge->end))) {
+            std::cout << "adding node " << minimalEdge->end << '\n';
             tree.addNode(g.searchNodeID(minimalEdge->end));
         }
         else {
+            std::cout << "adding node " << minimalEdge->start << '\n';
             tree.addNode(g.searchNodeID(minimalEdge->start));
         }
-        tree.addEdge(*minimalEdge);
+
+
+        tree.addEdge(edge(tree.searchAttribute(*g.searchNodeID(minimalEdge->start))->id, tree.searchAttribute(*g.searchNodeID(minimalEdge->end))->id));
     }
 
     return tree;
@@ -92,25 +95,25 @@ template<typename T> graph<node<T> > prims(graph<T> g) {
 
 // kruskals util
 template<typename T> edge* findMinEdgeThatIsntCyclic (graph<T> g, graph<node<T> > tree) {
-    listNode<edge>* curEdge = g.allEdges().returnHead();
+    listNode<edge>* edgeWalk = g.allEdges().returnHead();
     edge* minEdge;
     int minWeight = 0;
 
     for (int i = 0; i < g.edgeCount(); i++) {
         // test each edge
-        if ((curEdge->data->weight < minWeight || minWeight == 0) && !tree.allEdges().contains(*curEdge->data)) {
+        if ((edgeWalk->data->weight < minWeight || minWeight == 0) && !tree.allEdges().contains(*edgeWalk->data)) {
 
-            tree.addEdge(*curEdge->data);
+            tree.addEdge(*edgeWalk->data);
             // this was a fucking pain to implement
             if (!tree.cyclic()) {
-                minEdge = curEdge->data;
+                minEdge = edgeWalk->data;
                 minWeight = minEdge->weight;
             }
             // im so glad that this works like no way
-            tree.deleteEdge(curEdge->data);
+            tree.deleteEdge(edgeWalk->data);
         } // enumerate
-        if (curEdge->next) {
-            curEdge = curEdge->next;
+        if (edgeWalk->next) {
+            edgeWalk = edgeWalk->next;
         }
     }
 
