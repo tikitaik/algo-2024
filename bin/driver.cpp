@@ -40,11 +40,12 @@ int main() {
     //std::cout << "topSort: " << *topologicalSort(g) << '\n';
     //std::cout << "recTopSort: " << *recTopSortStart(g) << '\n';
 
-    std::cout << "prims: " << prims(g) << '\n';
-    std::cout << "recPrims: " << recPrimsStart(g) << '\n';
+    prims(g).printGraphAndAttributes();
+    recPrimsStart(g).printGraphAndAttributes();
     std::cout << "kruskals: " << kruskals(g) << '\n';
 
     g.setAllNodesToUntraversed();
+
     // unit test
     for (int i = 0; i < 10; i++) {
         for (int j = 0; j < 10; j++) {

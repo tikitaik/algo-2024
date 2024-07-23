@@ -82,6 +82,11 @@ template <typename T> class graph {
 
     int indexOfId(int id);
     bool idExistsInList(int id);
+    bool idIsConsecutive(int id);
+
+    // dangerous sigma
+    void addNode (node* add);
+    void addNode (node add);
 
     public:
 
@@ -96,10 +101,8 @@ template <typename T> class graph {
     int nodeCount();
     int edgeCount();
 
-    void addNode (node* add);
-    void addNode (node add);
-    void addNode(int id);
-    void addNode(int id, T attributeIn);
+    void addNode(T attributeIn);
+    void addNode(T* attributeIn);
     void addNodes(int n);
     void deleteNode(node* del);
 
@@ -137,9 +140,21 @@ template <typename T> class graph {
 
     void displayAttribute(listNode<node>* listNode);
     void displayNodeAndAttributes(listNode<node>* nodeSelect);
+    void printGraphAndAttributes();
+    bool hasAttribute(T att);
+    node* searchAttribute(T att);
 
     template<typename U> friend std::ostream& operator << (std::ostream& os, const graph<U>& graph);
 };
+
+template<typename T> bool graph<T>::idIsConsecutive(int id) {
+    if (nodes.size() != id) {
+        return false;
+    }
+    else {
+        return true;
+    }
+}
 
 template<typename T> int graph<T>::indexOfId (int idToCheck) {
     // returns head of the list
@@ -190,8 +205,8 @@ template<typename T> int graph<T>::edgeCount() {
 // add node using pointer
 template<typename T> void graph<T>::addNode (node* add) {
     // validating id
-    if (add->id < 0) {
-        std::cout << "id is < 0, therefore cannot add to node list \n";
+    if (!idIsConsecutive(add->id)) {
+        std::cout << "id is nonconsecutive, therefore cannot add to node list \n";
     }
     if (idExistsInList(add->id)) {
         std::cout << "id of " << add->id << " is equal to id of another node, therefore cannot add to node list \n";
@@ -209,33 +224,33 @@ template<typename T> void graph<T>::addNode (node add) {
     addNode(ptr);
 }
 
-template<typename T> void graph<T>::addNode(int id) {
-    node* add = new node(id);
+template<typename T> void graph<T>::addNode(T attributeIn) {
+    node* add = new node(nodes.size(), attributeIn);
     addNode(add);
 }
 
-template<typename T> void graph<T>::addNode(int id, T attributeIn) {
-    node toAdd(id, attributeIn);
-    addNode(toAdd);
+template<typename T> void graph<T>::addNode(T* attributeIn) {
+    node* add = new node(nodes.size(), attributeIn);
+    addNode(add);
 }
 
 // add n nodes
 template<typename T> void graph<T>::addNodes(int n) {
     int highestID = 0;
-    listNode<node>* curListNode = nodes.returnHead();
+    listNode<node>* walk = nodes.returnHead();
 
     for (int i = 0; i < nodes.size(); i++) {
-        if (highestID < curListNode->data->id) {
-            highestID = curListNode->data->id;
+        if (highestID < walk->data->id) {
+            highestID = walk->data->id;
         }
-        if (curListNode->next) {
-            curListNode = curListNode->next;
+        if (walk->next) {
+            walk = walk->next;
         }
     }
 
     for (int i = 0; i < n; i++) {
         // need a way to delete nodes now
-        addNode(i + highestID);
+        addNode(node(i + highestID));
     }
 }
 
@@ -248,15 +263,15 @@ template<typename T> void graph<T>::deleteNode(node* del) {
         std::cout << "node does not exist in list \n";
     }
 
-    listNode<edge>* curListNode = edges.returnHead();
+    listNode<edge>* walk = edges.returnHead();
     for (int i = 0; i < edges.size(); i++) {
-        if (curListNode->data->start == del->id || curListNode->data->end == del->id) {
-            curListNode = curListNode->next;
+        if (walk->data->start == del->id || walk->data->end == del->id) {
+            walk = walk->next;
             edges.removeAtIndex(i);
             i = i - 1;
         }
         else {
-            curListNode = curListNode->next;
+            walk = walk->next;
         }
     }
 }
@@ -269,7 +284,7 @@ template<typename T> void graph<T>::addEdge (edge* add) {
         return;
     }
     else if (!idExistsInList(add->start) || !idExistsInList(add->end)) {
-        std::cout << "you are trying to add edges to nodes that do not exsist in this graph. maybe try to add the node first \n";
+        std::cout << "you are trying to add edges to nodes that do not exist in this graph. maybe try to add the node first \n";
         return;
     }
     //std::cout << "adding edge [" << add->start << ", " << add->end << "] to the edges list \n";
@@ -295,13 +310,13 @@ template<typename T> void graph<T>::addEdge(int start, int end, int weight) {
 // has O(n^2) -- should implement map or associative array
 template<typename T> void graph<T>::deleteEdge (edge* del) {
     if (edgeExists(*del)) {
-        listNode<edge> *curListNode = edges.returnHead();
+        listNode<edge> *walk = edges.returnHead();
         for (int i = 0; i < edges.size(); i++) {
-            if (curListNode->data->start == del->start && curListNode->data->end == del->end) {
+            if (walk->data->start == del->start && walk->data->end == del->end) {
                 edges.removeAtIndex(i);
             }
             else {
-                curListNode = curListNode->next;
+                walk = walk->next;
             }
         }
     }
@@ -503,15 +518,15 @@ template<typename T> void graph<T>::resetTraversed() {
 
 // check if every node in graph's traversed attribute == true
 template<typename T> bool graph<T>::allNodesAreTraversed() {
-    listNode<node>* curListNode = allNodes().returnHead();
+    listNode<node>* walk = allNodes().returnHead();
 
     // for loop and enum
     for (int i = 0; i < nodeCount(); i++) {
-        if (!curListNode->data->traversed) {
+        if (!walk->data->traversed) {
             return false;
         }
-        if (curListNode->next) {
-            curListNode = curListNode->next;
+        if (walk->next) {
+            walk = walk->next;
         }
     }
     // otherwise return true
@@ -520,15 +535,15 @@ template<typename T> bool graph<T>::allNodesAreTraversed() {
 
 // returns all traversed nodes
 template<typename T> linkedList<node<T> > graph<T>::traversedNodes() {
-    listNode<node>* curListNode = allNodes().returnHead();
+    listNode<node>* walk = allNodes().returnHead();
     linkedList<node> traversed;
 
     for (int i = 0; i < nodeCount(); i++) {
-        if (curListNode->data->traversed) {
-            traversed.insertTail(curListNode->data);
+        if (walk->data->traversed) {
+            traversed.insertTail(walk->data);
         }
-        if (curListNode->next) {
-            curListNode = curListNode->next;
+        if (walk->next) {
+            walk = walk->next;
         }
     }
 
@@ -537,15 +552,15 @@ template<typename T> linkedList<node<T> > graph<T>::traversedNodes() {
 
 // returns all untraversed nodes
 template<typename T> linkedList<node<T> > graph<T>::untraversedNodes() {
-    listNode<node>* curListNode = allNodes().returnHead();
+    listNode<node>* walk = allNodes().returnHead();
 
     linkedList<node> untraversed;
     for (int i = 0; i < nodeCount(); i++) {
-        if (!curListNode->data->traversed) {
-            untraversed.insertTail(curListNode->data);
+        if (!walk->data->traversed) {
+            untraversed.insertTail(walk->data);
         }
-        if (curListNode->next) {
-            curListNode = curListNode->next;
+        if (walk->next) {
+            walk = walk->next;
         }
     }
 
@@ -680,7 +695,7 @@ template<typename T> void graph<T>::makeComplete() {
         }
         end = nodes.returnHead();
     }
-    }
+}
 
 template<typename T> void graph<T>::displayAttribute(listNode<node>* listNode) {
     std::cout << *listNode->data->attribute << '\n';
@@ -691,6 +706,63 @@ template<typename T> void graph<T>::displayNodeAndAttributes(listNode<node>* nod
         std::cout << "node with id " << nodeSelect->data->id << " has attribute ";
         displayAttribute(nodeSelect);
     }
+}
+
+template<typename T> void graph<T>::printGraphAndAttributes() {
+    listNode<node>* walk = allNodes().returnHead();
+    std::cout << "graph attributes are: ";
+    for (int i = 0; i < nodeCount() - 1; i++) {
+        if (walk->data->attribute) {
+            std::cout << *walk->data->attribute << ", ";
+        }
+        else {
+            std::cout << "null, ";
+        }
+        if (walk->next) {
+            walk = walk->next;
+        }
+    }
+    if (walk->data->attribute) {
+        std::cout << *walk->data->attribute << '\n';
+    }
+    else {
+        std::cout << "null\n";
+    }
+    std::cout << *this << '\n';
+}
+
+template<typename T> bool graph<T>::hasAttribute(T att) {
+
+    listNode<node>* walk = allNodes().returnHead();
+
+    for (int i = 0; i < nodeCount(); i++) {
+        if (*walk->data->attribute == att) {
+            return true;
+        }
+
+        if (walk->next) {
+            walk = walk->next;
+        }
+    }
+
+    return false;
+}
+
+template<typename T> node<T>* graph<T>::searchAttribute(T att) {
+
+    listNode<node>* walk = allNodes().returnHead();
+
+    for (int i = 0; i < nodeCount(); i++) {
+        if (*walk->data->attribute == att) {
+            return walk->data;
+        }
+
+        if (walk->next) {
+            walk = walk->next;
+        }
+    }
+
+    return nullptr;
 }
 
 template<typename T> std::ostream& operator << (std::ostream& os, const graph<T>& graph) {

@@ -4,21 +4,20 @@
 # include "graph.h"
 # include "traversals.h"
 
-template<typename U> linkedList<edge> findCrossingEdges (graph<U> g, graph<U> T) {
+template<typename T> linkedList<edge> findCrossingEdges (graph<T> g, graph<node<T> > tree) {
     
-    listNode<edge>* curEdge = g.allEdges().returnHead();
+    listNode<edge>* edgeWalk = g.allEdges().returnHead();
     linkedList<edge> crossingEdges;
 
     // find crossing edges for T and G - T
     for (int i = 0; i < g.edgeCount(); i++) {
         // i wish it looked better than this
-        // seg faults on this if statement
-        if ((T.allNodes().contains(*g.searchNodeID(curEdge->data->start)) && !T.allNodes().contains(*g.searchNodeID(curEdge->data->end))) || (T.allNodes().contains(*g.searchNodeID(curEdge->data->end)) && !T.allNodes().contains(*g.searchNodeID(curEdge->data->start)))) {
-            crossingEdges.insertTail(curEdge->data);
-            //std::cout << "adding edge " << *curEdge->data << " to crossingEdges\n";
+        if ((tree.hasAttribute(*g.searchNodeID(edgeWalk->data->start)) && !tree.hasAttribute(*g.searchNodeID(edgeWalk->data->end))) || (tree.hasAttribute(*g.searchNodeID(edgeWalk->data->end)) && !tree.hasAttribute(*g.searchNodeID(edgeWalk->data->start)))) {
+            crossingEdges.insertTail(edgeWalk->data);
+            //std::cout << "adding edge " << *edgeWalk->data << " to crossingEdges\n";
         } // enumerate yuhh
-        if (curEdge->next) {
-            curEdge = curEdge->next;
+        if (edgeWalk->next) {
+            edgeWalk = edgeWalk->next;
         }
     }
 
@@ -28,17 +27,17 @@ template<typename U> linkedList<edge> findCrossingEdges (graph<U> g, graph<U> T)
 edge* findMinimalCrossingEdge(linkedList<edge>& crossingEdges) {
    // only works for positive integer weight 
     int smallestWeight = 0;
-    listNode<edge>* curCrossingEdge = crossingEdges.returnHead();
+    listNode<edge>* edgeWalk = crossingEdges.returnHead();
     edge* minimalEdge = crossingEdges.returnHead()->data;
 
     for (int i = 0; i < crossingEdges.size(); i++) {
-        if (smallestWeight == 0 || curCrossingEdge->data->weight < smallestWeight) {
-            smallestWeight = curCrossingEdge->data->weight;
-            minimalEdge = curCrossingEdge->data;
+        if (smallestWeight == 0 || edgeWalk->data->weight < smallestWeight) {
+            smallestWeight = edgeWalk->data->weight;
+            minimalEdge = edgeWalk->data;
         }
 
-        if (curCrossingEdge->next) {
-            curCrossingEdge = curCrossingEdge->next;
+        if (edgeWalk->next) {
+            edgeWalk = edgeWalk->next;
         }
     }
     // deletes everything in crossingEdges for clean up
@@ -50,67 +49,71 @@ edge* findMinimalCrossingEdge(linkedList<edge>& crossingEdges) {
 }
 
 // given a connected g returns an MST using prims algorithm
-template<typename U> graph<U> prims(graph<U>& g, const int sourceNode) {
-    typedef node<U> node;
+template<typename T> graph<node<T> > prims(graph<T>& g, const int sourceNode) {
+    typedef node<T> node;
     // works on undirected graphs best
     if (g.directed) {
         std::cout << "this may not work as prim's doesnt always work on directed graphs\n";
     }
 
     // prelim setup
-    graph<U> T(g.directed);
-    T.addNode(*g.searchNodeID(sourceNode));
+    graph<node> tree(g.directed);
+    tree.addNode(*g.searchNodeID(sourceNode));
     const int sourceNodeCount = g.allNodes().size();
     const int sourceEdgeCount = g.allEdges().size();
     
     // main loop
-    while (T.nodeCount() != sourceNodeCount)
+    while (tree.nodeCount() != sourceNodeCount)
     {
-        linkedList<edge> crossingEdges = findCrossingEdges(g, T);
+        linkedList<edge> crossingEdges = findCrossingEdges(g, tree);
 
         // find minimal edge from crossingEdges
         edge* minimalEdge = findMinimalCrossingEdge(crossingEdges);
-        //std::cout << "minimal crossing edge is " << *minimalEdge << " with weight of " << minimalEdge->weight << '\n';
+        std::cout << "minimal crossing edge is " << *minimalEdge << " with weight of " << minimalEdge->weight << '\n';
 
         // add node before edge otherwise g class wont let me add the edge
-        if (T.allNodes().contains(*g.searchNodeID(minimalEdge->start)) && !T.allNodes().contains(*g.searchNodeID(minimalEdge->end))) {
-            T.addNode(g.searchNodeID(minimalEdge->end));
+        if (tree.hasAttribute(*g.searchNodeID(minimalEdge->start)) && !tree.hasAttribute(*g.searchNodeID(minimalEdge->end))) {
+            std::cout << "adding node " << minimalEdge->end << '\n';
+            tree.addNode(g.searchNodeID(minimalEdge->end));
         }
         else {
-            T.addNode(g.searchNodeID(minimalEdge->start));
+            std::cout << "adding node " << minimalEdge->start << '\n';
+            tree.addNode(g.searchNodeID(minimalEdge->start));
         }
-        T.addEdge(*minimalEdge);
+
+
+        tree.addEdge(edge(tree.searchAttribute(*g.searchNodeID(minimalEdge->start))->id, tree.searchAttribute(*g.searchNodeID(minimalEdge->end))->id));
     }
 
-    return T;
+    return tree;
 }
 
 // for when you dont want to define source node
-template<typename T> graph<T> prims(graph<T> g) {
+template<typename T> graph<node<T> > prims(graph<T> g) {
     return prims(g, g.allNodes().returnHead()->data->id);
 }
 
 // kruskals util
-template<typename U> edge* findMinEdgeThatIsntCyclic (graph<U> g, graph<U> T) {
-    listNode<edge>* curEdge = g.allEdges().returnHead();
+template<typename T> edge* findMinEdgeThatIsntCyclic (graph<T> g, graph<node<T> > tree) {
+    listNode<edge>* edgeWalk = g.allEdges().returnHead();
     edge* minEdge;
     int minWeight = 0;
 
     for (int i = 0; i < g.edgeCount(); i++) {
         // test each edge
-        if ((curEdge->data->weight < minWeight || minWeight == 0) && !T.allEdges().contains(*curEdge->data)) {
+        if ((edgeWalk->data->weight < minWeight || minWeight == 0) && !tree.allEdges().contains(*edgeWalk->data)) {
 
-            T.addEdge(*curEdge->data);
+            tree.addEdge(*edgeWalk->data);
             // this was a fucking pain to implement
-            if (!T.cyclic()) {
-                minEdge = curEdge->data;
+            if (!tree.cyclic()) {
+                minEdge = edgeWalk->data;
                 minWeight = minEdge->weight;
             }
             // im so glad that this works like no way
-            T.deleteEdge(curEdge->data);
+            tree.deleteEdge(edgeWalk->data);
         } // enumerate
-        if (curEdge->next) {
-            curEdge = curEdge->next;
+        if (edgeWalk->next) {
+            edgeWalk = edgeWalk->next;
         }
     }
 
@@ -118,39 +121,39 @@ template<typename U> edge* findMinEdgeThatIsntCyclic (graph<U> g, graph<U> T) {
 }
 
 // add the minimal node that doesnt make the graph cyclic until it is connected
-template<typename U> graph<U> kruskals(graph<U> g) {
-    typedef node<U> node;
+template<typename T> graph<node<T> > kruskals(graph<T> g) {
+    typedef node<T> node;
     // warning
     if (g.directed) {
         std::cout << "this may not work as kruskals doesnt always work on directed graphs\n";
     }
 
     // prelim setup
-    graph<U> T(g.directed);
+    graph<node> tree(g.directed);
     const int sourceNodeCount = g.allNodes().size();
     const int sourceEdgeCount = g.allEdges().size();
 
-    // add all nodes from g to T
+    // add all nodes from g to tree
     listNode<node>* curNode = g.allNodes().returnHead();
     for (int i = 0; i < sourceNodeCount; i++) {
         // need to add instances so that when they are removed they dont change the pointers in the og graph
-        T.addNode(*curNode->data);
+        tree.addNode(*curNode->data);
         if (curNode->next) {
             curNode = curNode->next;
         }
     }
 
     // main loop
-    while (!T.connected()) {
+    while (!tree.connected()) {
         // find minimal edge that doesn't make the graph cyclic
-        edge* minEdge = findMinEdgeThatIsntCyclic(g, T);
+        edge* minEdge = findMinEdgeThatIsntCyclic(g, tree);
 
-        // add edge and nodes that it connects to T
-        T.addEdge(*minEdge);
+        // add edge and nodes that it connects to tree
+        tree.addEdge(*minEdge);
         //std::cout << "minimal edge is " << *minEdge << " with weight " << minEdge->weight << '\n';
     }
 
-    return T;
+    return tree;
 }
 
 template <typename T> node<T>** dijkstras(graph<T> g, int sourceNodeID, int sinkNodeID) {
@@ -178,7 +181,7 @@ template <typename T> node<T>** dijkstras(graph<T> g, int sourceNodeID, int sink
         prevNodes[i] = nullptr;
     }
     // set init distance to 0 
-    minimalDist[g.getIndexInAllNodes(sourceNodeID)] = 0;
+    minimalDist[sourceNodeID] = 0;
     
     // main loop 
     while (pq.size() > 0) {
@@ -189,17 +192,16 @@ template <typename T> node<T>** dijkstras(graph<T> g, int sourceNodeID, int sink
 
         for (int i = 0; i < untNeighbours.size(); i++) {
 
-            const int indexOfNeighbour = g.getIndexInAllNodes(curNeighbour->data->id);
-            double costToNeighbour = minimalDist[g.getIndexInAllNodes(current->id)] + (double)g.searchEdge(current->id, curNeighbour->data->id)->weight;
-            if(minimalDist[g.getIndexInAllNodes(current->id)] == -1) {
+            double costToNeighbour = minimalDist[current->id] + (double)g.searchEdge(current->id, curNeighbour->data->id)->weight;
+            if(minimalDist[current->id] == -1) {
                 costToNeighbour += 1;
             }
 
             // if this new path is minimal or the minimal distance is "infinity" update it
-            if (costToNeighbour < minimalDist[indexOfNeighbour] || minimalDist[indexOfNeighbour] == -1) {
+            if (costToNeighbour < minimalDist[curNeighbour->data->id] || minimalDist[curNeighbour->data->id] == -1) {
                 // set minimal distance of neighbour to new cost to neighbour
-                minimalDist[indexOfNeighbour] = costToNeighbour;
-                prevNodes[indexOfNeighbour] = current;
+                minimalDist[curNeighbour->data->id] = costToNeighbour;
+                prevNodes[curNeighbour->data->id] = current;
                 pq.enqueue(curNeighbour->data, costToNeighbour);
             }
             if (curNeighbour->next) {
@@ -210,6 +212,7 @@ template <typename T> node<T>** dijkstras(graph<T> g, int sourceNodeID, int sink
         current = pq.extractFront();
         current->traversed = true;
     }
+
     g.resetTraversed();
     return prevNodes;
 }
