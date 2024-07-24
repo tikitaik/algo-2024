@@ -23,6 +23,7 @@ class rogaineEvent {
     // map
     graph<checkpoint> eventMap;
     node<checkpoint>*** neighbourArray;
+    edge*** edgeArray;
 
     // register for teams
     linkedList<team> teamRegister;
@@ -38,13 +39,14 @@ class rogaineEvent {
         startNode = eventMap.searchNodeID(0);
         endNode = eventMap.searchNodeID(0);
 
-        std::cout << eventMap << '\n';
         graph<checkpoint> tempGraph = constructGraph(1);
         neighbourArray = new node<checkpoint>** [eventMap.nodeCount()];
+        edgeArray = new edge** [eventMap.nodeCount()];
 
         for (int i = 0; i < eventMap.nodeCount(); i++) {
 
             neighbourArray[i] = new node<checkpoint>* [eventMap.nodeCount()];
+            edgeArray[i] = new edge* [eventMap.nodeCount()];
 
             for (int j = 0; j < eventMap.nodeCount(); j++) {
                 if (tempGraph.searchEdge(i, j)) {
@@ -83,7 +85,9 @@ float rogaineEvent::desirability(graph<checkpoint> g, node<checkpoint>* currentN
         if (neighbourArray[currentNode->id][i]) {
             // base case
             if (depth == 1) { 
-                des += neighbourArray[currentNode->id][i]->attribute->points / g.searchEdge(currentNode->id, i)->weight;
+                //des += neighbourArray[currentNode->id][i]->attribute->points / g.searchEdge(currentNode->id, i)->weight;
+                des += neighbourArray[currentNode->id][i]->attribute->points / edgeArray[currentNode->id][i]->weight;
+
             }
             // recursive case
             else {
@@ -143,17 +147,6 @@ bool rogaineEvent::pathBackFromNeighbourExists(graph<checkpoint>& g, node<checkp
 
 // algorithm
 linkedList<node<checkpoint> > rogaineEvent::optimalRoute(team t) {
-    /*for (int i = 0; i < eventMap.nodeCount(); i++) {
-        for (int j = 0; j < eventMap.nodeCount(); j++) {
-            if (neighbourArray[i][j]) {
-                std::cout << *neighbourArray[i][j] << ", ";
-            }
-            else {
-                std::cout << "n, ";
-            }
-        }
-        std::cout << '\n';
-    }*/
     // s = d / t therefore if t /= 0.973 then s = d / (t / 0.973) = s / 0.973
     float walkSpeed = t.speed;
     int bracket = t.bracket;
@@ -170,6 +163,18 @@ linkedList<node<checkpoint> > rogaineEvent::optimalRoute(team t) {
     int pointTotal = 0;
     int timeRemaining = timeLimit;
     int desirabilityArr[teamMap.nodeCount()];
+
+    // initalise edge array for each team
+    for (int i = 0; i < eventMap.nodeCount(); i++) {
+        for (int j = 0; j < eventMap.nodeCount(); j++) {
+            if (teamMap.searchEdge(i, j)) {
+                edgeArray[i][j] = teamMap.searchEdge(i, j);
+            }
+            else {
+                edgeArray[i][j] = nullptr;
+            }
+        }
+    }
 
     // get desirability of everything
     for (int i = 0; i < teamMap.nodeCount(); i++) {
