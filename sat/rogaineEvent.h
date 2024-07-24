@@ -14,15 +14,15 @@
 class rogaineEvent {
 
     // start and end can be represented as checkpoints with no reward 
-    const node<checkpoint>* startNode;
-    const node<checkpoint>* endNode;
+    node<checkpoint>* startNode;
+    node<checkpoint>* endNode;
 
     // time related vars
     const int timeLimit;
 
     // map
-    const graph<checkpoint> eventMap;
-    const linkedList<node<checkpoint> > checkpoints;
+    graph<checkpoint> eventMap;
+    node<checkpoint>*** neighbourArray;
 
     // register for teams
     linkedList<team> teamRegister;
@@ -34,7 +34,28 @@ class rogaineEvent {
     public:
 
     // epic constructor
-    rogaineEvent(graph<checkpoint> mapIn, linkedList<node<checkpoint> > checkpointList, node<checkpoint>* start, node<checkpoint>* end, int timeIn) : eventMap(mapIn), checkpoints(checkpointList), startNode(start), endNode(end), timeLimit(timeIn) {}
+    rogaineEvent(int timeIn) : eventMap(initGraphCheckpoints()), timeLimit(timeIn) {
+        startNode = eventMap.searchNodeID(0);
+        endNode = eventMap.searchNodeID(0);
+
+        std::cout << eventMap << '\n';
+        graph<checkpoint> tempGraph = constructGraph(1);
+        neighbourArray = new node<checkpoint>** [eventMap.nodeCount()];
+
+        for (int i = 0; i < eventMap.nodeCount(); i++) {
+
+            neighbourArray[i] = new node<checkpoint>* [eventMap.nodeCount()];
+
+            for (int j = 0; j < eventMap.nodeCount(); j++) {
+                if (tempGraph.searchEdge(i, j)) {
+                    neighbourArray[i][j] = tempGraph.searchNodeID(tempGraph.searchEdge(i, j)->end);
+                }
+                else {
+                    neighbourArray[i][j] = nullptr;
+                }
+            }
+        }
+    }
 
     void addTeamToBracket(team& t, int index);
     void addTeamToCheckpoint(checkpoint& c, team* t, timePlaceholder time);
@@ -57,21 +78,17 @@ void rogaineEvent::addTeamToCheckpoint(checkpoint& check, team* t, timePlacehold
 
 float rogaineEvent::desirability(graph<checkpoint> g, node<checkpoint>* currentNode, int depth) {
     float des = 0;
-    linkedList<node<checkpoint> >* nodeNeighbours = g.neighbours(currentNode, true);
-    listNode<node<checkpoint> >* walk = nodeNeighbours->returnHead();
 
-    for (int i = 0 ; i < nodeNeighbours->size(); i++) {
-        // base case
-        if (depth == 1) { 
-            des += walk->data->attribute->points / g.searchEdge(currentNode->id, walk->data->id)->weight;
-        }
-        // recursive case
-        else {
-            des += desirability(g, walk->data, depth - 1) / depth;
-        }
-
-        if (walk->next) {
-            walk = walk->next;
+    for (int i = 0; i < g.nodeCount(); i++) {
+        if (neighbourArray[currentNode->id][i]) {
+            // base case
+            if (depth == 1) { 
+                des += neighbourArray[currentNode->id][i]->attribute->points / g.searchEdge(currentNode->id, i)->weight;
+            }
+            // recursive case
+            else {
+                des += desirability(g, neighbourArray[currentNode->id][i], depth - 1) / depth;
+            }
         }
     }
 
@@ -126,6 +143,17 @@ bool rogaineEvent::pathBackFromNeighbourExists(graph<checkpoint>& g, node<checkp
 
 // algorithm
 linkedList<node<checkpoint> > rogaineEvent::optimalRoute(team t) {
+    /*for (int i = 0; i < eventMap.nodeCount(); i++) {
+        for (int j = 0; j < eventMap.nodeCount(); j++) {
+            if (neighbourArray[i][j]) {
+                std::cout << *neighbourArray[i][j] << ", ";
+            }
+            else {
+                std::cout << "n, ";
+            }
+        }
+        std::cout << '\n';
+    }*/
     // s = d / t therefore if t /= 0.973 then s = d / (t / 0.973) = s / 0.973
     float walkSpeed = t.speed;
     int bracket = t.bracket;
