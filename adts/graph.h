@@ -538,13 +538,11 @@ template<typename T> linkedList<node<T> > graph<T>::traversedNodes() {
     listNode<node>* walk = allNodes().returnHead();
     linkedList<node> traversed;
 
-    for (int i = 0; i < nodeCount(); i++) {
+    while (walk) {
         if (walk->data->traversed) {
             traversed.insertTail(walk->data);
         }
-        if (walk->next) {
-            walk = walk->next;
-        }
+        walk = walk->next;
     }
 
     return traversed;
@@ -553,15 +551,14 @@ template<typename T> linkedList<node<T> > graph<T>::traversedNodes() {
 // returns all untraversed nodes
 template<typename T> linkedList<node<T> > graph<T>::untraversedNodes() {
     listNode<node>* walk = allNodes().returnHead();
-
     linkedList<node> untraversed;
-    for (int i = 0; i < nodeCount(); i++) {
+
+    while(walk) {
         if (!walk->data->traversed) {
             untraversed.insertTail(walk->data);
         }
-        if (walk->next) {
-            walk = walk->next;
-        }
+
+        walk = walk->next;
     }
 
     return untraversed;

@@ -6,7 +6,7 @@
 
 # define METER 1 / 0.190 // one m is 0.190 pixels
 
-graph<checkpoint> initGraphCheckpoints() {
+graph<checkpoint> initEventCheckpoints() {
     graph<checkpoint> g(true);
 
     // every goal - coordinates are in pixels
@@ -97,8 +97,8 @@ float getPathTime(const node<checkpoint>* startNode, const node<checkpoint>* end
     return edgeTime;
 }
 
-graph<checkpoint> constructGraph(const float walkSpeed) {
-    graph<checkpoint> g = initGraphCheckpoints();
+graph<checkpoint> initTeamGraph(const float walkSpeed) {
+    graph<checkpoint> g = initEventCheckpoints();
 
     // id array that has ids of edges that will be implemented 
     const int ids[96][2] = {

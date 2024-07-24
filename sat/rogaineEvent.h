@@ -1,14 +1,14 @@
 # pragma once
 
 # include <iostream>
-# include "../adts/linkedlist.h"
 # include "../adts/graph.h"
-# include "../adts/shortPaths.h"
+# include "../adts/linkedlist.h"
 # include "../adts/pair.h"
+# include "../adts/traversals.h"
 # include "../time/time.h"
 # include "checkpoint.h"
-# include "team.h"
 # include "graphConstructor.h"
+# include "team.h"
 
 
 class rogaineEvent {
@@ -22,6 +22,7 @@ class rogaineEvent {
 
     // map
     graph<checkpoint> eventMap;
+    node<checkpoint>** nodeArray;
     node<checkpoint>*** neighbourArray;
     edge*** edgeArray;
 
@@ -35,16 +36,16 @@ class rogaineEvent {
     public:
 
     // epic constructor
-    rogaineEvent(int timeIn) : eventMap(initGraphCheckpoints()), timeLimit(timeIn) {
-        startNode = eventMap.searchNodeID(0);
-        endNode = eventMap.searchNodeID(0);
+    rogaineEvent(int timeIn) : eventMap(initEventCheckpoints()), timeLimit(timeIn) {
 
-        graph<checkpoint> tempGraph = constructGraph(1);
+        graph<checkpoint> tempGraph = initTeamGraph(1);
+        nodeArray = new node<checkpoint>* [eventMap.nodeCount()];
         neighbourArray = new node<checkpoint>** [eventMap.nodeCount()];
         edgeArray = new edge** [eventMap.nodeCount()];
 
         for (int i = 0; i < eventMap.nodeCount(); i++) {
 
+            nodeArray[i] = eventMap.searchNodeID(i);
             neighbourArray[i] = new node<checkpoint>* [eventMap.nodeCount()];
             edgeArray[i] = new edge* [eventMap.nodeCount()];
 
@@ -57,6 +58,9 @@ class rogaineEvent {
                 }
             }
         }
+
+        startNode = nodeArray[0];
+        endNode = nodeArray[0];
     }
 
     void addTeamToBracket(team& t, int index);
@@ -65,6 +69,9 @@ class rogaineEvent {
     bool pathBackInTimeExists(graph<checkpoint>& g, node<checkpoint>* sourceNode, node<checkpoint>* possibleNode, node<checkpoint>* goalNode, int timeRemaining);
     bool pathBackFromNeighbourExists(graph<checkpoint>& g, node<checkpoint>* currentNode, node<checkpoint>* goalNode, int timeRemaining);
     linkedList<node<checkpoint> > optimalRoute(team t);
+    node<checkpoint>** dijkstras(graph<checkpoint> g, int sourceNodeID, int sinkNodeID);
+    linkedList<node<checkpoint> > dijkstrasPath(graph<checkpoint> g, int sourceNodeID, int sinkNodeID);
+    int dijkstrasCost(graph<checkpoint> g, int sourceNodeID, int sinkNodeID);
 };
 
 void rogaineEvent::addTeamToBracket(team& t, int index) {
@@ -99,10 +106,101 @@ float rogaineEvent::desirability(graph<checkpoint> g, node<checkpoint>* currentN
     return des;
 }
 
+node<checkpoint>** rogaineEvent::dijkstras(graph<checkpoint> g, int sourceNodeID, int sinkNodeID) {
+    typedef node<checkpoint> node;
+
+    // DFS check to see if there is a path at all to sink node, if not return linkedlist with one thing
+    if (!DFS(g, sourceNodeID).contains(sinkNodeID)) {
+        std::cout << "no path exists from node " << sourceNodeID << " to " << sinkNodeID << '\n';
+        return nullptr;
+    }
+    
+    g.getTraversedState();
+
+    node* current = nodeArray[sourceNodeID];
+    current->traversed = true;
+    priorityQueue<node> pq(false);
+    pq.enqueue(current, 0);
+    //std::cout << "starting from node " << *current << " and searching for path to node " << *g.searchNodeID(sinkNodeID) << '\n';
+
+    // array to store current minimal path costs, init all to -1 to represent infinite
+    // can be used since dijkstras is not for negative weight values
+    double minimalDist[g.nodeCount()];
+    node** prevNodes = new node*[g.nodeCount()];
+    for (int i = 0; i < g.nodeCount(); i++) {
+        minimalDist[i] = -1;
+        prevNodes[i] = nullptr;
+    }
+    // set init distance to 0 
+    minimalDist[sourceNodeID] = 0;
+    
+    // main loop 
+    while (pq.size() > 0) {
+        //std::cout << *current << " is current node\n";
+        for (int i = 0; i < eventMap.nodeCount(); i++) {
+
+            // untraversed neighbours
+            if (neighbourArray[current->id][i] && !neighbourArray[current->id][i]->traversed) {
+
+                double costToNeighbour = minimalDist[current->id] + (double)edgeArray[current->id][i]->weight;
+                if (minimalDist[current->id] == -1) {
+                    costToNeighbour += 1;
+                }
+
+                // if this new path is minimal or the minimal distance is "infinity" update it
+                if (costToNeighbour < minimalDist[i] || minimalDist[i] == -1) {
+                    // set minimal distance of neighbour to new cost to neighbour
+                    minimalDist[i] = costToNeighbour;
+                    prevNodes[i] = current;
+                    pq.enqueue(nodeArray[i], costToNeighbour);
+                }
+
+            }
+        }
+
+        current = pq.extractFront();
+        current->traversed = true;
+    }
+
+    g.resetTraversed();
+    return prevNodes;
+}
+
+// linked list of path back to node
+linkedList<node<checkpoint> > rogaineEvent::dijkstrasPath(graph<checkpoint> g, int sourceNodeID, int sinkNodeID) {
+    node<checkpoint>** prev = new node<checkpoint>*[g.nodeCount()];
+    prev = dijkstras(g, sourceNodeID, sinkNodeID);
+
+    linkedList<node<checkpoint> > shortestPath;
+    node<checkpoint>* walk = g.searchNodeID(sinkNodeID);
+
+    while (walk) {
+        shortestPath.insertHead(*walk);
+        walk = prev[g.getIndexInAllNodes(walk->id)];
+    }
+
+    return shortestPath;
+}
+
+int rogaineEvent::dijkstrasCost(graph<checkpoint> g, int sourceNodeID, int sinkNodeID) {
+    node<checkpoint>** prev = new node<checkpoint>*[g.nodeCount()];
+    prev = dijkstras(g, sourceNodeID, sinkNodeID);
+
+    int cost = 0;
+    node<checkpoint>* walk = g.searchNodeID(sinkNodeID);
+
+    while (prev[g.getIndexInAllNodes(walk->id)]) {
+        cost += g.searchEdge(prev[g.getIndexInAllNodes(walk->id)]->id, walk->id)->weight;
+        walk = prev[g.getIndexInAllNodes(walk->id)];
+    }
+
+    return cost;
+}
+
 // determines if a path back from possible node to goal node will be within the time limit
 bool rogaineEvent::pathBackInTimeExists(graph<checkpoint>& g, node<checkpoint>* sourceNode, node<checkpoint>* possibleNode, node<checkpoint>* goalNode, int timeLimit) {
 
-    timeLimit -= g.searchEdge(sourceNode->id, possibleNode->id)->weight;
+    timeLimit -= edgeArray[sourceNode->id][possibleNode->id]->weight;
     if (!possibleNode->traversed) {
         timeLimit -= 2;
     }
@@ -131,15 +229,11 @@ bool rogaineEvent::pathBackInTimeExists(graph<checkpoint>& g, node<checkpoint>* 
 // determines if any neighbours of a node will have a path back
 bool rogaineEvent::pathBackFromNeighbourExists(graph<checkpoint>& g, node<checkpoint>* currentNode, node<checkpoint>* goalNode, int timeLimit) {
 
-    linkedList<node<checkpoint> >* neighbours = g.neighbours(currentNode, true);
-    listNode<node<checkpoint> >* neighbourWalk = neighbours->returnHead();
-
-    for (int i = 0; i < neighbours->size(); i++) {
-        if (pathBackInTimeExists(g, currentNode, neighbourWalk->data, goalNode, timeLimit)) {
-            return true;
-        }
-        if (neighbourWalk->next) {
-            neighbourWalk = neighbourWalk->next;
+    for (int i = 0; i < eventMap.nodeCount(); i++) {
+        if (neighbourArray[currentNode->id][i]) {
+            if (pathBackInTimeExists(g, currentNode, neighbourArray[currentNode->id][i], goalNode, timeLimit)) {
+                return true;
+            }
         }
     }
     return false;
@@ -156,9 +250,9 @@ linkedList<node<checkpoint> > rogaineEvent::optimalRoute(team t) {
     }
 
     // initalise everything
-    graph<checkpoint> teamMap = constructGraph(walkSpeed);
-    node<checkpoint>* currentNode = teamMap.searchNodeID(0);
-    node<checkpoint>* endCheckpoint = teamMap.searchNodeID(0);
+    graph<checkpoint> teamMap = initTeamGraph(walkSpeed);
+    node<checkpoint>* currentNode = nodeArray[0];
+    node<checkpoint>* endCheckpoint = nodeArray[0];
     linkedList<node<checkpoint> > path;
     int pointTotal = 0;
     int timeRemaining = timeLimit;
@@ -178,59 +272,59 @@ linkedList<node<checkpoint> > rogaineEvent::optimalRoute(team t) {
 
     // get desirability of everything
     for (int i = 0; i < teamMap.nodeCount(); i++) {
-        desirabilityArr[i] = desirability(teamMap, teamMap.searchNodeID(i), 6);
+        desirabilityArr[i] = desirability(teamMap, nodeArray[i], 6);
     }
 
     path.insertTail(*currentNode);
 
+    currentNode->traversed = true;
+
     // go further if path back from that node that doesnt hit any traversed nodes is within time limit
     while (pathBackFromNeighbourExists(teamMap, currentNode, endCheckpoint, timeRemaining)) {
 
-        currentNode->traversed = true;
-
         // pick most desirable node that has not been traversed
         node<checkpoint>* bestNode = nullptr;
-        linkedList<node<checkpoint> >* n = teamMap.neighbours(currentNode, true);
-        listNode<node<checkpoint> >* bestWalk = n->returnHead();
 
-        for (int i = 0; i < n->size(); i++) {
-            if (!bestNode && pathBackInTimeExists(teamMap, currentNode, bestWalk->data, endCheckpoint, timeRemaining)) {
-                bestNode = bestWalk->data;
-            }
-            // if i dont have this it tries to dereference a null bestNode ptr in the next if sometimes and segfaults
-            else if (!bestNode && !pathBackInTimeExists(teamMap, currentNode, bestWalk->data, endCheckpoint, timeRemaining)) {
-                if (bestWalk->next) {
-                    bestWalk = bestWalk->next;
+        for (int i = 0; i < eventMap.nodeCount(); i++) {
+            if (neighbourArray[currentNode->id][i]) {
+                if (!bestNode && pathBackInTimeExists(teamMap, currentNode, neighbourArray[currentNode->id][i], endCheckpoint, timeRemaining)) {
+                    bestNode = neighbourArray[currentNode->id][i];
                 }
-                continue;
-            }
-            else if (desirabilityArr[bestNode->id] < desirabilityArr[bestWalk->data->id] && pathBackInTimeExists(teamMap, currentNode, bestWalk->data, endCheckpoint, timeRemaining)) {
-                bestNode = bestWalk->data;
-            }
-
-            if (bestWalk->next) {
-                bestWalk = bestWalk->next;
+                // if i dont have this it tries to dereference a null bestNode ptr in the next if sometimes and segfaults
+                else if (!bestNode && !pathBackInTimeExists(teamMap, currentNode, neighbourArray[currentNode->id][i], endCheckpoint, timeRemaining)) {
+                    continue;
+                }
+                else if (desirabilityArr[bestNode->id] < desirabilityArr[i] && pathBackInTimeExists(teamMap, currentNode, neighbourArray[currentNode->id][i], endCheckpoint, timeRemaining)) {
+                    bestNode = neighbourArray[currentNode->id][i];
+                }
             }
         }
+
         // decrement time
-        timeRemaining -= teamMap.searchEdge(currentNode->id, bestNode->id)->weight;
+        timeRemaining -= edgeArray[currentNode->id][bestNode->id]->weight;
         if (!bestNode->traversed) {
             timeRemaining = timeRemaining - 2;
         }
+
         desirabilityArr[currentNode->id] = 0;
+
         // new current node things
         currentNode = bestNode;
-        path.insertTail(*currentNode);
+
         if (desirabilityArr[currentNode->id] != 0) {
+            path.insertTail(*currentNode);
             pointTotal += currentNode->attribute->points;
         }
+
+        currentNode->traversed = true;
     } 
+
     // print just in case algorithm doesnt work, hasn't yet
     if (timeRemaining < 0) {
         std::cout << "time is less than 0, taking off " << -1 * timeRemaining * 10 << " points\n";
         pointTotal += timeRemaining * 10;
     }
 
-    std::cout << "total points is: " << pointTotal << " and time remaining is " << timeRemaining << '\n';
+    std::cout << "total points: " << pointTotal << " and time remaining is " << timeRemaining << '\n';
     return path;
 };
