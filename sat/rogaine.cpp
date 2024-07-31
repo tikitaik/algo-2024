@@ -18,6 +18,7 @@ int main () {
     }
 
     rogaineEvent rEvent(60 * 6);
+
     for (int i = 0; i < 6; i++) {
         for (int j = 0; j < 10; j++) {
             std::cout << rEvent.optimalRoute(team(1 + j * 0.1, i)) << '\n';
