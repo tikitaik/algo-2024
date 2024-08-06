@@ -12,16 +12,18 @@ int main () {
 
     // prints nodes and coords and point reward
     listNode<node<checkpoint> >* walk = eventMap.allNodes().returnHead();
-    while (walk) {
+    /*while (walk) {
         std::cout << *walk->data << ": " << *walk->data->attribute << '\n';
         walk = walk->next;
-    }
+    }*/
 
     rogaineEvent rEvent(60 * 6);
+    int scores[6 * 10];
 
     for (int i = 0; i < 6; i++) {
         for (int j = 0; j < 10; j++) {
-            std::cout << rEvent.optimalRoute(team(1 + j * 0.1, i)) << '\n';
+            rEvent.optimalRoute(team(1 + j * 0.1, i));
         }
+        std::cout << '\n';
     }
 }
