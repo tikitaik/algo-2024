@@ -38,7 +38,7 @@ class rogaineEvent {
     // epic constructor
     rogaineEvent(int timeIn) : eventMap(initEventCheckpoints()), timeLimit(timeIn) {
 
-        graph<checkpoint> tempGraph = initTeamGraph(eventMap, 1);
+        graph<checkpoint> tempGraph = initTeamGraph(1);
         nodeArray = new node<checkpoint>* [eventMap.nodeCount()];
         neighbourArray = new node<checkpoint>** [eventMap.nodeCount()];
         edgeArray = new edge** [eventMap.nodeCount()];
@@ -250,7 +250,7 @@ linkedList<node<checkpoint> > rogaineEvent::optimalRoute(team t) {
     }
 
     // initalise everything
-    graph<checkpoint> teamMap = initTeamGraph(eventMap, walkSpeed);
+    graph<checkpoint> teamMap = initTeamGraph(walkSpeed);
     node<checkpoint>* currentNode = nodeArray[0];
     node<checkpoint>* endCheckpoint = nodeArray[0];
     linkedList<node<checkpoint> > path;
