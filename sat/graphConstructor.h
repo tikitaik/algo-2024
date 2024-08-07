@@ -1,12 +1,17 @@
 # pragma once
 
 # include <iostream>
+# include <fstream>
 # include "../adts/graph.h"
 # include "../adts/pair.h"
 
 # define METER 1 / 0.190 // one m is 0.190 pixels
 
 graph<checkpoint> initEventCheckpoints() {
+    std::ifstream checkpointData("../sat/map-data/checkpoint-data.csv");
+    if (!checkpointData.is_open()) {
+        std::cout << "not open\n";
+    }
     graph<checkpoint> g(true);
 
     // every goal - coordinates are in pixels
