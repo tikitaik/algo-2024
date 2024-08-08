@@ -95,8 +95,7 @@ graph<checkpoint> initEventCheckpoints() {
     return g;
 }
 
-graph<checkpoint> initTeamGraph(const float walkSpeed) {
-    graph<checkpoint> g = initEventCheckpoints();
+graph<checkpoint> initTeamGraph(graph<checkpoint> g, const float walkSpeed) {
 
     std::ifstream edgeData("../sat/map-data/edge-data.csv");
     if (!edgeData.is_open()) {

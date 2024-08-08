@@ -38,7 +38,7 @@ class rogaineEvent {
     // epic constructor
     rogaineEvent(int timeIn) : eventMap(initEventCheckpoints()), timeLimit(timeIn) {
 
-        graph<checkpoint> tempGraph = initTeamGraph(1);
+        graph<checkpoint> tempGraph = initTeamGraph(eventMap, 1);
         nodeArray = new node<checkpoint>* [eventMap.nodeCount()];
         neighbourArray = new node<checkpoint>** [eventMap.nodeCount()];
         edgeArray = new edge** [eventMap.nodeCount()];
@@ -200,6 +200,7 @@ int rogaineEvent::dijkstrasCost(graph<checkpoint> g, int sourceNodeID, int sinkN
 // determines if a path back from possible node to goal node will be within the time limit
 bool rogaineEvent::pathBackInTimeExists(graph<checkpoint>& g, node<checkpoint>* sourceNode, node<checkpoint>* possibleNode, node<checkpoint>* goalNode, int timeLimit) {
 
+    //std::cout << "checking for path from " << possibleNode->id << " to " << goalNode->id << '\n';
     timeLimit -= edgeArray[sourceNode->id][possibleNode->id]->weight;
     if (!possibleNode->traversed) {
         timeLimit -= 2;
@@ -211,6 +212,7 @@ bool rogaineEvent::pathBackInTimeExists(graph<checkpoint>& g, node<checkpoint>* 
     // extra 2 minutes to find scanning point check
     int pathCost = dijkstrasCost(g, possibleNode->id, goalNode->id);
     linkedList<node<checkpoint> > path = dijkstrasPath(g, possibleNode->id, goalNode->id);
+    //std::cout << "path is " << path << '\n';
     listNode<node<checkpoint> >* walk = path.returnHead();
 
     for (int i = 0; i < path.size(); i++) {
@@ -250,7 +252,7 @@ linkedList<node<checkpoint> > rogaineEvent::optimalRoute(team t) {
     }
 
     // initalise everything
-    graph<checkpoint> teamMap = initTeamGraph(walkSpeed);
+    graph<checkpoint> teamMap = initTeamGraph(eventMap, walkSpeed);
     node<checkpoint>* currentNode = nodeArray[0];
     node<checkpoint>* endCheckpoint = nodeArray[0];
     linkedList<node<checkpoint> > path;
@@ -276,7 +278,6 @@ linkedList<node<checkpoint> > rogaineEvent::optimalRoute(team t) {
     }
 
     path.insertTail(*currentNode);
-
     currentNode->traversed = true;
 
     // go further if path back from that node that doesnt hit any traversed nodes is within time limit
@@ -312,9 +313,9 @@ linkedList<node<checkpoint> > rogaineEvent::optimalRoute(team t) {
         currentNode = bestNode;
 
         if (desirabilityArr[currentNode->id] != 0) {
-            path.insertTail(*currentNode);
             pointTotal += currentNode->attribute->points;
         }
+        path.insertTail(*currentNode);
 
         currentNode->traversed = true;
     } 
