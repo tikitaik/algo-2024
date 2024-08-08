@@ -21,7 +21,7 @@ class rogaineEvent {
     const int timeLimit;
 
     // map
-    graph<checkpoint> eventMap;
+    const graph<checkpoint> eventMap;
     node<checkpoint>** nodeArray;
     node<checkpoint>*** neighbourArray;
     edge*** edgeArray;

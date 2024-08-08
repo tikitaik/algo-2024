@@ -56,6 +56,8 @@ int main() {
         }
     }
 
+    std::cout << g.cyclic() << '\n';
+
     //std::cout << dijkstrasPath(g, 0, 9) << ": " << dijkstrasCost(g, 0, 9) << '\n';
     //std::cout << dijkstrasPathPQ(g, 0, 9, true) << ": " << dijkstrasCostPQ(g, 0, 9) << '\n';
     //std::cout << dijkstrasPathPQ(g, 0, 9, true) << '\n';

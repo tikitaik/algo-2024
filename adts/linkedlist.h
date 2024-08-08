@@ -56,7 +56,6 @@ template <typename T> class linkedList {
         this->tail = nullptr;
     }
     
-    void remove(listNode* del);
     void insertHead(T* add);
     void insertHead(T add);
     void insertTail(T* add);
@@ -65,22 +64,28 @@ template <typename T> class linkedList {
     void insertTail(T add, int id);
     void insertAtIndex(int index, T* add);
     void insertAtIndex(int index, T add);
+    void remove(listNode* del);
     void removeNode(listNode* node);
     void removeAtIndex(int n);
     void removeKey(T key);
     void removeKey(T* key);
     void removeAllKeys(T key);
-    void displayHead();
-    void displayTail();
-    listNode* searchKey(const T key);
-    listNode* searchID(int key);
-    int getIndex(const T* key);
-    bool contains(const T key);
-    listNode* goToIndex(int index);
-    listNode* returnHead();
-    listNode* returnTail();
+
+    void displayHead() const;
+    void displayTail() const;
+
+    listNode* searchKey(const T key) const;
+    listNode* searchID(int key) const;
+
+    int getIndex(const T* key) const;
+    bool contains(const T key) const;
+
+    listNode* goToIndex(int index) const;
+    listNode* returnHead() const;
+    listNode* returnTail() const;
+
     int size() const;
-    bool isEmpty();
+    bool isEmpty() const;
     template <typename U> friend std::ostream& operator << (std::ostream& os, const linkedList<U> list);
 };
 
@@ -271,17 +276,17 @@ template<typename T> void linkedList<T>::removeAllKeys(T key) {
 }
 
 // outputs address and value of the head listNode
-template<typename T> void linkedList<T>::displayHead() {
+template<typename T> void linkedList<T>::displayHead()  const {
     std::cout << "head is at " << this->head << " and value of head is " << head->data << "\n";
 }
 
 // outputs address and value of the tail listNode
-template<typename T> void linkedList<T>::displayTail() {
+template<typename T> void linkedList<T>::displayTail()  const {
     std::cout << "tail is at " << this->tail << " and value of tail is " << tail->data << "\n";
 }
 
 // returns mem address of the first listNode found from head with equal key
-template<typename T> listNode<T>* linkedList<T>::searchKey(const T key) {
+template<typename T> listNode<T>* linkedList<T>::searchKey(const T key)  const {
     listNode* searchKey = this->head;
 
     for (int i = 0; i < curSize; i++) {
@@ -295,7 +300,7 @@ template<typename T> listNode<T>* linkedList<T>::searchKey(const T key) {
     return nullptr;
 }
 
-template<typename T> listNode<T>* linkedList<T>::searchID(int key) {
+template<typename T> listNode<T>* linkedList<T>::searchID(int key)  const {
     listNode* searchKey = this->head;
 
     for (int i = 0; i < curSize; i++) {
@@ -310,7 +315,7 @@ template<typename T> listNode<T>* linkedList<T>::searchID(int key) {
 }
 
 // returns index of first listnode found with equivalent key
-template<typename T> int linkedList<T>::getIndex(const T* key) {
+template<typename T> int linkedList<T>::getIndex(const T* key)  const {
     listNode* searchKey = this->head;
 
     for (int i = 0; i < curSize; i++) {
@@ -325,7 +330,7 @@ template<typename T> int linkedList<T>::getIndex(const T* key) {
 }
 
 // does this list contain a node w this key
-template<typename T> bool linkedList<T>::contains(const T key) {
+template<typename T> bool linkedList<T>::contains(const T key)  const {
     listNode* searchKey = this->head;
 
     for (int i = 0; i < curSize; i++) {
@@ -342,7 +347,7 @@ template<typename T> bool linkedList<T>::contains(const T key) {
 }
 
 // returns pointer to listNode at passed index
-template<typename T> listNode<T>* linkedList<T>::goToIndex(int index) {
+template<typename T> listNode<T>* linkedList<T>::goToIndex(int index)  const {
 
     listNode* atIndex = this->head;
 
@@ -352,11 +357,11 @@ template<typename T> listNode<T>* linkedList<T>::goToIndex(int index) {
     return atIndex;
 }
 
-template<typename T> listNode<T>* linkedList<T>::returnHead() {
+template<typename T> listNode<T>* linkedList<T>::returnHead()  const {
     return this->head;
 }
 
-template<typename T> listNode<T>* linkedList<T>::returnTail() {
+template<typename T> listNode<T>* linkedList<T>::returnTail()  const {
     return this->tail;
 }
 
@@ -364,7 +369,7 @@ template<typename T> int linkedList<T>::size() const {
     return curSize;
 }
 
-template<typename T> bool linkedList<T>::isEmpty() {
+template<typename T> bool linkedList<T>::isEmpty()  const {
     if (curSize == 0) {
         return true;
     }

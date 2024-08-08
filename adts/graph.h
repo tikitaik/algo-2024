@@ -80,9 +80,9 @@ template <typename T> class graph {
 
     bool* traversedStates;
 
-    int indexOfId(int id);
-    bool idExistsInList(int id);
-    bool idIsConsecutive(int id);
+    int indexOfId(int id) const;
+    bool idExistsInList(int id) const;
+    bool idIsConsecutive(int id) const;
 
     // dangerous sigma
     void addNode (node* add);
@@ -95,11 +95,11 @@ template <typename T> class graph {
 
     graph (bool isDirected) : directed(isDirected) {}
 
-    linkedList<node>& allNodes();
-    linkedList<edge>& allEdges();
+    linkedList<node> allNodes() const;
+    linkedList<edge> allEdges() const;
 
-    int nodeCount();
-    int edgeCount();
+    int nodeCount() const;
+    int edgeCount() const;
 
     void addNode(T attributeIn);
     void addNode(T* attributeIn);
@@ -112,42 +112,42 @@ template <typename T> class graph {
     void addEdge(int start, int end, int weight);
     void deleteEdge (edge* del);
 
-    linkedList<node>* neighbours (node* center, bool directed);
-    linkedList<node>* untraversedNeighbours (node* center, bool directed);
-    linkedList<edge>* incident (edge* centerEdge);
-    int degree(int id);
+    linkedList<node>* neighbours (node* center, bool directed) const;
+    linkedList<node>* untraversedNeighbours (node* center, bool directed) const;
+    linkedList<edge>* incident (edge* centerEdge) const;
+    int degree(int id) const;
 
-    node* searchNodeID(int id);
-    int getIndexInAllNodes(int id);
-    edge* searchEdge(int start, int end);
-    bool edgeExists(edge edgeToCheck);
-    bool edgeExists(int start, int end);
+    node* searchNodeID(int id) const;
+    int getIndexInAllNodes(int id) const;
+    edge* searchEdge(int start, int end) const;
+    bool edgeExists(edge edgeToCheck) const;
+    bool edgeExists(int start, int end) const;
 
     void setAllNodesToUntraversed();
     void getTraversedState();
     void resetTraversed();
 
-    bool allNodesAreTraversed();
-    linkedList<node> traversedNodes();
-    linkedList<node> untraversedNodes();
-    void displayTraversedNodes();
+    bool allNodesAreTraversed() const;
+    linkedList<node> traversedNodes() const;
+    linkedList<node> untraversedNodes() const;
+    void displayTraversedNodes() const;
 
     bool connected();
-    bool cycleCheck(node* current, stack<node>& curStack, linkedList<node>& visited);
-    bool cyclic();
+    bool cycleCheck(node* current, stack<node>& curStack, linkedList<node>& visited) const;
+    bool cyclic() const;
 
     void makeComplete();
 
-    void displayAttribute(listNode<node>* listNode);
-    void displayNodeAndAttributes(listNode<node>* nodeSelect);
-    void printGraphAndAttributes();
-    bool hasAttribute(T att);
-    node* searchAttribute(T att);
+    void displayAttribute(listNode<node>* listNode) const;
+    void displayNodeAndAttributes(listNode<node>* nodeSelect) const;
+    void printGraphAndAttributes() const;
+    bool hasAttribute(T att) const;
+    node* searchAttribute(T att) const;
 
     template<typename U> friend std::ostream& operator << (std::ostream& os, const graph<U>& graph);
 };
 
-template<typename T> bool graph<T>::idIsConsecutive(int id) {
+template<typename T> bool graph<T>::idIsConsecutive(int id) const {
     if (nodes.size() != id) {
         return false;
     }
@@ -156,7 +156,7 @@ template<typename T> bool graph<T>::idIsConsecutive(int id) {
     }
 }
 
-template<typename T> int graph<T>::indexOfId (int idToCheck) {
+template<typename T> int graph<T>::indexOfId (int idToCheck) const {
     // returns head of the list
     listNode<node>* curNode = nodes.returnHead();
     // checks if id is equal at all
@@ -174,7 +174,7 @@ template<typename T> int graph<T>::indexOfId (int idToCheck) {
     return -1;
 }
 
-template<typename T> bool graph<T>::idExistsInList(int id) {
+template<typename T> bool graph<T>::idExistsInList(int id) const {
     if (indexOfId(id) != -1) {
         return true;
     }
@@ -184,21 +184,19 @@ template<typename T> bool graph<T>::idExistsInList(int id) {
 }
 
 // returns nodes and edges
-template<typename T> linkedList<node<T> >& graph<T>::allNodes() {
-    linkedList<node>& allNodes = nodes;
-    return allNodes;
+template<typename T> linkedList<node<T> > graph<T>::allNodes() const {
+    return nodes;
 }
 
-template<typename T> linkedList<edge>& graph<T>::allEdges() {
-    linkedList<edge>& allEdges = edges;
-    return allEdges;
+template<typename T> linkedList<edge> graph<T>::allEdges() const {
+    return edges;
 }
 
-template<typename T> int graph<T>::nodeCount() {
+template<typename T> int graph<T>::nodeCount() const {
     return nodes.size();
 }
 
-template<typename T> int graph<T>::edgeCount() {
+template<typename T> int graph<T>::edgeCount() const {
     return edges.size();
 }
 
@@ -323,7 +321,7 @@ template<typename T> void graph<T>::deleteEdge (edge* del) {
 }
 
 // adjacent funcs
-template<typename T> linkedList<node<T> >* graph<T>::neighbours (node* center, bool directed) {
+template<typename T> linkedList<node<T> >* graph<T>::neighbours (node* center, bool directed) const {
     //return nodes on opposite ends of edges that connect to graph
     listNode<edge>* curEdge = edges.returnHead();
     linkedList<node>* neighbours = new linkedList<node>;
@@ -345,7 +343,7 @@ template<typename T> linkedList<node<T> >* graph<T>::neighbours (node* center, b
     return neighbours;
 }
 
-template<typename T> linkedList<node<T> >* graph<T>::untraversedNeighbours (node* center, bool directed) {
+template<typename T> linkedList<node<T> >* graph<T>::untraversedNeighbours (node* center, bool directed) const {
     //return nodes on opposite ends of edges that connect to graph
     listNode<edge>* curEdge = edges.returnHead();
     linkedList<node>* untNeighbours = new linkedList<node>;
@@ -369,7 +367,7 @@ template<typename T> linkedList<node<T> >* graph<T>::untraversedNeighbours (node
 }
 
 // list of edges that an edge shares a common vertex with
-template <typename T> linkedList<edge>* graph<T>::incident (edge* centerEdge) {
+template <typename T> linkedList<edge>* graph<T>::incident (edge* centerEdge) const {
     //return nodes on opposite ends of edges that connect to graph
     listNode<edge>* curEdge = edges.returnHead();
     linkedList<edge>* incidentEdges = new linkedList<edge>;
@@ -389,7 +387,7 @@ template <typename T> linkedList<edge>* graph<T>::incident (edge* centerEdge) {
     return incidentEdges;
 }
 
-template<typename T> int graph<T>::degree (int id) {
+template<typename T> int graph<T>::degree (int id) const {
     int degree = 0;
     listNode<edge>* curEdge = allEdges().returnHead();
 
@@ -406,7 +404,7 @@ template<typename T> int graph<T>::degree (int id) {
 }
 
 // misc
-template<typename T> node<T>* graph<T>::searchNodeID (int id) {
+template<typename T> node<T>* graph<T>::searchNodeID (int id) const {
     listNode<node>* curNode = allNodes().returnHead();
     for (int i = 0; i < allNodes().size(); i++) {
         if (curNode->data->id == id) {
@@ -422,11 +420,11 @@ template<typename T> node<T>* graph<T>::searchNodeID (int id) {
     return nullptr;
 }
 
-template<typename T> int graph<T>::getIndexInAllNodes(int id) {
+template<typename T> int graph<T>::getIndexInAllNodes(int id) const {
     return nodes.getIndex(searchNodeID(id));
 }
 
-template<typename T> edge* graph<T>::searchEdge (int start, int end) {
+template<typename T> edge* graph<T>::searchEdge (int start, int end) const {
     listNode<edge>* curEdge = edges.returnHead();
     // O(n)
     for (int i = 0; i < edges.size(); i++) {
@@ -443,7 +441,7 @@ template<typename T> edge* graph<T>::searchEdge (int start, int end) {
     return nullptr;
 }
 
-template<typename T> bool graph<T>::edgeExists (edge edgeToCheck) {
+template<typename T> bool graph<T>::edgeExists (edge edgeToCheck) const {
     listNode<edge>* curEdge = edges.returnHead();
     // O(n)
     for (int i = 0; i < edges.size(); i++) {
@@ -460,7 +458,7 @@ template<typename T> bool graph<T>::edgeExists (edge edgeToCheck) {
     return false;
 }
 
-template<typename T> bool graph<T>::edgeExists (int start, int end) {
+template<typename T> bool graph<T>::edgeExists (int start, int end) const {
     listNode<edge>* curEdge = edges.returnHead();
     // O(n)
     for (int i = 0; i < edges.size(); i++) {
@@ -517,7 +515,7 @@ template<typename T> void graph<T>::resetTraversed() {
 }
 
 // check if every node in graph's traversed attribute == true
-template<typename T> bool graph<T>::allNodesAreTraversed() {
+template<typename T> bool graph<T>::allNodesAreTraversed() const {
     listNode<node>* walk = allNodes().returnHead();
 
     // for loop and enum
@@ -534,7 +532,7 @@ template<typename T> bool graph<T>::allNodesAreTraversed() {
 }
 
 // returns all traversed nodes
-template<typename T> linkedList<node<T> > graph<T>::traversedNodes() {
+template<typename T> linkedList<node<T> > graph<T>::traversedNodes() const {
     listNode<node>* walk = allNodes().returnHead();
     linkedList<node> traversed;
 
@@ -549,7 +547,7 @@ template<typename T> linkedList<node<T> > graph<T>::traversedNodes() {
 }
 
 // returns all untraversed nodes
-template<typename T> linkedList<node<T> > graph<T>::untraversedNodes() {
+template<typename T> linkedList<node<T> > graph<T>::untraversedNodes() const {
     listNode<node>* walk = allNodes().returnHead();
     linkedList<node> untraversed;
 
@@ -565,7 +563,7 @@ template<typename T> linkedList<node<T> > graph<T>::untraversedNodes() {
 }
 
 // writes the traversed and untraversed nodes to console, quite useless
-template<typename T> void graph<T>::displayTraversedNodes() {
+template<typename T> void graph<T>::displayTraversedNodes() const {
     std::cout << "traversed: " << traversedNodes() << '\n';
     std::cout << "untraversed: " << untraversedNodes() << '\n';
 }
@@ -609,7 +607,7 @@ template<typename T> bool graph<T>::connected() {
 }
 
 // util for cyclic bool praise be to the internet
-template<typename T> bool graph<T>::cycleCheck(node* current, stack<node>& curStack, linkedList<node>& visited) {
+template<typename T> bool graph<T>::cycleCheck(node* current, stack<node>& curStack, linkedList<node>& visited) const {
     // return cyclic if already in recursion stack
     if (curStack.contains(*current)) {
         //std::cout << "curStack: " << curStack << '\n';
@@ -648,7 +646,7 @@ template<typename T> bool graph<T>::cycleCheck(node* current, stack<node>& curSt
 }
 
 // DFS return true and needs to set things back to untraversed afterwards
-template<typename T> bool graph<T>::cyclic() {
+template<typename T> bool graph<T>::cyclic() const {
     stack<node> curStack;
     linkedList<node> visited;
     listNode<node>* curNode = allNodes().returnHead();
@@ -694,18 +692,18 @@ template<typename T> void graph<T>::makeComplete() {
     }
 }
 
-template<typename T> void graph<T>::displayAttribute(listNode<node>* listNode) {
+template<typename T> void graph<T>::displayAttribute(listNode<node>* listNode) const {
     std::cout << *listNode->data->attribute << '\n';
 }
 
-template<typename T> void graph<T>::displayNodeAndAttributes(listNode<node>* nodeSelect) {
+template<typename T> void graph<T>::displayNodeAndAttributes(listNode<node>* nodeSelect) const {
     for (int i = 0; i < allNodes().size(); i++) {
         std::cout << "node with id " << nodeSelect->data->id << " has attribute ";
         displayAttribute(nodeSelect);
     }
 }
 
-template<typename T> void graph<T>::printGraphAndAttributes() {
+template<typename T> void graph<T>::printGraphAndAttributes() const {
     listNode<node>* walk = allNodes().returnHead();
     std::cout << "graph attributes are: ";
     for (int i = 0; i < nodeCount() - 1; i++) {
@@ -728,7 +726,7 @@ template<typename T> void graph<T>::printGraphAndAttributes() {
     std::cout << *this << '\n';
 }
 
-template<typename T> bool graph<T>::hasAttribute(T att) {
+template<typename T> bool graph<T>::hasAttribute(T att) const {
 
     listNode<node>* walk = allNodes().returnHead();
 
@@ -745,7 +743,7 @@ template<typename T> bool graph<T>::hasAttribute(T att) {
     return false;
 }
 
-template<typename T> node<T>* graph<T>::searchAttribute(T att) {
+template<typename T> node<T>* graph<T>::searchAttribute(T att) const {
 
     listNode<node>* walk = allNodes().returnHead();
 
