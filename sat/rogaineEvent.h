@@ -246,7 +246,6 @@ bool rogaineEvent::pathBackFromNeighbourExists(graph<checkpoint>& g, node<checkp
 linkedList<node<checkpoint> > rogaineEvent::optimalRoute(team t) {
     // s = d / t therefore if t /= 0.973 then s = d / (t / 0.973) = s / 0.973
     float walkSpeed = t.speed;
-    int bracket = t.bracket;
     for (int i = t.bracket; i < 6; i++) {
         // same as walkSpeed /= 0.973
         walkSpeed *= 1.02775;
@@ -324,7 +323,7 @@ linkedList<node<checkpoint> > rogaineEvent::optimalRoute(team t) {
     // print just in case algorithm doesnt work, hasn't yet
     if (timeRemaining < 0) {
         std::cout << "time is less than 0, taking off " << -1 * timeRemaining * 10 << " points\n";
-        pointTotal += timeRemaining * 10;
+        pointTotal -= timeRemaining * 10;
     }
 
     //std::cout << pointTotal << '\n';

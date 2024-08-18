@@ -84,7 +84,7 @@ graph ADT
 |   newGraph: -> graph
 |   allNodes: graph -> linked list of nodes
 |   allEdges: graph -> linked list of edges
-|   nodeCount: graph -> integer
+|   eventMap.nodeCount: graph -> integer
 |   edgeCount: graph -> integer
 |   addNode: graph x node x attribute -> graph
 |   addNodes: graph x integer -> graph
@@ -261,6 +261,229 @@ start linkedList OPTIMAL_ROUTE (team)
 
     if timeRemaining < 0
         pointTotal <- pointTotal + timeRemaining * 10
+    end if
+
+    return path
+stop
+
+-- new algorithm pseudocode --
+
+start graph INIT_EVENT_CHECKPOINTS()
+
+    checkpointData <- checkpoint data csv file
+    if checkpointData is not open 
+        print "checkpoint data couldn't be opened"
+    end if
+
+    directed graph<checkpoint> g
+
+    string line <- empty string
+
+    while getline(checkpointData, line) != null pointer
+        ss <- line
+        id <- getline(ss, ',')
+        x <- getline(ss, ',')
+        y <- getline(ss, ',')
+        reward <- getline(ss, ',')
+
+        if x = "x"
+            continue
+        end if
+
+        g.addNode(checkpoint(x, y, reward - (reward % 10)))
+    end while
+
+    return g
+
+stop INIT_EVENT_CHECKPOINTS()
+
+start graph INIT_TEAM_GRAPH(graph, walkSpeed)
+    
+    edgeData <- edge data csv file
+    if edgeData is not open
+        print "edge data couldn't be opened"
+    end if
+
+    string line
+
+    while getline(edgeData, line) != null pointer
+        ss <- line 
+        startID <- getline(ss, ',')
+        endID <- getline(ss, ',')
+        uphill <- getline(ss, ',')
+        roadCoefficient <- getline(ss, ',')
+        obstacleCoefficient <- getline(ss, ',')
+
+        if uphill = "uphill"
+            continue
+        end if
+
+        graph.addEdge(startID, endID, GET_PATH_TIME(graph.searchNodeID(startID), graph.searchNodeID(endID), walkSpeed, uphill, roadCoefficient, obstacleCoefficient))
+        graph.addEdge(endID, startID, GET_PATH_TIME(graph.searchNodeID(endID), graph.searchNodeID(startID), walkSpeed, uphill * -1, roadCoefficient, obstacleCoefficient))
+
+    end while
+
+    return graph
+
+end INIT_TEAM_GRAPH
+
+start rogaineEvent CONSTRUCTOR (time limit)
+    eventMap <- INIT_EVENT_CHECKPOINTS()
+    empGraph <- INIT_TEAM_GRAPH(eventMap, 1)
+    nodeArray <- array of length eventMap.nodeCount
+    neighbourArray <- 2d array of null pointers size eventMap.nodeCount x eventMap.nodeCount
+    edgeArray <- 2d array of null pointers size eventMap.nodeCount x eventMap.nodeCount
+
+    for i <- 0 to eventMap.nodeCount() - 1
+        nodeArray[i] <- eventMap.searchNodeID(i)
+        
+        for j <- 0 to eventMap.nodeCount() -1
+            if tempGraph.searchEdge(i, j) != null pointer
+                neighbourArray[i][j] <- tempGraph.searchNodeID(tempGraph.searchEdge(i, j)->end)
+            end if
+        end for
+    end for
+
+    startNode <- hash house
+    endNode <- hash house
+
+stop rogaineEvent CONSTRUCTOR
+
+start float DESIRABILITY (map, currentNode, depth)
+    float desirability <- 0
+
+    for i <- 0 to map.nodeCount - 1
+        if neighbourArray[currentNode.id][i] != null pointer
+            if depth = 1
+                desirability <- desirability + neighbourArray[currentNode.id][i].attribute.points / edgeArray[currentNode.id][id].weight
+            else
+                desirability <- DESIRABILITY(map, neighbourArray[currentNode.id][i], depth - 1) / depth
+            end if
+        end if
+    end for
+
+    return desirability
+stop
+
+start integer GET_PATH_TIME (startNode, endNode, walkSpeed, uphill, roadCoefficient, obstacleCoefficient)
+
+    if roadCoefficient > 1 or roadCoefficient < 0
+        return null
+    if obstacleCoefficient >= 1 or obstacleCoefficient < 0
+        return null
+
+    meter <- 1 / 0.190
+
+    distance <- sqrt((startNode.x - endNode.x)^2 + (startNode.y - endNode.y)^2) * meter
+    edgeTime <- distance / walkSpeed
+    edgeTime <- edgeTime * (roadCoefficient + (1 - roadCoefficient) * 1 / 0.7)
+    edgeTime <- edgeTime / (1 - obstacleCoefficient)
+
+    if uphill > 0
+        edgeTime <- edgeTime / 0.8
+    else if uphill < 0
+        edgeTime <- edgeTime / 1.2
+
+    edgeTime <- edgeTime / 60
+    round edgeTime to neartest integer
+    return edgeTime
+stop
+
+start bool PATH_BACK_IN_TIME_EXISTS (teamMap, currentNode, possibleNode, goalNode, timeLimit)
+    timeLimit <- timeLimit - edgeArray[sourceNode][currentNode]
+
+    if possibleNode is untraversed
+        timeLimit <- timeLimit - 2
+    end if
+
+    teamMap.getTraversedState()
+    teamMap.setAllNodesToUntraversed()
+
+    path cost <- dijkstrasCost(teamMap, currentNode, goalNode)
+    path <- dijkstrasPath(teamMap, currentNode, goalNode)
+
+    for each untraversed node in path
+        path cost <- path cost + 2
+    end for
+
+    g.resetTraversed()
+
+    return timeLimit > pathCost
+stop
+
+start bool PATH_BACK_FROM_NEIGHBOUR_EXISTS (teamMap, currentNode, goalNode, timeLimit)
+    for i <- 0 to teamMap.nodeCount - 1
+        if neighbourArray[currentNode.id][i] != null pointer
+            if PATH_BACK_IN_TIME_EXISTS(teamMap, currentNode, neighbourNode, goalNode, timeLimit) = true
+                return true
+            end if
+        end if
+    end for
+
+    return false
+stop
+
+start linkedList OPTIMAL_ROUTE (team)
+    walkSpeed <- team.speed
+    for i <- team.bracket to 5
+        walkSpeed <- walkSpeed / 0.973
+    end for
+
+    graph teamMap <- INIT_TEAM_GRAPH(eventMap, 1walkSpeed)
+    currentNode <- hash house
+    endCheckpoint <- hash house
+    linkedList path <- empty list
+    pointTotal <- 0
+    desirability array <- empty array size teamMap.nodeCount()
+
+    for i <- 0 to teamMap.nodeCount - 1
+        for j <- 0 to teamMap.nodeCount - 1
+            if teamMap.searchEdge(i, j) != null pointer
+                edgeArray[i][j] <- teamMap.searchEdge(i, j)
+            end if
+        end for
+    end for
+
+    for i <- 0 to checkpoint count - 1
+        desirability[i] <- DESIRABILITY(teamMap, nodeArray[i], 6)
+    end for
+
+    insert currentNode to path
+    currentNode.traversed <- true
+
+    while PATH_BACK_FROM_NEIGHBOUR_EXISTS(teamMap, currentNode, hash house, timeRemaining)
+
+        bestNode <- null pointer
+
+        for i <- 0 to eventMap.nodeCount() - 1
+            if neighbourArray[currentNode->id][i] is not a null pointer
+                if bestNode is null and PATH_BACK_IN_TIME_EXISTS(teamMap, currentNode, neighbourNode, hash house, timeRemaining) = true
+                    bestNode <- neighbourNode
+                else if best node is null and PATH_BACK_IN_TIME_EXISTS(teamMap, currentNode, neighbourNode, hash house, timeRemaining) = false
+                    continue
+                else if desirability[bestNode.id] < desirability[neighbourNode.id] and PATH_BACK_IN_TIME_EXISTS(teamMap, currentNode, neighbourNode, hash house, timeRemaining) = true
+                    bestNode <- neighbourNode
+                end if
+        end for
+
+        timeRemaining <- timeRemaining - edgeArray[currentNode.id][bestNode]
+        if bestNode.traversed = false
+            timeRemaining <- timeRemaining - 2
+        end if
+        desirability[currentNode.id] <- 0
+
+        currentNode <- bestNode
+
+        if desirability[currentNode.id] != 0
+            pointTotal <- pointTotal + currentNode.points
+        end if
+        insert currentNode to path
+
+        currentNode.traversed <- true
+    end while
+
+    if timeRemaining < 0
+        pointTotal <- pointTotal - timeRemaining * 10
     end if
 
     return path
