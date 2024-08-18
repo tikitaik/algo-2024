@@ -1,7 +1,3 @@
-implement lower time complexity dijkstras
-
-- as many points in time limit
-
 task :  
 |   define model to hold required information for an event
 |   develop algo for optimal path through the park
@@ -137,7 +133,7 @@ algorithm
 -   multiple depth recursive desirability check?
 -   from hash house follow desirable nodes as long as a path exists back to the hash house in less time than is left 
 
-algorithm pseudocode
+ALGORITHM PSEUDOCODE -- OLD
 
 start float DESIRABILITY (map, currentNode, depth)
     if depth = 1
@@ -194,7 +190,7 @@ start bool PATH_BACK_IN_TIME_EXISTS (teamMap, currentNode, possibleNode, goalNod
         path cost <- path cost + 2
     end for
 
-    path cost <- dijkstrasCost(currentNode, goalNode)
+    path cost <- DIJKSTRAS_COST(currentNode, goalNode)
 
     g.resetTraversed()
     if (pathCost > timeLimit)
@@ -266,7 +262,7 @@ start linkedList OPTIMAL_ROUTE (team)
     return path
 stop
 
--- new algorithm pseudocode --
+-- ALGORITHM PSEUDOCODE -- NEW --
 
 start integer GET_PATH_TIME(startNode, endNode, walkSpeed, uphill, roadCoefficient, obstacleCoefficient)
 
@@ -275,7 +271,7 @@ start integer GET_PATH_TIME(startNode, endNode, walkSpeed, uphill, roadCoefficie
     if obstacleCoefficient >= 1 or obstacleCoefficient < 0
         return null
 
-    meter <- 1 / 0.190
+    meter <- 1 / 0.190 -- ratio of pixels to meters i think --
 
     distance <- sqrt((startNode.x - endNode.x)^2 + (startNode.y - endNode.y)^2) * meter
     edgeTime <- distance / walkSpeed
@@ -299,9 +295,9 @@ start graph INIT_EVENT_CHECKPOINTS()
         print "checkpoint data couldn't be opened"
     end if
 
-    directed graph<checkpoint> g
+    g <- empty directed graph<checkpoint>
 
-    string line <- empty string
+    line <- empty string
 
     while getline(checkpointData, line) != null pointer
         ss <- line
@@ -327,7 +323,7 @@ start graph INIT_TEAM_GRAPH(graph, walkSpeed)
         print "edge data couldn't be opened"
     end if
 
-    string line
+    line <- empty string
 
     while getline(edgeData, line) != null pointer
         ss <- line 
@@ -371,7 +367,7 @@ start rogaineEvent CONSTRUCTOR(time limit)
 stop
 
 start float DESIRABILITY(map, currentNode, depth)
-    float desirability <- 0
+    desirability <- 0
 
     for i <- 0 to map.nodeCount - 1
         if neighbourArray[currentNode.id][i] != null pointer
@@ -397,7 +393,7 @@ start node array DIJKSTRAS(teamMap, sourceNodeID, sinkNodeID)
 
     current <- nodeArray[sourceNodeID]
     current.traversed <- true
-    priorityQueue pq
+    pq <- empty priority queue
     pq.enqueue(current, 0)
 
     minimalDist <- double array length teamMap.nodeCount() with all elements set to -1
@@ -429,6 +425,32 @@ start node array DIJKSTRAS(teamMap, sourceNodeID, sinkNodeID)
     return prevNodes
 stop
 
+start int DIJKSTRAS_PATH(teamMap, sourceNodeID, sinkNodeID)
+    prev <- DIJSKTRAS(teamMap, sourceNodeID, sinkNodeID)
+    path <- empty linked list
+    walk <- teamMap.searchNodeID(sinkNodeID)
+
+    while prev[walk->id] != null pointer
+        path.insertHead(walk)
+        walk <- prev[walk->id]
+    end while
+
+    return path
+stop
+
+start int DIJKSTRAS_COST(teamMap, sourceNodeID, sinkNodeID)
+    prev <- DIJSKTRAS(teamMap, sourceNodeID, sinkNodeID)
+    cost <- 0
+    walk <- teamMap.searchNodeID(sinkNodeID)
+
+    while prev[walk->id] != null pointer
+        cost <- cost + edgeArray[prev[walk.id].id][walk.id].weight
+        walk <- prev[walk->id]
+    end while
+
+    return cost
+stop
+
 start bool PATH_BACK_IN_TIME_EXISTS(teamMap, currentNode, possibleNode, goalNode, timeLimit)
     timeLimit <- timeLimit - edgeArray[sourceNode][currentNode]
 
@@ -439,8 +461,8 @@ start bool PATH_BACK_IN_TIME_EXISTS(teamMap, currentNode, possibleNode, goalNode
     teamMap.getTraversedState()
     teamMap.setAllNodesToUntraversed()
 
-    path cost <- dijkstrasCost(teamMap, currentNode, goalNode)
-    path <- dijkstrasPath(teamMap, currentNode, goalNode)
+    path cost <- DIJKSTRAS_COST(teamMap, currentNode, goalNode)
+    path <- DIJKSTRAS_PATH(teamMap, currentNode, goalNode)
 
     for each untraversed node in path
         path cost <- path cost + 2
@@ -469,12 +491,12 @@ start linkedList OPTIMAL_ROUTE(team)
         walkSpeed <- walkSpeed / 0.973
     end for
 
-    graph teamMap <- INIT_TEAM_GRAPH(eventMap, 1walkSpeed)
+    teamMap <- INIT_TEAM_GRAPH(eventMap, 1walkSpeed)
     currentNode <- hash house
     endCheckpoint <- hash house
-    linkedList path <- empty list
+    path <- empty linked list
     pointTotal <- 0
-    desirability array <- empty array size teamMap.nodeCount()
+    desirabilityArr <- empty array size teamMap.nodeCount()
 
     for i <- 0 to teamMap.nodeCount - 1
         for j <- 0 to teamMap.nodeCount - 1
@@ -485,7 +507,7 @@ start linkedList OPTIMAL_ROUTE(team)
     end for
 
     for i <- 0 to checkpoint count - 1
-        desirability[i] <- DESIRABILITY(teamMap, nodeArray[i], 6)
+        desirabilityArr[i] <- DESIRABILITY(teamMap, nodeArray[i], 6)
     end for
 
     insert currentNode to path
@@ -510,11 +532,11 @@ start linkedList OPTIMAL_ROUTE(team)
         if bestNode.traversed = false
             timeRemaining <- timeRemaining - 2
         end if
-        desirability[currentNode.id] <- 0
+        desirabilityArr[currentNode.id] <- 0
 
         currentNode <- bestNode
 
-        if desirability[currentNode.id] != 0
+        if desirabilityArr[currentNode.id] != 0
             pointTotal <- pointTotal + currentNode.points
         end if
         insert currentNode to path
@@ -527,5 +549,4 @@ start linkedList OPTIMAL_ROUTE(team)
     end if
 
     return path
-
 stop
