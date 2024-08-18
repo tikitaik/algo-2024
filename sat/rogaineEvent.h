@@ -88,6 +88,7 @@ void rogaineEvent::addTeamToCheckpoint(checkpoint& check, team* t, timePlacehold
 float rogaineEvent::desirability(graph<checkpoint> g, node<checkpoint>* currentNode, int depth) {
     float des = 0;
 
+    // go through every node : check for if they are a neighbour
     for (int i = 0; i < g.nodeCount(); i++) {
         if (neighbourArray[currentNode->id][i]) {
             // base case
@@ -176,7 +177,7 @@ linkedList<node<checkpoint> > rogaineEvent::dijkstrasPath(graph<checkpoint> g, i
 
     while (walk) {
         shortestPath.insertHead(*walk);
-        walk = prev[g.getIndexInAllNodes(walk->id)];
+        walk = prev[walk->id];
     }
 
     return shortestPath;
@@ -189,9 +190,9 @@ int rogaineEvent::dijkstrasCost(graph<checkpoint> g, int sourceNodeID, int sinkN
     int cost = 0;
     node<checkpoint>* walk = g.searchNodeID(sinkNodeID);
 
-    while (prev[g.getIndexInAllNodes(walk->id)]) {
-        cost += g.searchEdge(prev[g.getIndexInAllNodes(walk->id)]->id, walk->id)->weight;
-        walk = prev[g.getIndexInAllNodes(walk->id)];
+    while (prev[walk->id]) {
+        cost += g.searchEdge(prev[walk->id]->id, walk->id)->weight;
+        walk = prev[walk->id];
     }
 
     return cost;
@@ -326,7 +327,7 @@ linkedList<node<checkpoint> > rogaineEvent::optimalRoute(team t) {
         pointTotal += timeRemaining * 10;
     }
 
-    std::cout << pointTotal << '\n';
-    //std::cout << "total points: " << pointTotal << " and time remaining is " << timeRemaining << '\n';
+    //std::cout << pointTotal << '\n';
+    std::cout << "total points: " << pointTotal << " and time remaining is " << timeRemaining << '\n';
     return path;
 };
