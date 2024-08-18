@@ -155,7 +155,6 @@ node<checkpoint>** rogaineEvent::dijkstras(graph<checkpoint> g, int sourceNodeID
                     prevNodes[i] = current;
                     pq.enqueue(nodeArray[i], costToNeighbour);
                 }
-
             }
         }
 
@@ -191,7 +190,7 @@ int rogaineEvent::dijkstrasCost(graph<checkpoint> g, int sourceNodeID, int sinkN
     node<checkpoint>* walk = g.searchNodeID(sinkNodeID);
 
     while (prev[walk->id]) {
-        cost += g.searchEdge(prev[walk->id]->id, walk->id)->weight;
+        cost += edgeArray[prev[walk->id]->id][walk->id]->weight;
         walk = prev[walk->id];
     }
 
