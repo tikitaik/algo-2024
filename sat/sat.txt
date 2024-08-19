@@ -539,7 +539,7 @@ start linkedList OPTIMAL_ROUTE(team)
         insert currentNode to path
     end while
 
-    if timeRemaining < 0 # this is a check and should never actually need to be used in the case of this algorithm
+    if timeRemaining < 0 // this is a check and should never actually need to be used in the case of this algorithm
         pointTotal <- pointTotal - timeRemaining * 10
     end if
 

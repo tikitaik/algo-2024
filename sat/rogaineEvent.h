@@ -319,7 +319,7 @@ linkedList<node<checkpoint> > rogaineEvent::optimalRoute(team t) {
         pointTotal -= timeRemaining * 10;
     }
 
-    std::cout << pointTotal << '\n';
-    //std::cout << "total points: " << pointTotal << " and time remaining is " << timeRemaining << '\n';
+    //std::cout << pointTotal << '\n';
+    std::cout << "total points: " << pointTotal << " and time remaining is " << timeRemaining << '\n';
     return path;
 };
