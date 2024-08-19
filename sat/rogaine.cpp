@@ -13,8 +13,10 @@ int main () {
 
     for (int i = 0; i < 6; i++) {
         for (int j = 0; j < 10; j++) {
-            std::cout << rEvent.optimalRoute(team(1 + j * 0.1, i)) << '\n';
+            //std::cout << rEvent.optimalRoute(team(1 + j * 0.1, i)) << '\n';
+            rEvent.optimalRoute(team(1 + j * 0.1, i));
         }
         std::cout << '\n';
     }
+
 }

@@ -277,7 +277,6 @@ linkedList<node<checkpoint> > rogaineEvent::optimalRoute(team t) {
     }
 
     path.insertTail(*currentNode);
-    currentNode->traversed = true;
 
     // go further if path back from that node that doesnt hit any traversed nodes is within time limit
     while (pathBackFromNeighbourExists(teamMap, currentNode, endCheckpoint, timeRemaining)) {
@@ -315,8 +314,6 @@ linkedList<node<checkpoint> > rogaineEvent::optimalRoute(team t) {
             pointTotal += currentNode->attribute->points;
         }
         path.insertTail(*currentNode);
-
-        currentNode->traversed = true;
     } 
 
     // print just in case algorithm doesnt work, hasn't yet
@@ -325,7 +322,7 @@ linkedList<node<checkpoint> > rogaineEvent::optimalRoute(team t) {
         pointTotal -= timeRemaining * 10;
     }
 
-    //std::cout << pointTotal << '\n';
-    std::cout << "total points: " << pointTotal << " and time remaining is " << timeRemaining << '\n';
+    std::cout << pointTotal << '\n';
+    //std::cout << "total points: " << pointTotal << " and time remaining is " << timeRemaining << '\n';
     return path;
 };
