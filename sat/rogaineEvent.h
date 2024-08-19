@@ -299,20 +299,17 @@ linkedList<node<checkpoint> > rogaineEvent::optimalRoute(team t) {
             }
         }
 
-        // decrement time
+        // decrement time and set the node to traversed
         timeRemaining -= edgeArray[currentNode->id][bestNode->id]->weight;
-        if (!bestNode->traversed) {
-            timeRemaining = timeRemaining - 2;
-        }
-
         desirabilityArr[currentNode->id] = 0;
+        // if bestnode not traversed
+        if (desirabilityArr[bestNode->id] != 0) {
+            timeRemaining -= 2;
+            pointTotal += bestNode->attribute->points;
+        }
 
         // new current node things
         currentNode = bestNode;
-
-        if (desirabilityArr[currentNode->id] != 0) {
-            pointTotal += currentNode->attribute->points;
-        }
         path.insertTail(*currentNode);
     } 
 

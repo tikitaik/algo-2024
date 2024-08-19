@@ -511,7 +511,6 @@ start linkedList OPTIMAL_ROUTE(team)
     end for
 
     insert currentNode to path
-    currentNode.traversed <- true
 
     while PATH_BACK_FROM_NEIGHBOUR_EXISTS(teamMap, currentNode, hash house, timeRemaining)
 
@@ -529,22 +528,18 @@ start linkedList OPTIMAL_ROUTE(team)
         end for
 
         timeRemaining <- timeRemaining - edgeArray[currentNode.id][bestNode]
-        if bestNode.traversed = false
-            timeRemaining <- timeRemaining - 2
-        end if
         desirabilityArr[currentNode.id] <- 0
 
-        currentNode <- bestNode
-
-        if desirabilityArr[currentNode.id] != 0
+        if desirabilityArr[bestNode.id] != 0
+            timeRemaining <- timeRemaining - 2
             pointTotal <- pointTotal + currentNode.points
         end if
-        insert currentNode to path
 
-        currentNode.traversed <- true
+        currentNode <- bestNode
+        insert currentNode to path
     end while
 
-    if timeRemaining < 0
+    if timeRemaining < 0 # this is a check and should never actually need to be used in the case of this algorithm
         pointTotal <- pointTotal - timeRemaining * 10
     end if
 
