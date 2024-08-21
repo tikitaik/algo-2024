@@ -385,7 +385,7 @@ stop
 
 start node array DIJKSTRAS(teamMap, sourceNodeID, sinkNodeID)
 
-    if DFS(teamMap, sourceNodeID) does not contain sinkNodeID
+    if transClosure[sourceNodeID][sinkNodeID] = 0
         print "no path exits"
         return null pointer
     end if
