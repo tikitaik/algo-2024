@@ -25,6 +25,7 @@ class rogaineEvent {
     node<checkpoint>** nodeArray;
     node<checkpoint>*** neighbourArray;
     edge*** edgeArray;
+    int** transClosure;
 
     // register for teams
     linkedList<team> teamRegister;
@@ -36,7 +37,7 @@ class rogaineEvent {
     public:
 
     // epic constructor
-    rogaineEvent(int timeIn) : eventMap(initEventCheckpoints()), timeLimit(timeIn) {
+    rogaineEvent(int timeIn) : eventMap(initEventCheckpoints()), timeLimit(timeIn), transClosure(FWTC(initTeamGraph(initEventCheckpoints(), 1))) {
 
         graph<checkpoint> tempGraph = initTeamGraph(eventMap, 1);
         nodeArray = new node<checkpoint>* [eventMap.nodeCount()];
@@ -93,13 +94,11 @@ float rogaineEvent::desirability(graph<checkpoint> g, node<checkpoint>* currentN
         if (neighbourArray[currentNode->id][i]) {
             // base case
             if (depth == 1) { 
-                //des += neighbourArray[currentNode->id][i]->attribute->points / g.searchEdge(currentNode->id, i)->weight;
                 des += neighbourArray[currentNode->id][i]->attribute->points / edgeArray[currentNode->id][i]->weight;
-
             }
             // recursive case
             else {
-                des += desirability(g, neighbourArray[currentNode->id][i], depth - 1) / depth;
+                des += desirability(g, neighbourArray[currentNode->id][i], depth - 1) / (depth);
             }
         }
     }
@@ -111,11 +110,11 @@ node<checkpoint>** rogaineEvent::dijkstras(graph<checkpoint> g, int sourceNodeID
     typedef node<checkpoint> node;
 
     // DFS check to see if there is a path at all to sink node, if not return linkedlist with one thing
-    if (!DFS(g, sourceNodeID).contains(sinkNodeID)) {
+    if (transClosure[sourceNodeID][sinkNodeID] == 0) {
         std::cout << "no path exists from node " << sourceNodeID << " to " << sinkNodeID << '\n';
         return nullptr;
     }
-    
+   
     g.getTraversedState();
 
     node* current = nodeArray[sourceNodeID];
@@ -274,6 +273,7 @@ linkedList<node<checkpoint> > rogaineEvent::optimalRoute(team t) {
     // get desirability of everything
     for (int i = 0; i < teamMap.nodeCount(); i++) {
         desirabilityArr[i] = desirability(teamMap, nodeArray[i], 6);
+        //std::cout << i << ": " << desirabilityArr[i] << '\n'; 
     }
 
     path.insertTail(*currentNode);

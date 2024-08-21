@@ -351,6 +351,7 @@ start rogaineEvent CONSTRUCTOR(time limit)
     nodeArray <- array of length eventMap.nodeCount
     neighbourArray <- 2d array of null pointers size eventMap.nodeCount x eventMap.nodeCount
     edgeArray <- 2d array of null pointers size eventMap.nodeCount x eventMap.nodeCount
+    transClosure <- FWTC algorithm
 
     for i <- 0 to eventMap.nodeCount() - 1
         nodeArray[i] <- eventMap.searchNodeID(i)

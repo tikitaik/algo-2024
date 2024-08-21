@@ -239,7 +239,7 @@ template <typename T> linkedList<node<T> > BFS (graph<T>& g, const int source) {
     return visited;
 }
 
-template <typename U> int** FWTC(graph<U>& g) { 
+template <typename U> int** FWTC(graph<U> g) { 
     //let T be |V|x|V| matrix of transitive closure initialized to run on a directed graph G={V,E}
     const int nodeCount = g.nodeCount();
     int** T = new int*[nodeCount];
