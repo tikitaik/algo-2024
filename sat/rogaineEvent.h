@@ -98,10 +98,10 @@ float rogaineEvent::desirability(graph<checkpoint> g, node<checkpoint>* currentN
             }
             // recursive case
             else {
-                des += desirability(g, neighbourArray[currentNode->id][i], depth - 1) / (depth);
+                des += desirability(g, neighbourArray[currentNode->id][i], depth - 1) / depth;
             }
         }
-    }
+    } 
 
     return des;
 }
@@ -121,7 +121,7 @@ node<checkpoint>** rogaineEvent::dijkstras(graph<checkpoint> g, int sourceNodeID
     current->traversed = true;
     priorityQueue<node> pq(false);
     pq.enqueue(current, 0);
-    //std::cout << "starting from node " << *current << " and searching for path to node " << *g.searchNodeID(sinkNodeID) << '\n';
+    //std::cout << "starting from node " << *current << " and searching for path to node " << *nodeArray[sinkNodeID] << '\n';
 
     // array to store current minimal path costs, init all to -1 to represent infinite
     // can be used since dijkstras is not for negative weight values
@@ -171,7 +171,7 @@ linkedList<node<checkpoint> > rogaineEvent::dijkstrasPath(graph<checkpoint> g, i
     prev = dijkstras(g, sourceNodeID, sinkNodeID);
 
     linkedList<node<checkpoint> > shortestPath;
-    node<checkpoint>* walk = g.searchNodeID(sinkNodeID);
+    node<checkpoint>* walk = nodeArray[sinkNodeID];
 
     while (walk) {
         shortestPath.insertHead(*walk);
@@ -186,7 +186,7 @@ int rogaineEvent::dijkstrasCost(graph<checkpoint> g, int sourceNodeID, int sinkN
     prev = dijkstras(g, sourceNodeID, sinkNodeID);
 
     int cost = 0;
-    node<checkpoint>* walk = g.searchNodeID(sinkNodeID);
+    node<checkpoint>* walk = nodeArray[sinkNodeID];
 
     while (prev[walk->id]) {
         cost += edgeArray[prev[walk->id]->id][walk->id]->weight;
@@ -256,7 +256,7 @@ linkedList<node<checkpoint> > rogaineEvent::optimalRoute(team t) {
     linkedList<node<checkpoint> > path;
     int pointTotal = 0;
     int timeRemaining = timeLimit;
-    int desirabilityArr[teamMap.nodeCount()];
+    float desirabilityArr[teamMap.nodeCount()];
 
     // initalise edge array for each team
     for (int i = 0; i < eventMap.nodeCount(); i++) {

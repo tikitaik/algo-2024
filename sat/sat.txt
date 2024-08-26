@@ -347,7 +347,7 @@ stop
 
 start rogaineEvent CONSTRUCTOR(time limit)
     eventMap <- INIT_EVENT_CHECKPOINTS()
-    empGraph <- INIT_TEAM_GRAPH(eventMap, 1)
+    tempGraph <- INIT_TEAM_GRAPH(eventMap, 1)
     nodeArray <- array of length eventMap.nodeCount
     neighbourArray <- 2d array of null pointers size eventMap.nodeCount x eventMap.nodeCount
     edgeArray <- 2d array of null pointers size eventMap.nodeCount x eventMap.nodeCount
@@ -429,9 +429,9 @@ stop
 start int DIJKSTRAS_PATH(teamMap, sourceNodeID, sinkNodeID)
     prev <- DIJSKTRAS(teamMap, sourceNodeID, sinkNodeID)
     path <- empty linked list
-    walk <- teamMap.searchNodeID(sinkNodeID)
+    walk <- nodeArray[sinkNodeID]
 
-    while prev[walk->id] != null pointer
+    while walk != null pointer
         path.insertHead(walk)
         walk <- prev[walk->id]
     end while
@@ -442,7 +442,6 @@ stop
 start int DIJKSTRAS_COST(teamMap, sourceNodeID, sinkNodeID)
     prev <- DIJSKTRAS(teamMap, sourceNodeID, sinkNodeID)
     cost <- 0
-    walk <- teamMap.searchNodeID(sinkNodeID)
 
     while prev[walk->id] != null pointer
         cost <- cost + edgeArray[prev[walk.id].id][walk.id].weight
