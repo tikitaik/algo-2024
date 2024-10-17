@@ -63,9 +63,8 @@ int main() {
     //std::cout << dijkstrasPathPQ(g, 0, 9, true) << '\n';
 */
     
-    int arr[] = { 2, 1, 5, 3, 2, 6, 8, 2, 4, 5, 23 };
+    int arr[] = { 2, 1, 5, 3, 2, 6, 23, 1, 2, 1, -1, 3, 6, 7, 12, 4, 675, 34, 6 };
     int n = sizeof(arr) / sizeof(int);
-    std::cout << "n : " << n << '\n';
     int* sortedArr = mergeSort(arr, 0, n - 1);
 
     for (int i = 0; i < n; i++) {
