@@ -65,7 +65,7 @@ int main() {
     
     int arr[] = { 2, 1, 5, 3, 2, 6, 23, 1, 2, 1, -1, 3, 6, 7, 12, 4, 675, 34, 6 };
     int n = sizeof(arr) / sizeof(int);
-    int* sortedArr = mergeSort(arr, 0, n - 1);
+    int* sortedArr = quicksort(arr, 0, n - 1);
 
     for (int i = 0; i < n; i++) {
         std::cout << sortedArr[i] << ", ";
