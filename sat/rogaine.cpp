@@ -19,4 +19,6 @@ int main () {
         std::cout << '\n' << '\n';
     }
     //std::cout << rEvent.optimalRoute(team(1 + 0.5, 0)) << '\n';
+    std::string a;
+    std::cin >> a;
 }
