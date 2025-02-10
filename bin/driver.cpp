@@ -10,7 +10,7 @@
 # include "../searchAndSortAlgorithms/sort.h"
 
 int main() {
-/*
+
     graph<int> g(false);
     
     g.addNodes(10);
@@ -58,17 +58,20 @@ int main() {
 
     std::cout << g.cyclic() << '\n';
 
-    //std::cout << dijkstrasPath(g, 0, 9) << ": " << dijkstrasCost(g, 0, 9) << '\n';
-    //std::cout << dijkstrasPathPQ(g, 0, 9, true) << ": " << dijkstrasCostPQ(g, 0, 9) << '\n';
-    //std::cout << dijkstrasPathPQ(g, 0, 9, true) << '\n';
-*/
-    
-    int arr[] = { 2, 1, 5, 3, 2, 6, 23, 1, 2, 1, -1, 3, 6, 7, 12, 4, 675, 34, 6 };
-    int n = sizeof(arr) / sizeof(int);
-    int* sortedArr = quicksort(arr, 0, n - 1);
-
-    for (int i = 0; i < n; i++) {
-        std::cout << sortedArr[i] << ", ";
-    }
+    std::cout << dijkstrasPath(g, 0, 9) << ": " << dijkstrasCost(g, 0, 9) << '\n';
     std::cout << '\n';
+
+    int i = 10;
+
+    linkedList<int>* a = new linkedList<int>();
+    a->insertHead(1);
+    a->insertTail(2);
+    a->insertTail(&i);
+
+    i = 20;
+
+    std::cout << *a << '\n';
+
+    delete a;
+    std::cout << i << '\n';
 }
