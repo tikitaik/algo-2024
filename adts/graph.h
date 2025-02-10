@@ -130,8 +130,6 @@ template <typename T> class graph {
 
     graph (bool isDirected) : directed(isDirected) {}
 
-    ~graph () {}
-
     linkedList<node> allNodes() const;
     linkedList<edge> allEdges() const;
 
