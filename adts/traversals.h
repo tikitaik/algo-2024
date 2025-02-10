@@ -169,12 +169,12 @@ template <typename T> linkedList<node<T> > DFS (graph<T>& g, const int source) {
     visited.insertTail(current);
     
     // icy condition that means it'll terminate when theres no unvisited nodes or it has nowhere else to go
-    while ((g.untraversedNeighbours(current, g.directed)->size() > 0 || unvisited.size() > 0 || visited.size() < 1) && !g.allNodesAreTraversed()) {
+    while ((g.untraversedNeighbours(current, g.directed).size() > 0 || unvisited.size() > 0 || visited.size() < 1) && !g.allNodesAreTraversed()) {
         // add neighbouring nodes to unvisited stack if they have not been traversed
-        linkedList<node>* untNeighbours = g.untraversedNeighbours(current, g.directed);
-        listNode<node>* curNode = untNeighbours->returnHead();
+        linkedList<node> untNeighbours = g.untraversedNeighbours(current, g.directed);
+        listNode<node>* curNode = untNeighbours.returnHead();
 
-        for (int i = 0; i < untNeighbours->size(); i++) {
+        for (int i = 0; i < untNeighbours.size(); i++) {
             unvisited.push(curNode->data);
             if (curNode->next) {
                 curNode = curNode->next;
@@ -211,12 +211,12 @@ template <typename T> linkedList<node<T> > BFS (graph<T>& g, const int source) {
     visited.insertTail(current);
     
     // icy condition that means it'll terminate when theres no unvisited nodes or it has nowhere else to go
-    while ((g.neighbours(current, g.directed)->size() > 0 || unvisited.size() > 0 || visited.size() < 1) && !g.allNodesAreTraversed()) {
+    while ((g.neighbours(current, g.directed).size() > 0 || unvisited.size() > 0 || visited.size() < 1) && !g.allNodesAreTraversed()) {
         // add neighbouring nodes to unvisited stack if they have not been traversed
-        linkedList<node>* untNeighbours = g.untraversedNeighbours(current, g.directed);
-        listNode<node>* curNode = untNeighbours->returnHead();
+        linkedList<node> untNeighbours = g.untraversedNeighbours(current, g.directed);
+        listNode<node>* curNode = untNeighbours.returnHead();
 
-        for (int i = 0; i < untNeighbours->size(); i++) {
+        for (int i = 0; i < untNeighbours.size(); i++) {
             unvisited.enqueue(curNode->data);
             if (curNode->next) {
                 curNode = curNode->next;

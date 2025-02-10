@@ -149,9 +149,9 @@ template <typename T> class graph {
     void addEdge(int start, int end, int weight);
     void deleteEdge (edge* del);
 
-    linkedList<node>* neighbours (node* center, bool directed) const;
-    linkedList<node>* untraversedNeighbours (node* center, bool directed) const;
-    linkedList<edge>* incident (edge* centerEdge) const;
+    linkedList<node> neighbours (node* center, bool directed) const;
+    linkedList<node> untraversedNeighbours (node* center, bool directed) const;
+    linkedList<edge> incident (edge* centerEdge) const;
     int degree(int id) const;
 
     node* searchNodeID(int id) const;
@@ -358,18 +358,18 @@ template<typename T> void graph<T>::deleteEdge (edge* del) {
 }
 
 // adjacent funcs
-template<typename T> linkedList<node<T> >* graph<T>::neighbours (node* center, bool directed) const {
+template<typename T> linkedList<node<T> > graph<T>::neighbours (node* center, bool directed) const {
     //return nodes on opposite ends of edges that connect to graph
     listNode<edge>* curEdge = edges.returnHead();
-    linkedList<node>* neighbours = new linkedList<node>;
+    linkedList<node> neighbours;
 
     for (int i = 0; i < edges.size(); i++) {
         if (curEdge->data->start == center->id) {
-            neighbours->insertTail(searchNodeID(curEdge->data->end));
+            neighbours.insertTail(searchNodeID(curEdge->data->end));
             //std::cout << "from " << curEdge->data << " adding " << curEdge->data->end << " to neighbours \n";
         }
         else if (!directed && curEdge->data->end == center->id) {
-            neighbours->insertTail(searchNodeID(curEdge->data->start));
+            neighbours.insertTail(searchNodeID(curEdge->data->start));
             //std::cout << "from " << curEdge->data << " adding " << curEdge->data->start << " to neighbours \n";
         }
         if (curEdge->next) {
@@ -380,18 +380,18 @@ template<typename T> linkedList<node<T> >* graph<T>::neighbours (node* center, b
     return neighbours;
 }
 
-template<typename T> linkedList<node<T> >* graph<T>::untraversedNeighbours (node* center, bool directed) const {
+template<typename T> linkedList<node<T> > graph<T>::untraversedNeighbours (node* center, bool directed) const {
     //return nodes on opposite ends of edges that connect to graph
     listNode<edge>* curEdge = edges.returnHead();
-    linkedList<node>* untNeighbours = new linkedList<node>;
+    linkedList<node> untNeighbours;
 
     for (int i = 0; i < edges.size(); i++) {
         if (curEdge->data->start == center->id && !searchNodeID(curEdge->data->end)->traversed) {
-            untNeighbours->insertTail(searchNodeID(curEdge->data->end));
+            untNeighbours.insertTail(searchNodeID(curEdge->data->end));
             //std::cout << "from " << curEdge->data << " adding " << curEdge->data->end << " to neighbours \n";
         }
         else if (!directed && curEdge->data->end == center->id && !searchNodeID(curEdge->data->start)->traversed) {
-            untNeighbours->insertTail(searchNodeID(curEdge->data->start));
+            untNeighbours.insertTail(searchNodeID(curEdge->data->start));
             //std::cout << "from " << curEdge->data << " adding " << curEdge->data->start << " to neighbours \n";
         }
 
@@ -404,15 +404,15 @@ template<typename T> linkedList<node<T> >* graph<T>::untraversedNeighbours (node
 }
 
 // list of edges that an edge shares a common vertex with
-template <typename T> linkedList<edge>* graph<T>::incident (edge* centerEdge) const {
+template <typename T> linkedList<edge> graph<T>::incident (edge* centerEdge) const {
     //return nodes on opposite ends of edges that connect to graph
     listNode<edge>* curEdge = edges.returnHead();
-    linkedList<edge>* incidentEdges = new linkedList<edge>;
+    linkedList<edge> incidentEdges;
 
     for (int i = 0; i < edges.size(); i++) {
         if (curEdge->data->start == centerEdge->start || curEdge->data->start == centerEdge->end || curEdge->data->end == centerEdge->start || curEdge->data->end  == centerEdge->end) {
             if (curEdge->data->start != centerEdge->start || curEdge->data->end != centerEdge->end) {
-                incidentEdges->insertTail(curEdge->data);
+                incidentEdges.insertTail(curEdge->data);
             }
         }
         // dont want to go out of the bounds of the list
@@ -616,11 +616,11 @@ template<typename T> bool graph<T>::connected() {
     current->traversed = true;
     visited.insertTail(*current);
 
-    while ((untraversedNeighbours(current, false)->size() > 0 || unvisited.size() > 0 || visited.size() < 1) && !allNodesAreTraversed()) {
-        linkedList<node>* untNeighbours = untraversedNeighbours(current, false);
-        listNode<node>* curNode = untNeighbours->returnHead();
+    while ((untraversedNeighbours(current, false).size() > 0 || unvisited.size() > 0 || visited.size() < 1) && !allNodesAreTraversed()) {
+        linkedList<node> untNeighbours = untraversedNeighbours(current, false);
+        listNode<node>* curNode = untNeighbours.returnHead();
 
-        for (int i = 0; i < untNeighbours->size(); i++) {
+        for (int i = 0; i < untNeighbours.size(); i++) {
             unvisited.push(curNode->data);
             if (curNode->next) {
                 curNode = curNode->next;
@@ -657,7 +657,7 @@ template<typename T> bool graph<T>::cycleCheck(node* current, stack<node>& curSt
     }
 
     // add all neighbours to list to check except the node we just came from
-    linkedList<node> neighboursToCheck = *neighbours(current, directed);
+    linkedList<node> neighboursToCheck = neighbours(current, directed);
     // get rid of previous node so we dont go backwards and shit ourselves
     if (curStack.size() > 0) {
         neighboursToCheck.removeKey(*curStack.top()->data);
