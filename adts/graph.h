@@ -7,30 +7,65 @@ template <typename T> struct node {
     int id;
     T*  attribute;
     bool traversed;
+    bool primitive;
     
     node () {
-        attribute = nullptr;
-        traversed = false;
+        this->attribute = nullptr;
+        this->traversed = false;
+        this->primitive = false;
     }
 
     node (int id) {
         this->id = id;
-        attribute = nullptr;
-        traversed = false;
+        this->attribute = nullptr;
+        this->traversed = false;
+        this->primitive = false;
     }
 
     node (int id, T* attributeIn) {
         this->id = id;
         this->attribute = attributeIn;
-        traversed = false;
+        this->traversed = false;
+        this->primitive = false;
     }
 
     node (int id, T attributeIn) {
-        this->id = id;
+
         T* att = new T;
         *att = attributeIn;
         this->attribute = att;
-        traversed = false;
+
+        this->id = id;
+        this->traversed = false;
+        this->primitive = true;
+    }
+
+    ~node () {
+
+        if (this->primitive && this->attribute) {
+            //std::cout << "deleting" << '\n';
+            delete this->attribute;
+        }
+
+        this->attribute = nullptr;
+    }
+
+    node (const node& other) {
+
+        this->id = other.id;
+        this->attribute = other.attribute;
+        this->traversed = other.traversed;
+        this->primitive = false;
+    } 
+
+    node& operator = (const node& other) {
+
+        this->id = other.id;
+        this->attribute = other.attribute;
+        this->traversed = other.traversed;
+        this->primitive = false;
+
+        return *this;
     }
 };
 
@@ -94,6 +129,8 @@ template <typename T> class graph {
     bool isCyclic;
 
     graph (bool isDirected) : directed(isDirected) {}
+
+    ~graph () {}
 
     linkedList<node> allNodes() const;
     linkedList<edge> allEdges() const;

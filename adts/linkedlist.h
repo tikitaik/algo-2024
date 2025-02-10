@@ -69,12 +69,29 @@ template<typename T> struct listNode {
         this->next = nullptr;
 
         // if the data is not a pointer delete memory allocated, otherwise just free the pointer
-        if (this->primitive) {
+        if (this->primitive && this->data) {
             delete this->data;
         }
-        else {
-            this->data = nullptr;
-        }
+
+        this->data = nullptr;
+    }
+
+    listNode (const listNode& other) {
+        this->prev = other.prev;
+        this->next = other.next;
+        this->id = other.id;
+        this->data = other.data;
+        this->primitive = false;
+    }
+
+    listNode& operator = (const listNode& other) {
+        this->prev = other.prev;
+        this->next = other.next;
+        this->id = other.id;
+        this->data = other.data;
+        this->primitive = false;
+
+        return *this;
     }
 };
 // how to print nodes
@@ -108,12 +125,14 @@ template <typename T> class linkedList {
     }
 
     ~linkedList() {
+
         this->head = nullptr;
         this->tail = nullptr;
 
         for (int i = 0; i < curSize; i++) {
             delete this->tail;
         }
+
     }
     
     void insertHead(T* add);
@@ -393,6 +412,7 @@ template<typename T> int linkedList<T>::getIndex(const T* key) const {
 
 // does this list contain a node w this key
 template<typename T> bool linkedList<T>::contains(const T key) const {
+
     listNode* searchKey = this->head;
 
     for (int i = 0; i < curSize; i++) {

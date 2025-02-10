@@ -35,6 +35,7 @@ int main() {
     g.addEdge(8, 9, 5);
 
     std::cout << "DFS: " << DFS(g, 0) << '\n';
+    
     //std::cout << "recDFS: " << *recDFSStart(g, 0) << '\n';
     std::cout << "BFS: " << BFS(g, 0) << '\n';
     //std::cout << "topSort: " << *topologicalSort(g) << '\n';
@@ -42,11 +43,11 @@ int main() {
 
     prims(g).printGraphAndAttributes();
     recPrimsStart(g).printGraphAndAttributes();
+    
     std::cout << "kruskals: " << kruskals(g) << '\n';
 
     g.setAllNodesToUntraversed();
 
-    // unit test
     for (int i = 0; i < 10; i++) {
         for (int j = 0; j < 10; j++) {
             if (!DFS(g, i).contains(*g.searchNodeID(j))) {
@@ -59,19 +60,4 @@ int main() {
     std::cout << g.cyclic() << '\n';
 
     std::cout << dijkstrasPath(g, 0, 9) << ": " << dijkstrasCost(g, 0, 9) << '\n';
-    std::cout << '\n';
-
-    int i = 10;
-
-    linkedList<int>* a = new linkedList<int>();
-    a->insertHead(1);
-    a->insertTail(2);
-    a->insertTail(&i);
-
-    i = 20;
-
-    std::cout << *a << '\n';
-
-    delete a;
-    std::cout << i << '\n';
 }
