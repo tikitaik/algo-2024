@@ -188,7 +188,7 @@ template <typename T> node<T>** dijkstras(graph<T> g, int sourceNodeID, int sink
     while (pq.size() > 0) {
         //std::cout << *current << " is current node\n";
 
-        linkedList<node> untNeighbours = *g.untraversedNeighbours(current, g.directed); 
+        linkedList<node> untNeighbours = g.untraversedNeighbours(current, g.directed); 
         listNode<node>* curNeighbour = untNeighbours.returnHead();
 
         for (int i = 0; i < untNeighbours.size(); i++) {
