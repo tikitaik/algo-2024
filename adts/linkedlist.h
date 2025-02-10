@@ -69,12 +69,29 @@ template<typename T> struct listNode {
         this->next = nullptr;
 
         // if the data is not a pointer delete memory allocated, otherwise just free the pointer
-        if (this->primitive) {
+        if (this->primitive && this->data) {
             delete this->data;
         }
-        else {
-            this->data = nullptr;
-        }
+
+        this->data = nullptr;
+    }
+
+    listNode (const listNode& other) {
+        this->prev = other.prev;
+        this->next = other.next;
+        this->id = other.id;
+        this->data = other.data;
+        this->primitive = false;
+    }
+
+    listNode& operator = (const listNode& other) {
+        this->prev = other.prev;
+        this->next = other.next;
+        this->id = other.id;
+        this->data = other.data;
+        this->primitive = false;
+
+        return *this;
     }
 };
 // how to print nodes

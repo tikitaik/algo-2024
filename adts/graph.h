@@ -42,14 +42,30 @@ template <typename T> struct node {
 
     ~node () {
 
-        if (this->primitive) {
+        if (this->primitive && this->attribute) {
             //std::cout << "deleting" << '\n';
-            //delete this->attribute;
-        }
-        else {
-            this->attribute = nullptr;
+            delete this->attribute;
         }
 
+        this->attribute = nullptr;
+    }
+
+    node (const node& other) {
+
+        this->id = other.id;
+        this->attribute = other.attribute;
+        this->traversed = other.traversed;
+        this->primitive = false;
+    } 
+
+    node& operator = (const node& other) {
+
+        this->id = other.id;
+        this->attribute = other.attribute;
+        this->traversed = other.traversed;
+        this->primitive = false;
+
+        return *this;
     }
 };
 
@@ -633,18 +649,15 @@ template<typename T> bool graph<T>::connected() {
 // util for cyclic bool praise be to the internet
 template<typename T> bool graph<T>::cycleCheck(node* current, stack<node>& curStack, linkedList<node>& visited) const {
     // return cyclic if already in recursion stack
-    std::cout << curStack << '\n';
     if (curStack.contains(*current)) {
         //std::cout << "curStack: " << curStack << '\n';
         //std::cout << *current << " is in curStack\n";
         return true;
     }
     // return acyclic if node is visited but not in recursion stack im not actaully sure why this should return false
-    std::cout << "visited : " << visited << '\n';
     if (visited.contains(*current)) {
         return false;
     }
-    std::cout << "after\n";
 
     // add all neighbours to list to check except the node we just came from
     linkedList<node> neighboursToCheck = *neighbours(current, directed);
