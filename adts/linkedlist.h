@@ -108,12 +108,14 @@ template <typename T> class linkedList {
     }
 
     ~linkedList() {
+
         this->head = nullptr;
         this->tail = nullptr;
 
         for (int i = 0; i < curSize; i++) {
             delete this->tail;
         }
+
     }
     
     void insertHead(T* add);
@@ -393,6 +395,7 @@ template<typename T> int linkedList<T>::getIndex(const T* key) const {
 
 // does this list contain a node w this key
 template<typename T> bool linkedList<T>::contains(const T key) const {
+
     listNode* searchKey = this->head;
 
     for (int i = 0; i < curSize; i++) {

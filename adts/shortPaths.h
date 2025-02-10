@@ -117,6 +117,7 @@ template<typename T> edge* findMinEdgeThatIsntCyclic (graph<T> g, graph<node<T> 
         }
     }
 
+
     return minEdge;
 }
 

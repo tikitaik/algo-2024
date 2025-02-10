@@ -61,17 +61,7 @@ int main() {
     std::cout << dijkstrasPath(g, 0, 9) << ": " << dijkstrasCost(g, 0, 9) << '\n';
     std::cout << '\n';
 
-    int i = 10;
+    std::string a;
 
-    linkedList<int>* a = new linkedList<int>();
-    a->insertHead(1);
-    a->insertTail(2);
-    a->insertTail(&i);
-
-    i = 20;
-
-    std::cout << *a << '\n';
-
-    delete a;
-    std::cout << i << '\n';
+    std::cin >> a;
 }
