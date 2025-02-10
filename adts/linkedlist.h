@@ -5,25 +5,76 @@
 
 // listNode with data that constitutes the linked list
 template<typename T> struct listNode {
+
     listNode* prev;
     listNode* next;
     int id;
     T* data;
+    // primitive means data is hard coded and that it is not a pointer
+    bool primitive;
 
     listNode() {
-        this->prev = (listNode*)malloc(sizeof(listNode));
-        this->next = (listNode*)malloc(sizeof(listNode));
+        //this->prev = (listNode*)malloc(sizeof(listNode));
+        //this->next = (listNode*)malloc(sizeof(listNode));
     }
 
-    listNode (T* newData) : data(newData) {
-        this->prev = (listNode*)malloc(sizeof(listNode));
-        this->next = (listNode*)malloc(sizeof(listNode));
+    listNode(T* newData) : data(newData) {
+        //this->prev = (listNode()*)malloc(sizeof(listNode));
+        //this->next = (listNode()*)malloc(sizeof(listNode));
+
+        this->prev = nullptr;
+        this->next = nullptr;
+        this->primitive = false;
     }
 
-    listNode (T* newData, int id) : data(newData) {
-        this->prev = (listNode*)malloc(sizeof(listNode));
-        this->next = (listNode*)malloc(sizeof(listNode));
+    listNode(T* newData, int id) : data(newData) {
+        //this->prev = (listnode*)malloc(sizeof(listnode));
+        //this->next = (listnode*)malloc(sizeof(listnode));
+        //
+        this->prev = nullptr;
+        this->next = nullptr;
         this->id = id;
+        this->primitive = false;
+    }
+
+    listNode(T newData) {
+        //this->prev = (listnode*)malloc(sizeof(listnode));
+        //this->next = (listnode*)malloc(sizeof(listnode));
+        //
+        this->prev = nullptr;
+        this->next = nullptr;
+        this->primitive = true;
+
+        T* ptr = new T;
+        *ptr = newData;
+        this->data = ptr;
+    }
+
+    listNode(T newData, int id) {
+        //this->prev = (listnode*)malloc(sizeof(listnode));
+        //this->next = (listnode*)malloc(sizeof(listnode));
+        this->prev = nullptr;
+        this->next = nullptr;
+        this->id = id;
+        this->primitive = true;
+
+        T* ptr = new T;
+        *ptr = newData;
+        this->data = ptr;
+    }
+
+    ~listNode() {
+
+        this->prev = nullptr;
+        this->next = nullptr;
+
+        // if the data is not a pointer delete memory allocated, otherwise just free the pointer
+        if (this->primitive) {
+            delete this->data;
+        }
+        else {
+            this->data = nullptr;
+        }
     }
 };
 // how to print nodes
@@ -55,6 +106,15 @@ template <typename T> class linkedList {
         this->head = nullptr;
         this->tail = nullptr;
     }
+
+    ~linkedList() {
+        this->head = nullptr;
+        this->tail = nullptr;
+
+        for (int i = 0; i < curSize; i++) {
+            delete this->tail;
+        }
+    }
     
     void insertHead(T* add);
     void insertHead(T add);
@@ -64,6 +124,7 @@ template <typename T> class linkedList {
     void insertTail(T add, int id);
     void insertAtIndex(int index, T* add);
     void insertAtIndex(int index, T add);
+
     void remove(listNode* del);
     void removeNode(listNode* node);
     void removeAtIndex(int n);
@@ -88,29 +149,6 @@ template <typename T> class linkedList {
     bool isEmpty() const;
     template <typename U> friend std::ostream& operator << (std::ostream& os, const linkedList<U> list);
 };
-
-// thing that reassigns pointers to whats before & after them, if they are not head and/ or tail
-// doesnt actually delete the listnode though
-template<typename T> void linkedList<T>::remove(listNode* del) {
-    if (del == head && del == tail) {
-        head = nullptr;
-        tail = nullptr;
-    }
-    else if (del == head) {
-        del->next->prev = nullptr;
-        head = del->next;
-    }
-    else if (del == tail) {
-        del->prev->next = nullptr;
-        tail = del->prev;
-    }
-    else {
-        del->prev->next = del->next;
-        del->next->prev = del->prev;
-    }
-    delete del;
-    curSize--;
-}
 
 // add listNode as new head but its pointer so its dynamic
 template<typename T> void linkedList<T>::insertHead(T* add) {
@@ -146,7 +184,7 @@ template<typename T> void linkedList<T>::insertTail(T* add) {
     if (tail) {
         tail->next = newNode;
     }
-    if (head == nullptr) {
+    if (!head) {
         head = newNode;
     }
 
@@ -164,7 +202,7 @@ template<typename T> void linkedList<T>::insertTail(T* add, int id) {
     if (tail) {
         tail->next = newNode;
     }
-    if (head == nullptr) {
+    if (!head) {
         head = newNode;
     }
 
@@ -190,7 +228,7 @@ template<typename T> void linkedList<T>::insertTail(T add, int id) {
 
 // inserts value at index specified
 template<typename T> void linkedList<T>::insertAtIndex(int index, T* add) {
-    // good on me for making such a robust program
+    // good on me for making such a robust codebase
     if ((curSize != 0 && index > curSize) || index < 0) {
         //std::cout << "index is beyond bounds of list + 1 (index starts at 0) \n";
         return;
@@ -229,6 +267,30 @@ template<typename T> void linkedList<T>::insertAtIndex(int index, T add) {
     T* ptr = new T;
     *ptr = add;
     insertAtIndex(index, ptr);
+}
+
+// thing that reassigns pointers to whats before & after them, if they are not head and/ or tail
+// doesnt actually delete the listnode though
+template<typename T> void linkedList<T>::remove(listNode* del) {
+    if (del == head && del == tail) {
+        head = nullptr;
+        tail = nullptr;
+    }
+    else if (del == head) {
+        del->next->prev = nullptr;
+        head = del->next;
+    }
+    else if (del == tail) {
+        del->prev->next = nullptr;
+        tail = del->prev;
+    }
+    else {
+        del->prev->next = del->next;
+        del->next->prev = del->prev;
+    }
+
+    delete del;
+    curSize--;
 }
 
 // same as remove key but dont need to put key in
@@ -276,17 +338,17 @@ template<typename T> void linkedList<T>::removeAllKeys(T key) {
 }
 
 // outputs address and value of the head listNode
-template<typename T> void linkedList<T>::displayHead()  const {
+template<typename T> void linkedList<T>::displayHead() const {
     std::cout << "head is at " << this->head << " and value of head is " << head->data << "\n";
 }
 
 // outputs address and value of the tail listNode
-template<typename T> void linkedList<T>::displayTail()  const {
+template<typename T> void linkedList<T>::displayTail() const {
     std::cout << "tail is at " << this->tail << " and value of tail is " << tail->data << "\n";
 }
 
 // returns mem address of the first listNode found from head with equal key
-template<typename T> listNode<T>* linkedList<T>::searchKey(const T key)  const {
+template<typename T> listNode<T>* linkedList<T>::searchKey(const T key) const {
     listNode* searchKey = this->head;
 
     for (int i = 0; i < curSize; i++) {
@@ -300,7 +362,7 @@ template<typename T> listNode<T>* linkedList<T>::searchKey(const T key)  const {
     return nullptr;
 }
 
-template<typename T> listNode<T>* linkedList<T>::searchID(int key)  const {
+template<typename T> listNode<T>* linkedList<T>::searchID(int key) const {
     listNode* searchKey = this->head;
 
     for (int i = 0; i < curSize; i++) {
@@ -315,7 +377,7 @@ template<typename T> listNode<T>* linkedList<T>::searchID(int key)  const {
 }
 
 // returns index of first listnode found with equivalent key
-template<typename T> int linkedList<T>::getIndex(const T* key)  const {
+template<typename T> int linkedList<T>::getIndex(const T* key) const {
     listNode* searchKey = this->head;
 
     for (int i = 0; i < curSize; i++) {
@@ -330,7 +392,7 @@ template<typename T> int linkedList<T>::getIndex(const T* key)  const {
 }
 
 // does this list contain a node w this key
-template<typename T> bool linkedList<T>::contains(const T key)  const {
+template<typename T> bool linkedList<T>::contains(const T key) const {
     listNode* searchKey = this->head;
 
     for (int i = 0; i < curSize; i++) {
@@ -347,7 +409,7 @@ template<typename T> bool linkedList<T>::contains(const T key)  const {
 }
 
 // returns pointer to listNode at passed index
-template<typename T> listNode<T>* linkedList<T>::goToIndex(int index)  const {
+template<typename T> listNode<T>* linkedList<T>::goToIndex(int index) const {
 
     listNode* atIndex = this->head;
 
@@ -357,11 +419,11 @@ template<typename T> listNode<T>* linkedList<T>::goToIndex(int index)  const {
     return atIndex;
 }
 
-template<typename T> listNode<T>* linkedList<T>::returnHead()  const {
+template<typename T> listNode<T>* linkedList<T>::returnHead() const {
     return this->head;
 }
 
-template<typename T> listNode<T>* linkedList<T>::returnTail()  const {
+template<typename T> listNode<T>* linkedList<T>::returnTail() const {
     return this->tail;
 }
 
@@ -369,7 +431,7 @@ template<typename T> int linkedList<T>::size() const {
     return curSize;
 }
 
-template<typename T> bool linkedList<T>::isEmpty()  const {
+template<typename T> bool linkedList<T>::isEmpty() const {
     if (curSize == 0) {
         return true;
     }
@@ -510,7 +572,7 @@ template <typename T> class priorityQueue : public queue<pair<T, int> > {
 
     public:
 
-    const bool highPriorityFirst;
+   const bool highPriorityFirst;
 
     priorityQueue (bool highFirst) : highPriorityFirst(highFirst) {}
 
@@ -614,7 +676,7 @@ template <typename K, typename V> class dictionary : private linkedList<pair<K, 
     }
     
     // delete kvp using the key
-    void remove (K key) {
+    void remove(K key) {
         if (!containsKey(key)) {
             std::cout << "no such key exists in dictionary, cannot delete\n";
             return;
