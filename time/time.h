@@ -6,7 +6,7 @@
 class timePlaceholder {
     public:
         // time in deciseconds (uint has enough for 4971 days of saving)
-        uint time;
+        unsigned int time;
 
     public:
         
@@ -14,7 +14,7 @@ class timePlaceholder {
 };
 
 std::ostream& operator << (std::ostream& os, const timePlaceholder tm) {
-    uint t = tm.time;
+    unsigned int t = tm.time;
     // deciseconds
     os << "deciseconds: " << t % 10 << ", ";
     t = t - (t % 10);

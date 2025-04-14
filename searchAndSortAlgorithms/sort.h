@@ -26,6 +26,8 @@ template<typename T> T* bubbleSort(T arr[], int size) {
                arr[j + 1] = temp;
             }
         }
+    }
+}
 
 template <typename T> T* merge (T* arrOne, int oneSize, T* arrTwo, int twoSize) {
     
