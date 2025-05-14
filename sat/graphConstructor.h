@@ -3,6 +3,7 @@
 # include <iostream>
 # include <fstream>
 # include <sstream>
+# include <math.h>
 # include "../adts/graph.h"
 # include "../adts/pair.h"
 
